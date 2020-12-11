@@ -1,7 +1,7 @@
 const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 
-const port = 8080;
+const port = process.env.PORT || 8000;
 
 module.exports = {
     entry: ['@babel/polyfill', path.resolve(__dirname, "../src", "index.js")],
@@ -15,7 +15,7 @@ module.exports = {
         historyApiFallback: true,
         overlay: true,
         open: true,
-        proxy: { "/api/**": { target: 'http://localhost:5000', secure: false }  }
+        proxy: { "/api/**": { target: 'http://localhost:5000', secure: false, changeOrigin: true }  }
     },
     module: {
         rules: [
