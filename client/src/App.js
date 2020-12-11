@@ -32,7 +32,7 @@ render() {
         <p>{this.state.response}</p>
         <form onSubmit={this.handleSubmit}>
           <p>
-            <strong>Post to Server:</strong>
+            <strong>Post to Server and Save in DB:</strong>
           </p>
           <input
             type="text"
