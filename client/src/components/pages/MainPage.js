@@ -1,6 +1,7 @@
 import React from 'react';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
+
+import { get } from '../utils';
 
 class MainPage extends React.Component {
     state = {
@@ -11,13 +12,14 @@ class MainPage extends React.Component {
         console.log('Mounting component');
         this.callApi();
       }
-      
-      callApi = async () => {
-        axios.get('/api/hello').then((res) => {
-          const response = res.data;
-          this.setState({response: response.express});
-        });
-      };
+
+      callApi = () => {
+        get('/api/hello')
+          .then(res => {
+            console.log('res', res)
+            this.setState({response: res.express});
+          });
+      }
 
     render() {
         return (
