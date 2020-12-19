@@ -16,7 +16,6 @@ class MainPage extends React.Component {
       callApi = () => {
         get('/api/hello')
           .then(res => {
-            console.log('res', res)
             this.setState({response: res.express});
           });
       }
@@ -25,11 +24,11 @@ class MainPage extends React.Component {
         return (
             <div>
                 <h2>Main Page??</h2>
+                <Link to="/home" > Home </Link>
                 {
                     this.state.response &&
                     <p>{this.state.response}</p>
                 }
-                <Link to="/home" > Home </Link>
             </div>
         )
     }
