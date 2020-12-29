@@ -3,6 +3,8 @@ Timetable generator using MERN
 
 To setup, first install node and npm.
 
+Open Backend Folder. Rename .env.example to .env and enter your keys. 
+
 For Backend ->
 ```
 cd backend
