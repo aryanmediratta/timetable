@@ -1,0 +1,14 @@
+.box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
+}
+.outline {
+    border: 2px solid black;
+    padding: 20px;
+}
+.text-field {
+    width: 300px;
+}

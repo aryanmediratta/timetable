@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Button } from '@material-ui/core';
+import TextField from '@material-ui/core/TextField';
 
 import { post } from '../utils';
 
@@ -18,6 +20,7 @@ class OtherPage extends React.Component {
           post: this.state.post
         }
         post('/api/world', data)
+          .then(res => res.json())
           .then((res) => {
             if (res.success) {
               this.setState({ responseToPost: res.message });
@@ -32,18 +35,27 @@ class OtherPage extends React.Component {
             <div>
                 <h2>Home Page??</h2>
                 <Link to="/" > Main </Link>
-
+                <br/>
+                <Link to="/login" > Login </Link>
                 <p>{this.state.response}</p>
                 <form onSubmit={this.handleSubmit}>
                 <p>
-                    <strong>Post to Server and Save in DB:</strong>
+                  <strong>Post to Server and Save in DB:</strong>
                 </p>
-                <input
-                    type="text"
-                    value={this.state.post}
-                    onChange={e => this.setState({ post: e.target.value })}
+                <TextField
+                  id="post"
+                  label="Enter text to save"
+                  variant="outlined"
+                  onChange={e => this.setState({ post: e.target.value })}
+                  size="small"
                 />
-                <button type="submit">Submit</button>
+                <Button
+                  color="primary"
+                  variant="contained"
+                  type="submit"
+                >
+                  Save
+                </Button>
                 </form>
                 <p>{this.state.responseToPost}</p>
             </div>

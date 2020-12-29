@@ -1,8 +1,8 @@
 /*
-Script to test DB Connection. Should ideally print the name of all the databases.
+Script to test DB Connection. Should ideally print the name of all the collections.
 run
 ` node connection.js 'db_security_key' `
-db_security_key: present in .env
+db_security_key: present in .env file
 in terminal to view result
 */
 

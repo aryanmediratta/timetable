@@ -25,6 +25,8 @@ class MainPage extends React.Component {
             <div>
                 <h2>Main Page??</h2>
                 <Link to="/home" > Home </Link>
+                <br/>
+                <Link to="/login" > Login </Link>
                 {
                     this.state.response &&
                     <p>{this.state.response}</p>
