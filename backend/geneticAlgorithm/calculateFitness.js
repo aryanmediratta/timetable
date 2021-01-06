@@ -8,7 +8,7 @@ function costOfParent (parent, costForClasses, costForTeachers) {
         const allClasses = [];
         const allTeachers = [];
         period.forEach(sets => {
-            const elements = getSeparateChunks(sets, bits);
+            const elements = getSeparateChunks(sets, 9);
             elements.forEach((el, index) => {
                 if (index === 0) {
                     allTeachers.indexOf(el) > -1 ? costForTeachers++ : allTeachers.push(el);
@@ -17,11 +17,11 @@ function costOfParent (parent, costForClasses, costForTeachers) {
                 }
             });
         });
-        console.log('All Teachers', allTeachers);
-        console.log('costForTeachers ??', costForTeachers);
+        // console.log('All Teachers   -------------------', allTeachers);
+        // console.log('costForTeachers  -----------------', costForTeachers);
         
-        console.log('All Classes', allClasses);
-        console.log('costForClasses ??', costForClasses);
+        // console.log('All Classes', allClasses);
+        // console.log('costForClasses ??', costForClasses);
     });
     return {
         costForTeachers, costForClasses
