@@ -243,7 +243,7 @@ module.exports = {
     NUM_CLASSES: 6,
     NUM_TEACHERS: 8,
     NUM_PERIODS: 30,
-    NUM_CHROMOSOMES: 20,
+    NUM_CHROMOSOMES: 200,
     NUM_GENERATIONS: 1000,
     MUTATION_RATE: 40,
     specificClassData1,

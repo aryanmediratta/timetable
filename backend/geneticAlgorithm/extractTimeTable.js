@@ -3,52 +3,45 @@ const { easy } = require('./performCrossover');
 
 const timeTable = easy();
 
-function extractionClasses(id) {
+function extraction(string, id) {
 
     const searchId = id;
     const classById = [];
-    let periodNo = 1;
-
-    timeTable.forEach(period => {
-        const innerClasses = [];
-        period.forEach(tuple => {
-            const { classId, teacherId } = tuple;
-            if (classId === searchId) { 
-                const classData = {'period': periodNo,'teacher': teacherId};
-                innerClasses.push(classData); 
-            }
-        });
-        classById.push(innerClasses);
-        periodNo < 5 ? periodNo++ : periodNo = 1;
-    }); 
-    console.log(`Timetable for class ${id}`)
-    console.log(classById);
-    return classById;
-}
-
-function extractionTeachers(id) {
-
-    const searchId = id;
     const teacherById = [];
     let periodNo = 1;
 
     timeTable.forEach(period => {
+        const innerClass = [];
         const innerTeacher = [];
         period.forEach(tuple => {
             const { classId, teacherId } = tuple;
-            if (teacherId === searchId) {
-                const teacherData = {'period': periodNo,'class':classId};
-                innerTeacher.push(teacherData); 
+
+            if (string == 'class' || string == 'Class') {
+                if (classId === searchId) { 
+                    const classData = {'period': periodNo,'teacher': teacherId};
+                    innerClass.push(classData); 
+                }
+            } else if (string == 'teacher' || string == 'Teacher') {
+                if (teacherId === searchId) {
+                    const teacherData = {'period': periodNo,'class':classId};
+                    innerTeacher.push(teacherData); 
+                }
             }
         });
-        periodNo < 5 ? periodNo++ : periodNo = 1;
+        classById.push(innerClass);
         teacherById.push(innerTeacher);
-    });
-    console.log(`Timetable for Teacher ${id}`) 
-    console.log(teacherById);
-    return teacherById;
+        periodNo < 5 ? periodNo++ : periodNo = 1;
+    }); 
+
+    if (string == 'class' || string == 'Class') {
+        console.log(`Timetable for class ${id}`);
+        console.group(classById);
+    } else if (string == 'teacher' || string == 'Teacher') {
+        console.log(`Timetable for teacher ${id}`);
+        console.group(teacherById);
+    }
 }
 
-extractionClasses(1);
-extractionTeachers(2);
+extraction('teacher', 1);
+extraction('Class', 2);
 
