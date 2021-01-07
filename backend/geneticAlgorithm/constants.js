@@ -203,7 +203,7 @@ module.exports = {
     NUM_CLASSES: 5,
     NUM_TEACHERS: 8,
     NUM_PERIODS: 30,
-    NUM_CHROMOSOMES: 20,
+    NUM_CHROMOSOMES: 10,
     specificClassData1,
     specificClassData2,
     specificClassData3,

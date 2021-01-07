@@ -23,7 +23,7 @@ function createEntirePopulation () {
     population = createSpecificPopulationForClass(specificClassData3, population);
     population = createSpecificPopulationForClass(specificClassData4, population);
     population = createSpecificPopulationForClass(specificClassData5, population);
-    console.log('CREATED POPULATION WITH LENGTH', population.length);
+    // console.log('CREATED POPULATION WITH LENGTH', population.length);
     return population;
 }
 
