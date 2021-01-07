@@ -5,7 +5,7 @@ function getMaxBits () {
 }
 
 function probability(n){
-    n = n/500;
+    // n = n/500;
     return Math.random() < n;
 }
 

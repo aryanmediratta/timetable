@@ -5,7 +5,7 @@ const { probability } = require('./utils');
 
 
 // Receives two parents with the crossover point, returns the entire family.
-function crossTwoParents (parent1, parent2, crossoverPoint, performMutation) {
+function crossTwoParents (parent1, parent2, crossoverPoint, mutationRate) {
     const family = [];
     const child1 = Array.from(Array(NUM_PERIODS), () => new Array(NUM_CLASSES));
     const child2 = Array.from(Array(NUM_PERIODS), () => new Array(NUM_CLASSES));
@@ -20,7 +20,7 @@ function crossTwoParents (parent1, parent2, crossoverPoint, performMutation) {
             }
         }
     }
-    if (probability(performMutation)) {
+    if (probability(mutationRate)) {
         const i1 = Math.floor(Math.random() * NUM_PERIODS);
         const i2 = Math.floor(Math.random() * NUM_PERIODS);
         const j1 = Math.floor(Math.random() * NUM_CLASSES);
@@ -82,11 +82,11 @@ function easy () {
     let secondBestFamilyMember;
     let totalImprovement;
     let bestFamilyMember;
-    const numberOfMutations = (MUTATION_RATE/100) * population.length;
+    const mutationRate = (MUTATION_RATE/100);
     while (costOfBestMemberInFamily > 0) {
         const tempGeneration = [];
         for (k = 0; k < population.length; k+=2) {
-            const family = crossTwoParents(population[k], population[k+1], null, numberOfMutations);
+            const family = crossTwoParents(population[k], population[k+1], null, mutationRate);
             tempGeneration.push(...family);
         }
         const newGen = speciesPropogation(tempGeneration);
