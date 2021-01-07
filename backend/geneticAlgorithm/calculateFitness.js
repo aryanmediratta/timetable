@@ -2,7 +2,7 @@ const { NUM_CLASSES, NUM_TEACHERS } = require('./constants');
 const { getMaxBits, getSeparateChunks } = require('./utils');
 
 function costOfParent (parent, costForClasses, costForTeachers) {
-    console.log('parent', parent);
+    // console.log('parent', parent);
     const bits = getMaxBits();
     parent.forEach(period => {
         const allClasses = [];

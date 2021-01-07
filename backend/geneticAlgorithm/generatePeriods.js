@@ -24,12 +24,17 @@ function createPeriods () {
         resp = costOfParent(period, costForClasses, costForTeachers);
         const totalCost = resp.costForClasses + resp.costForTeachers;
         avgCost = avgCost + totalCost;
-        console.log('TOTAL COST of Parent ->', totalCost);
+        // console.log('TOTAL COST of Parent ->', totalCost);
         timeTable.push(period);
         numArrays = numArrays + 1;
     }
     avgCost = avgCost/numArrays;
     console.log('Avg cost of', numArrays, 'parents is', avgCost);
+    return [ timeTable ];
 }
 
-createPeriods();
+// createPeriods();
+
+module.exports = {
+    createPeriods,
+};
