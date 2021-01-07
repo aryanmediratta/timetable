@@ -28,7 +28,7 @@ function crossTwoParents (parent1, parent2, crossoverPoint, performMutation) {
         const temp = child1[i1][j1];
         child1[i1][j1] = child1[i2][j2];
         child1[i2][j2] = temp;
-        console.log('MUTATING THIS STRAIN HERE ----------------------');
+        // console.log('MUTATING THIS STRAIN HERE ----------------------');
     }
     family.push(parent1);
     family.push(parent2);
@@ -62,10 +62,12 @@ function speciesPropogation (generation) {
     generation.forEach((gen, i) => {
         fittestMembers.indexOf(i) > -1 ? newGeneration.push(gen) : null;
     });
+    const bestFamilyMember = newGeneration[0];
     return {
         averageCostOfGeneration: total/newGeneration.length,
         newGeneration: newGeneration,
         costOfBestMemberInFamily: costOfBestMemberInFamily,
+        bestFamilyMember: bestFamilyMember,
     };
 }
 
@@ -77,6 +79,7 @@ function easy () {
     let costOfBestMemberInFamily;
     let improvement = [];
     let totalImprovement = 0;
+    let bestFamilyMember;
     const numberOfMutations = (MUTATION_RATE/100) * population.length;
     while (index <= NUM_GENERATIONS) {
         const tempGeneration = [];
@@ -90,10 +93,12 @@ function easy () {
         population = newGen.newGeneration;
         costOfBestMemberInFamily = newGen.costOfBestMemberInFamily;
         totalImprovement = avgCost - avg;
+        bestFamilyMember = newGen.bestFamilyMember;
         console.log(`Average of ${population.length} parents in ${index} Generation is -> ${avg} with BEST as ${costOfBestMemberInFamily}`);
         index++;
     }
     console.log('Total improvement', totalImprovement);
+    console.log('bestFamilyMember',bestFamilyMember)
 }
 
 easy();
