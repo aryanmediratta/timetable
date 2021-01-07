@@ -1,35 +1,41 @@
-const { getMaxBits, pad } = require('./utils');
 const { specificClassData1,
     specificClassData2,
     specificClassData3,
     specificClassData4,
     specificClassData5 } = require('./constants');
 
-function createSpecificPopulationForClass (specificClassData, population) {
+// Returns A list of objects and index of last object.
+function createTuplesForClass (specificClassData, population, index) {
     const { classId, teachersList } = specificClassData;
     teachersList.forEach(teacher => {
         for (i = 0; i < teacher.periodsPerWeek ; i++) {
-            population.push(`teacher_${teacher.teacherId}` + `class_${classId}`);
+            index++
+            population.push({
+                label: index,
+                teacherId: teacher.teacherId,
+                classId: classId,
+            });
         }
     });
-    // console.log('population', population);
-    return population;
+    return [
+        population,
+        index,
+    ]
 }
 
-function createEntirePopulation () {
+
+// Returns the final population using a helper function: `createTuplesForClass()`. 
+function createAllTuples () {
     let population = [];
-    population = createSpecificPopulationForClass(specificClassData1, population);
-    population = createSpecificPopulationForClass(specificClassData2, population);
-    population = createSpecificPopulationForClass(specificClassData3, population);
-    population = createSpecificPopulationForClass(specificClassData4, population);
-    population = createSpecificPopulationForClass(specificClassData5, population);
-    // console.log('CREATED POPULATION WITH LENGTH', population.length);
+    let index = 0;
+    [ population, index ] = createTuplesForClass(specificClassData1, population, index);
+    [ population, index ] = createTuplesForClass(specificClassData2, population, index);
+    [ population, index ] = createTuplesForClass(specificClassData3, population, index);
+    [ population, index ] = createTuplesForClass(specificClassData4, population, index);
+    [ population, index ] = createTuplesForClass(specificClassData5, population, index);
     return population;
 }
-
-// createEntirePopulation();
-
 
 module.exports = {
-    createEntirePopulation,
+    createAllTuples,
 };

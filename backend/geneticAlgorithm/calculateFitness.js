@@ -1,34 +1,27 @@
-const { NUM_CLASSES, NUM_TEACHERS } = require('./constants');
-const { getMaxBits, getSeparateChunks } = require('./utils');
 
-function costOfParent (parent, costForClasses, costForTeachers) {
-    // console.log('parent', parent);
-    const bits = getMaxBits();
-    parent.forEach(period => {
+
+// Returns the number of clashes in a given timetable.
+function costFunction (timetable) {
+    let costForClasses = 0;
+    let costForTeachers = 0;
+    let costForLabels = 0;
+    timetable.forEach(period => {
         const allClasses = [];
         const allTeachers = [];
-        period.forEach(sets => {
-            const elements = getSeparateChunks(sets, 9);
-            elements.forEach((el, index) => {
-                if (index === 0) {
-                    allTeachers.indexOf(el) > -1 ? costForTeachers++ : allTeachers.push(el);
-                } else if (index === 1) {
-                    allClasses.indexOf(el) > -1 ? costForClasses++ : allClasses.push(el);
-                }
-            });
+        const allLabels = [];
+        period.forEach(tuple => {
+            const { teacherId, classId, label } = tuple;
+            allTeachers.indexOf(teacherId) > -1 ? costForTeachers++ : allTeachers.push(teacherId);
+            allClasses.indexOf(classId) > -1 ? costForClasses++ : allClasses.push(classId);
+            allLabels.indexOf(label) > -1 ? costForLabels+=10 : allLabels.push(label);
         });
-        // console.log('All Teachers   -------------------', allTeachers);
-        // console.log('costForTeachers  -----------------', costForTeachers);
-        
-        // console.log('All Classes', allClasses);
-        // console.log('costForClasses ??', costForClasses);
     });
-    return {
-        costForTeachers, costForClasses
-    };
+    // console.log('costForLabels',costForLabels)
+    // console.log('TOTAL', costForClasses + costForTeachers + costForLabels)
+    return costForClasses + costForTeachers + costForLabels;
 }
 
 
 module.exports = {
-    costOfParent
+    costFunction,
 };

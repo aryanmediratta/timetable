@@ -1,11 +1,11 @@
 const { NUM_PERIODS, NUM_CLASSES } = require('./constants');
-const { costOfParent } = require('./calculateFitness');
-const { createPeriods } = require('./generatePeriods')
+const { costFunction } = require('./calculateFitness');
+const { createTimeTables } = require('./generateRandomTimetables');
 
 function crossingOver () {
 
     let iterator = 0;
-    let [ parents ]  = createPeriods();
+    let parents  = createTimeTables();
     // let fakeParents = realParents;
     // let childTable = [];
 
@@ -29,14 +29,11 @@ function crossingOver () {
             tableEnd--;
         } 
         
-        let costForClasses = 0;
-        let costForTeachers = 0;
         let numArrays = 0;
         let avgCost = 0;
 
         parents.forEach(period => {
-            resp = costOfParent(period, costForClasses, costForTeachers);
-            const totalCost = resp.costForClasses + resp.costForTeachers;
+            const totalCost = costFunction(period);
             avgCost = avgCost + totalCost;
             console.log(`TOTAL COST of Child ${iterator + 1} ->`, totalCost);
             childTable.push(period);
@@ -48,6 +45,5 @@ function crossingOver () {
         iterator++;
     }
 }
-
 
 crossingOver();

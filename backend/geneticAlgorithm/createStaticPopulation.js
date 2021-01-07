@@ -1,14 +1,18 @@
 const { NUM_CLASSES, NUM_TEACHERS } = require('./constants');
 const { getMaxBits, pad } = require('./utils');
 
+// DEPRECATED CODE -> NOT BEING USED ANYWHERE NOW.
+
+// Creates static population.
 function createDefaultPopulation () {
     let teachersList = [];
     let classesList = [];
     // const initialPopulation = creatHumanReadableTuples(teachersList, classesList);
-    const initialPopulation = createBinaryTyples(teachersList, classesList);
+    // const initialPopulation = createBinaryTyples(teachersList, classesList);
     return initialPopulation;
 }
 
+// Creates human readable static population.
 function creatHumanReadableTuples (teachersList, classesList) {
     for (i = 0; i < NUM_TEACHERS; i++) {
         // Teacher Name -> Human Readable Format
@@ -26,6 +30,8 @@ function creatHumanReadableTuples (teachersList, classesList) {
     return initialPopulation;
 }
 
+
+// Creates Binary Static population.
 function createBinaryTyples (teachersList, classesList) {
     const bits = getMaxBits();
     for (i = 0; i < NUM_TEACHERS; i++) {
@@ -45,7 +51,3 @@ function createBinaryTyples (teachersList, classesList) {
     });
     return initialPopulation;
 }
-
-module.exports = {
-    createDefaultPopulation,
-};

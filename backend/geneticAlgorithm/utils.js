@@ -4,6 +4,11 @@ function getMaxBits () {
     return Math.max(NUM_CLASSES, NUM_TEACHERS).toString(2).length;
 }
 
+function probability(n){
+    n = n/500;
+    return Math.random() < n;
+}
+
 function pad (n, width, z) {
     z = z || '0';
     n = n + '';
@@ -21,8 +26,29 @@ function getSeparateChunks(str, size) {
     return chunks
 }
 
+function hasKeyValuePair(object, key, value) {
+    const allElementsWithSameKey = object.filter(el => el.key === key);
+    if (allElementsWithSameKey.length > 0) {
+        const found = allElementsWithSameKey.filter(el => el.value === value);
+        if (found && found.length > 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
+function create32BitBinaryString (nMask) {
+    for (var nFlag = 0, nShifted = nMask, sMask = ""; nFlag < 32;
+        nFlag++, sMask += String(nShifted >>> 31), nShifted <<= 1);
+    return sMask;
+}
+
 module.exports = {
     getMaxBits,
     pad,
     getSeparateChunks,
+    hasKeyValuePair,
+    create32BitBinaryString,
+    probability,
 };

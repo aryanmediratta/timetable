@@ -2,8 +2,9 @@ const NUM_TEACHERS = 9;
 const NUM_CLASSES = 8;
 const SIZE_OF_POPULATION = NUM_TEACHERS * NUM_CLASSES;
 
-// All of this is testing code, not being used anywhere right now.
+// DEPRECATED CODE, NOT BEING USED ANYWHERE.
 
+// Returns Random population based on number of teachers and number of classes.
 function createRandomizedPopulation () {
     let teachersList = [];
     let classesList = [];
@@ -24,45 +25,26 @@ function createRandomizedPopulation () {
         const resp = _randomizer(teachersList, classesList, map);
         teachersList = resp.teachersList;
         classesList = resp.classesList;
-        map = resp.map;
+        map = resp.list;
     }
     console.log(map);
     return map;
 }
 
-function _randomizer(teachersList, classesList, map) {
+
+// Randomizer which adds unique key value pairs to a List
+function _randomizer(teachersList, classesList, list) {
     const key = teachersList[Math.floor(Math.random() * teachersList.length)];
     const value = classesList[Math.floor(Math.random() * classesList.length)];
-    if (!_hasKeyValuePair(map, key, value) === true) {
-        map.push({
+    if (!_hasKeyValuePair(list, key, value) === true) {
+        list.push({
             key: key,
             value: value,
         });
     }
     return {
-        teachersList, classesList, map
+        teachersList, classesList, list
     };
 }
 
-function _hasKeyValuePair(map, key, value) {
-    const allElementsWithSameKey = map.filter(el => el.key === key);
-    if (allElementsWithSameKey.length > 0) {
-        const found = allElementsWithSameKey.filter(el => el.value === value);
-        if (found && found.length > 0) {
-            return true;
-        }
-    }
-    return false;
-}
-
-function createBinaryString (nMask) {
-    for (var nFlag = 0, nShifted = nMask, sMask = ""; nFlag < 32;
-        nFlag++, sMask += String(nShifted >>> 31), nShifted <<= 1);
-    return sMask;
-}
-
-createRandomizedPopulation();
-
-module.exports = {
-    createRandomizedPopulation,
-};
+// createRandomizedPopulation();
