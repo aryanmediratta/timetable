@@ -63,11 +63,13 @@ function speciesPropogation (generation) {
         fittestMembers.indexOf(i) > -1 ? newGeneration.push(gen) : null;
     });
     const bestFamilyMember = newGeneration[0];
+    const secondBestFamilyMember = newGeneration[1];
     return {
         averageCostOfGeneration: total/newGeneration.length,
         newGeneration: newGeneration,
         costOfBestMemberInFamily: costOfBestMemberInFamily,
         bestFamilyMember: bestFamilyMember,
+        secondBestFamilyMember: secondBestFamilyMember,
     };
 }
 
@@ -76,12 +78,12 @@ function easy () {
     let [population, avgCost] = createTimeTables();
     let index = 2;
     let avg;
-    let costOfBestMemberInFamily;
-    let improvement = [];
-    let totalImprovement = 0;
+    let costOfBestMemberInFamily = 10;
+    let secondBestFamilyMember;
+    let totalImprovement;
     let bestFamilyMember;
     const numberOfMutations = (MUTATION_RATE/100) * population.length;
-    while (index <= NUM_GENERATIONS) {
+    while (costOfBestMemberInFamily > 0) {
         const tempGeneration = [];
         for (k = 0; k < population.length; k+=2) {
             const family = crossTwoParents(population[k], population[k+1], null, numberOfMutations);
@@ -89,16 +91,18 @@ function easy () {
         }
         const newGen = speciesPropogation(tempGeneration);
         avg = newGen.averageCostOfGeneration;
-        improvement.push(avg);
         population = newGen.newGeneration;
         costOfBestMemberInFamily = newGen.costOfBestMemberInFamily;
         totalImprovement = avgCost - avg;
         bestFamilyMember = newGen.bestFamilyMember;
+        secondBestFamilyMember = newGen.secondBestFamilyMember;
         console.log(`Average of ${population.length} parents in ${index} Generation is -> ${avg} with BEST as ${costOfBestMemberInFamily}`);
         index++;
     }
     console.log('Total improvement', totalImprovement);
-    console.log('bestFamilyMember',bestFamilyMember)
+    // console.log('bestFamilyMember',bestFamilyMember);
+    console.log('-------------------------------------------------------------------------------');
+    console.log(`Average of ${population.length} parents in ${index} Generation is -> ${avg} with BEST as ${costOfBestMemberInFamily}`);
 }
 
 easy();

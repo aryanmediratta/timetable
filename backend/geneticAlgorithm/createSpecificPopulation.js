@@ -2,7 +2,8 @@ const { specificClassData1,
     specificClassData2,
     specificClassData3,
     specificClassData4,
-    specificClassData5 } = require('./constants');
+    specificClassData5,
+    specificClassData6 } = require('./constants');
 
 // Returns A list of objects and index of last object.
 function createTuplesForClass (specificClassData, population, index) {
@@ -33,6 +34,7 @@ function createAllTuples () {
     [ population, index ] = createTuplesForClass(specificClassData3, population, index);
     [ population, index ] = createTuplesForClass(specificClassData4, population, index);
     [ population, index ] = createTuplesForClass(specificClassData5, population, index);
+    [ population, index ] = createTuplesForClass(specificClassData6, population, index);
     return population;
 }
 
