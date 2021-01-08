@@ -245,7 +245,7 @@ module.exports = {
     NUM_PERIODS: 30,
     NUM_CHROMOSOMES: 200,
     NUM_GENERATIONS: 1000,
-    MUTATION_RATE: 80,
+    MUTATION_RATE: 40,
     specificClassData1,
     specificClassData2,
     specificClassData3,

@@ -83,7 +83,8 @@ function easy () {
     let totalImprovement;
     let bestFamilyMember;
     const mutationRate = (MUTATION_RATE/100);
-    while (costOfBestMemberInFamily > 0) {
+    // while (costOfBestMemberInFamily > 0) {
+    while ((costOfBestMemberInFamily > 0)) {
         const tempGeneration = [];
         for (k = 0; k < population.length; k+=2) {
             const family = crossTwoParents(population[k], population[k+1], null, mutationRate);
@@ -100,9 +101,14 @@ function easy () {
         index++;
     }
     console.log('Total improvement', totalImprovement);
-    // console.log('bestFamilyMember',bestFamilyMember);
+    console.log('bestFamilyMember',bestFamilyMember);
     console.log('-------------------------------------------------------------------------------');
     console.log(`Average of ${population.length} parents in ${index} Generation is -> ${avg} with BEST as ${costOfBestMemberInFamily}`);
+    return bestFamilyMember;
 }
 
-easy();
+// easy();
+
+module.exports = {
+    easy,
+};
