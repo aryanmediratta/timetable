@@ -79,7 +79,7 @@ class Timetable extends React.Component {
                     Generate New TimeTable
                 </Button>
                 <br/> <br/>
-                <h4>Timetable for Class - {this.state.entityId || 1}</h4>
+                <h2>Timetable for Class - {this.state.entityId || 1}</h2>
                 {
                     this.state.timetable && this.state.timetable.length > 0 &&
                     <div>

@@ -10,8 +10,8 @@ const { specificClassData1,
 function createTuplesForClass (specificClassData, population, index) {
     const { classId, teachersList } = specificClassData;
     teachersList.forEach(teacher => {
+        index++;
         for (i = 0; i < teacher.periodsPerWeek ; i++) {
-            index++
             population.push({
                 label: index,
                 teacherId: teacher.teacherId,
