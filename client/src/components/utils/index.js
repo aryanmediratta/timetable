@@ -1,3 +1,30 @@
+function getTimetableForEntity (timetable, entityType, entityId) {
+    const myTable = [];
+    let index = 1;
+    timetable.forEach(period => {
+        period.forEach(tuple => {
+            const { classId, teacherId, label } = tuple;
+            let tempEntity = null;
+            if (entityType === 'class' && entityId === classId) {
+                tempEntity = teacherId;
+            } else if (entityType === 'teacher' && entityId === teacherId) {
+                tempEntity = classId;
+            }
+            // If we find it, then we push it. otherwise we dont :)
+            if (tempEntity !== null) {
+                myTable.push({
+                    entityId: tempEntity,
+                    label: label,
+                    periodNo: index,
+                });
+                index < 6 ? index++ : index = 1;
+            }
+        });
+    });
+    console.log('My Table', myTable);
+    return myTable;
+}
+
 module.exports = {
     get: (url) => fetch(url, {
         headers: { 'Content-Type': 'application/json' },
@@ -19,4 +46,5 @@ module.exports = {
         headers: { 'Content-Type': 'application/json' },
         method: 'POST',
     }),
+    getTimetableForEntity,
 };

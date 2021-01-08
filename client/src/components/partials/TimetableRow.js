@@ -6,20 +6,19 @@ class TimetableRow extends React.Component {
     render() {
     console.log('All Props', this.props);
     return (
-        <div id="timetable-row">
+        <div>
             {
-                this.props.period.map((period) =>
-                <div>
-                    <span>
-                        Teacher Number -
-                        {period[0].teacher}
-                        &nbsp;&nbsp;
-                    </span>
-                    <span>
-                        {period[0].class}
-                    </span>
-                </div>
-                )
+                Object.keys(this.props.row).map((period) => {
+                    return (
+                        <div>
+                            <span>
+                                Teacher ID - {this.props.row[period].entityId} &nbsp;
+                                Period No - {this.props.row[period].periodNo} &nbsp;&nbsp;&nbsp;
+                                LABEL - {this.props.row[period].label} &nbsp;&nbsp;&nbsp;
+                            </span>
+                        </div>
+                    )
+                  })
             }
         </div>
     );

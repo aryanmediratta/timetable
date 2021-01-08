@@ -30,14 +30,14 @@ app.get('/api/hello', (_req, res) => {
     res.send({ express: 'Hello From Express!!!' });
 });
 
-// app.get('/api/fetch_static_timetable', (_req, res) => {
-//     // const tt = extraction('class', 3);
-//     const tt = easy();
-//     res.send({
-//         timetable: tt,
-//         numPeriods: NUM_PERIODS,
-//     });
-// });
+app.get('/api/fetch_static_timetable', (_req, res) => {
+    // const tt = extraction('class', 3);
+    const tt = easy();
+    res.send({
+        timetable: tt,
+        numPeriods: NUM_PERIODS,
+    });
+});
 
 // Testing code, Will remove
 app.post('/api/world', (req, res) => {

@@ -2,8 +2,8 @@
     border: 2px solid red;
 }
 #timetable-row div { 
-    height: 100px; 
-    width: 100px; 
+    height: 80px; 
+    width: 120px; 
     border: 1px solid red; 
     margin-left: 5px; 
     float: left;

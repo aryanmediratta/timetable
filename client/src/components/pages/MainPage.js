@@ -28,10 +28,6 @@ class MainPage extends React.Component {
                 <br/>
                 <Link to="/login" > Login </Link>
                 <Timetable />
-                {
-                    this.state.response &&
-                    <p>{this.state.response}</p>
-                }
             </div>
         )
     }

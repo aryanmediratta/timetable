@@ -11,7 +11,7 @@ function costFunction (timetable) {
             const { teacherId, classId, label } = tuple;
             allTeachers.indexOf(teacherId) > -1 ? costForTeachers++ : allTeachers.push(teacherId);
             allClasses.indexOf(classId) > -1 ? costForClasses++ : allClasses.push(classId);
-            allLabels.indexOf(label) > -1 ? costForLabels+=10 : allLabels.push(label);
+            allLabels.indexOf(label) > -1 ? costForLabels+=4 : allLabels.push(label);
         });
     });
     // console.log('TOTAL', costForClasses + costForTeachers + costForLabels)

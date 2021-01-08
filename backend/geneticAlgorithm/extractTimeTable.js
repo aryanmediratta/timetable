@@ -73,7 +73,7 @@ function getTimetableForEntity (timetable, entityType, entityId) {
     return myTable;
 }
 
-getTimetableForEntity(easy(), 'class', 3);
+// getTimetableForEntity(easy(), 'teacher', 3);
 
 
 module.exports = {
