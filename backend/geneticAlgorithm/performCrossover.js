@@ -1,6 +1,7 @@
-const { NUM_CLASSES, NUM_PERIODS, NUM_GENERATIONS } = require('./constants');
+const { NUM_CLASSES, NUM_PERIODS, NUM_GENERATIONS, MUTATION_RATE } = require('./constants');
 const { costFunction } = require('./calculateFitness');
 const { probability } = require('./utils');
+const { createTimeTables } = require('./generateRandomTimetables');
 
 
 // Receives two parents with the crossover point, returns the entire family.
