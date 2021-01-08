@@ -7,6 +7,9 @@ const { saveDataInDatabase } = require('../database/utils');
 const { backendPort, uri, connectionParams } = require('./config');
 
 const authRoutes = require('../routes/auth');
+const { extraction } = require('../geneticAlgorithm/extractTimeTable');
+const { easy } = require('../geneticAlgorithm/performCrossover');
+const { NUM_PERIODS } = require('../geneticAlgorithm/constants');
 
 const app = express();
 const port = backendPort || 5000;
@@ -26,6 +29,15 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.get('/api/hello', (_req, res) => {
     res.send({ express: 'Hello From Express!!!' });
 });
+
+// app.get('/api/fetch_static_timetable', (_req, res) => {
+//     // const tt = extraction('class', 3);
+//     const tt = easy();
+//     res.send({
+//         timetable: tt,
+//         numPeriods: NUM_PERIODS,
+//     });
+// });
 
 // Testing code, Will remove
 app.post('/api/world', (req, res) => {

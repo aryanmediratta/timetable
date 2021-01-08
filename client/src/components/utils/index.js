@@ -18,5 +18,5 @@ module.exports = {
         body: data,
         headers: { 'Content-Type': 'application/json' },
         method: 'POST',
-    })
-}
+    }),
+};

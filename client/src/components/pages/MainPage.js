@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
+import Timetable from './Timetable';
 import { get } from '../utils';
 
 class MainPage extends React.Component {
@@ -27,6 +27,7 @@ class MainPage extends React.Component {
                 <Link to="/home" > Home </Link>
                 <br/>
                 <Link to="/login" > Login </Link>
+                <Timetable />
                 {
                     this.state.response &&
                     <p>{this.state.response}</p>

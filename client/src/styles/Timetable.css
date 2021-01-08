@@ -1,0 +1,11 @@
+.border-box {
+    border: 2px solid red;
+}
+#timetable-row div { 
+    height: 100px; 
+    width: 100px; 
+    border: 1px solid red; 
+    margin-left: 5px; 
+    float: left;
+    background: orange; 
+}

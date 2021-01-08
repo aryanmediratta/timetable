@@ -41,11 +41,12 @@ function crossTwoParents (parent1, parent2, crossoverPoint, mutationRate) {
 // Receives all children + parents, return the average of new gen AND fittest members from the old generation.
 function speciesPropogation (generation) {
     const costOfTempGeneration = [];
-    generation.forEach((parent, index) => {
+    let bestFamilyMember;
+    generation.forEach(parent => {
         const cost = costFunction(parent);
         costOfTempGeneration.push({
-            index: index,
             cost: cost,
+            parent: parent,
         });
     });
     costOfTempGeneration.sort((a,b) => a.cost - b.cost);
@@ -55,21 +56,17 @@ function speciesPropogation (generation) {
     costOfTempGeneration.forEach((member, id) => {
         if (id < costOfTempGeneration.length/2) {
             total = total + member.cost;
-            fittestMembers.push(member.index);
+            fittestMembers.push(member.parent);
         }
     });
-    const newGeneration = [];
-    generation.forEach((gen, i) => {
-        fittestMembers.indexOf(i) > -1 ? newGeneration.push(gen) : null;
-    });
-    const bestFamilyMember = newGeneration[0];
-    const secondBestFamilyMember = newGeneration[1];
+    if (costOfBestMemberInFamily === 0) {
+        bestFamilyMember = fittestMembers[0];
+    }
     return {
-        averageCostOfGeneration: total/newGeneration.length,
-        newGeneration: newGeneration,
+        averageCostOfGeneration: total/fittestMembers.length,
+        newGeneration: fittestMembers,
         costOfBestMemberInFamily: costOfBestMemberInFamily,
         bestFamilyMember: bestFamilyMember,
-        secondBestFamilyMember: secondBestFamilyMember,
     };
 }
 
@@ -79,7 +76,6 @@ function easy () {
     let index = 2;
     let avg;
     let costOfBestMemberInFamily = 10;
-    let secondBestFamilyMember;
     let totalImprovement;
     let bestFamilyMember;
     const mutationRate = (MUTATION_RATE/100);
@@ -95,7 +91,6 @@ function easy () {
         costOfBestMemberInFamily = newGen.costOfBestMemberInFamily;
         totalImprovement = avgCost - avg;
         bestFamilyMember = newGen.bestFamilyMember;
-        secondBestFamilyMember = newGen.secondBestFamilyMember;
         console.log(`Average of ${population.length} parents in ${index} Generation is -> ${avg} with BEST as ${costOfBestMemberInFamily}`);
         index++;
     }
