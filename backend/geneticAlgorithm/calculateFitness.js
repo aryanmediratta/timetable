@@ -1,5 +1,3 @@
-
-
 // Returns the number of clashes in a given timetable.
 function costFunction (timetable) {
     let costForClasses = 0;
@@ -16,7 +14,6 @@ function costFunction (timetable) {
             allLabels.indexOf(label) > -1 ? costForLabels+=10 : allLabels.push(label);
         });
     });
-    // console.log('costForLabels',costForLabels)
     // console.log('TOTAL', costForClasses + costForTeachers + costForLabels)
     return costForClasses + costForTeachers + costForLabels;
 }

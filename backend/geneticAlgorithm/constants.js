@@ -8,7 +8,7 @@ const specificClassData1 = {
             periodsPerWeek: 4,
         },
         {
-            teacherId: 2,
+            teacherId: 10,
             periodsPerWeek: 3,
         },
         {
@@ -28,7 +28,7 @@ const specificClassData1 = {
             periodsPerWeek: 4,
         },
         {
-            teacherId: 7,
+            teacherId: 9,
             periodsPerWeek: 4,
         },
         {
@@ -84,7 +84,7 @@ const specificClassData3 = {
     // Sum of periods per week should be number of periods per day * number of days per week (5).
     teachersList: [
         {
-            teacherId: 1,
+            teacherId: 10,
             periodsPerWeek: 3,
         },
         {
@@ -92,7 +92,7 @@ const specificClassData3 = {
             periodsPerWeek: 4,
         },
         {
-            teacherId: 3,
+            teacherId: 9,
             periodsPerWeek: 5,
         },
         {
@@ -144,7 +144,7 @@ const specificClassData4 = {
             periodsPerWeek: 4,
         },
         {
-            teacherId: 6,
+            teacherId: 10,
             periodsPerWeek: 3,
         },
         {
@@ -193,7 +193,7 @@ const specificClassData5 = {
             periodsPerWeek: 3,
         },
         {
-            teacherId: 8,
+            teacherId: 9,
             periodsPerWeek: 4,
         },
     ]
@@ -209,8 +209,49 @@ const specificClassData6 = {
             periodsPerWeek: 3,
         },
         {
-            teacherId: 2,
+            teacherId: 10,
             periodsPerWeek: 5,
+        },
+        {
+            teacherId: 3,
+            periodsPerWeek: 3,
+        },
+        {
+            teacherId: 4,
+            periodsPerWeek: 4,
+        },
+        {
+            teacherId: 9,
+            periodsPerWeek: 4,
+        },
+        {
+            teacherId: 6,
+            periodsPerWeek: 4,
+        },
+        {
+            teacherId: 7,
+            periodsPerWeek: 3,
+        },
+        {
+            teacherId: 8,
+            periodsPerWeek: 4,
+        },
+    ]
+};
+
+
+const specificClassData7 = {
+    classId: 7,
+    name: '12-B',
+    // Sum of periods per week should be number of periods per day * number of days per week (5).
+    teachersList: [
+        {
+            teacherId: 1,
+            periodsPerWeek: 3,
+        },
+        {
+            teacherId: 9,
+            periodsPerWeek: 4,
         },
         {
             teacherId: 3,
@@ -229,27 +270,28 @@ const specificClassData6 = {
             periodsPerWeek: 4,
         },
         {
-            teacherId: 7,
+            teacherId: 10,
             periodsPerWeek: 3,
         },
         {
             teacherId: 8,
-            periodsPerWeek: 4,
+            periodsPerWeek: 5,
         },
     ]
 };
 
 module.exports = {
-    NUM_CLASSES: 6,
-    NUM_TEACHERS: 8,
+    NUM_CLASSES: 7,
+    NUM_TEACHERS: 10,
     NUM_PERIODS: 30,
     NUM_CHROMOSOMES: 200,
     NUM_GENERATIONS: 1000,
-    MUTATION_RATE: 40,
+    MUTATION_RATE: 60,
     specificClassData1,
     specificClassData2,
     specificClassData3,
     specificClassData4,
     specificClassData5,
     specificClassData6,
+    specificClassData7,
 };

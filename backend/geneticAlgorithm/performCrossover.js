@@ -1,5 +1,4 @@
-const { NUM_CLASSES, NUM_PERIODS, NUM_GENERATIONS, MUTATION_RATE } = require('./constants');
-const { createTimeTables } = require('./generateRandomTimetables');
+const { NUM_CLASSES, NUM_PERIODS, NUM_GENERATIONS } = require('./constants');
 const { costFunction } = require('./calculateFitness');
 const { probability } = require('./utils');
 
@@ -83,8 +82,7 @@ function easy () {
     let totalImprovement;
     let bestFamilyMember;
     const mutationRate = (MUTATION_RATE/100);
-    // while (costOfBestMemberInFamily > 0) {
-    while ((costOfBestMemberInFamily > 0)) {
+    while ((costOfBestMemberInFamily > 0) && (index <= NUM_GENERATIONS)) {
         const tempGeneration = [];
         for (k = 0; k < population.length; k+=2) {
             const family = crossTwoParents(population[k], population[k+1], null, mutationRate);
