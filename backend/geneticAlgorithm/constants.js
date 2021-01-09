@@ -288,7 +288,7 @@ module.exports = {
     NUM_PERIODS: 30,
     NUM_CHROMOSOMES: 200,
     NUM_GENERATIONS: 10000,
-    MUTATION_RATE: 100,
+    MUTATION_RATE: 60,
     DAYS_OF_WEEK,
     specificClassData1,
     specificClassData2,

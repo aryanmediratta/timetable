@@ -13,8 +13,6 @@ class TimetableRow extends React.Component {
                         <div>
                             <span>
                                 Teacher ID - {this.props.row[period].entityId} &nbsp;
-                                Period No - {this.props.row[period].periodNo} &nbsp;&nbsp;&nbsp;
-                                LABEL - {this.props.row[period].label} &nbsp;&nbsp;&nbsp;
                             </span>
                         </div>
                     )

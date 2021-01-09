@@ -82,7 +82,9 @@ function easy () {
     while ((costOfBestMemberInFamily > 0) && (index <= NUM_GENERATIONS)) {
         const tempGeneration = [];
         for (k = 0; k < population.length; k+=2) {
-            const family = crossTwoParents(population[k], population[k+1], null, mutationRate);
+            // Ideally remove this random member from the population so we have a crossover between all the parents.
+            const randomMember = population[Math.floor(Math.random() * population.length)];
+            const family = crossTwoParents(population[k], randomMember, null, mutationRate);
             tempGeneration.push(...family);
         }
         const newGen = speciesPropogation(tempGeneration);

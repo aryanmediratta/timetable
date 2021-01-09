@@ -81,7 +81,7 @@ class Timetable extends React.Component {
                 <br/> <br/>
                 <h2>Timetable for Class - {this.state.entityId || 1}</h2>
                 {
-                    this.state.timetable && this.state.timetable.length > 0 &&
+                    this.state.timetable && this.state.timetable.length > 0 ?
                     <div>
                         {
                             this.state.timetable.map((period) =>
@@ -91,6 +91,8 @@ class Timetable extends React.Component {
                             )
                         }
                     </div>
+                    :
+                    <h3>Loading, Please wait</h3>
                 }
             </div>
         );
