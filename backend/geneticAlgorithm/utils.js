@@ -1,18 +1,5 @@
-const { NUM_CLASSES, NUM_TEACHERS } = require('./constants');
-
-function getMaxBits () {
-    return Math.max(NUM_CLASSES, NUM_TEACHERS).toString(2).length;
-}
-
 function probability(n){
-    // n = n/500;
     return Math.random() < n;
-}
-
-function pad (n, width, z) {
-    z = z || '0';
-    n = n + '';
-    return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
 }
 
 function getSeparateChunks(str, size) {
@@ -45,8 +32,6 @@ function create32BitBinaryString (nMask) {
 }
 
 module.exports = {
-    getMaxBits,
-    pad,
     getSeparateChunks,
     hasKeyValuePair,
     create32BitBinaryString,
