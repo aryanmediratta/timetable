@@ -59,7 +59,7 @@ function speciesPropogation (generation) {
             fittestMembers.push(member.parent);
         }
     });
-    if (costOfBestMemberInFamily === 0) {
+    if (costOfBestMemberInFamily < 10) {
         bestFamilyMember = fittestMembers[0];
     }
     return {
@@ -81,7 +81,8 @@ function easy () {
     const mutationRate = (MUTATION_RATE/100);
     while ((costOfBestMemberInFamily > 0) && (index <= NUM_GENERATIONS)) {
         const tempGeneration = [];
-        for (k = 0; k < population.length; k+=2) {
+        const lengthOfPop = population.length;
+        for (k = 0; k < lengthOfPop; k+=2) {
             // Ideally remove this random member from the population so we have a crossover between all the parents.
             const randomMember = population[Math.floor(Math.random() * population.length)];
             const family = crossTwoParents(population[k], randomMember, null, mutationRate);

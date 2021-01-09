@@ -24,7 +24,7 @@ const specificClassData1 = {
             periodsPerWeek: 3,
         },
         {
-            teacherId: 6,
+            teacherId: 7,
             periodsPerWeek: 4,
         },
         {
@@ -177,7 +177,7 @@ const specificClassData5 = {
             periodsPerWeek: 3,
         },
         {
-            teacherId: 4,
+            teacherId: 10,
             periodsPerWeek: 4,
         },
         {
@@ -246,7 +246,7 @@ const specificClassData7 = {
     // Sum of periods per week should be number of periods per day * number of days per week (5).
     teachersList: [
         {
-            teacherId: 1,
+            teacherId: 2,
             periodsPerWeek: 3,
         },
         {
@@ -286,8 +286,8 @@ module.exports = {
     NUM_CLASSES: 7,
     NUM_TEACHERS: 10,
     NUM_PERIODS: 30,
-    NUM_CHROMOSOMES: 200,
-    NUM_GENERATIONS: 10000,
+    NUM_CHROMOSOMES: 80,
+    NUM_GENERATIONS: 5000,
     MUTATION_RATE: 60,
     DAYS_OF_WEEK,
     specificClassData1,

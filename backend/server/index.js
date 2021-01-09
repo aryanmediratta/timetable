@@ -7,7 +7,6 @@ const { saveDataInDatabase } = require('../database/utils');
 const { backendPort, uri, connectionParams } = require('./config');
 
 const authRoutes = require('../routes/auth');
-const { extraction } = require('../geneticAlgorithm/extractTimeTable');
 const { easy } = require('../geneticAlgorithm/performCrossover');
 const { NUM_PERIODS } = require('../geneticAlgorithm/constants');
 
@@ -31,7 +30,6 @@ app.get('/api/hello', (_req, res) => {
 });
 
 app.get('/api/fetch_static_timetable', (_req, res) => {
-    // const tt = extraction('class', 3);
     const tt = easy();
     res.send({
         timetable: tt,
