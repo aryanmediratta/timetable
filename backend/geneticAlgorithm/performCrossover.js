@@ -149,7 +149,7 @@ function easy () {
     return bestFamilyMember;
 }
 
-easy();
+// easy();
 
 module.exports = {
     easy,

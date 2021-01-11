@@ -7,9 +7,10 @@ import OtherPage from './components/pages/OtherPage';
 import Login from './components/pages/Login';
 import Register from './components/pages/Register';
 import Header from './components/partials/Header';
+import Teachers from './components/pages/Teachers';
 
 class App extends React.Component {
-  
+   
     render() {
         return (
             <div className="App">
@@ -20,6 +21,7 @@ class App extends React.Component {
                         <Route exact path='/home' component={OtherPage}></Route>
                         <Route exact path='/login' component={Login}></Route>
                         <Route exact path='/signup' component={Register}></Route>
+                        <Route exact path='./addTeacher' component={Teachers}></Route>
                     </Switch>
                 </BrowserRouter>
             </div>

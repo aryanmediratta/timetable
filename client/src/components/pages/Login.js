@@ -57,6 +57,8 @@ class Login extends React.Component {
                 <br/>
                 <Link to="/home"> Home </Link>
                 <br/>
+                <Link to="/addTeacher"> Add Teachers </Link>
+                <br/>
                 <form onSubmit={this.handleSubmit}>
                     <div className="box">
                         <div className="outline">
