@@ -4,9 +4,11 @@
 
 #timetable-row div { 
     height: 80px; 
-    width: 120px; 
+    width: 130px; 
     border: 1px solid red; 
     margin-left: 0px; 
     float: left;
-    background: lightgreen; 
+    background: lightgreen;
+    font-size: 18px;
+    text-align: center;
 }
