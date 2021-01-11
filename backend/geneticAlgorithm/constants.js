@@ -289,7 +289,7 @@ module.exports = {
     NUM_CHROMOSOMES: 32,
     NUM_GENERATIONS: 8192,
     MUTATION_RATE: 64,
-    POPULATION_RATIO: 0.63,
+    POPULATION_RATIO: 0.61,
     DAYS_OF_WEEK,
     specificClassData1,
     specificClassData2,

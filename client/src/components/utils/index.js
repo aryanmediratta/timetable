@@ -21,8 +21,19 @@ function getTimetableForEntity (timetable, entityType, entityId) {
             }
         });
     });
-    console.log('My Table', myTable);
     return myTable;
+}
+
+function createTimetableForRendering (timetable, numPeriods) {
+    const result = [];
+    for (let i = 0; i < numPeriods; i++) {
+        let periodRow = [];
+        for (let j = i; j < timetable.length; j=j+numPeriods) {
+            periodRow.push(timetable[j]);
+        }
+        result.push(periodRow);
+    }
+    return result;
 }
 
 module.exports = {
@@ -47,4 +58,5 @@ module.exports = {
         method: 'POST',
     }),
     getTimetableForEntity,
+    createTimetableForRendering,
 };
