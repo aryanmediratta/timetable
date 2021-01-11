@@ -17,14 +17,14 @@ function costFunction (timetable) {
         }
         period.forEach(tuple => {
             const { teacherId, classId, label, uniqueIndex } = tuple;
-            allTeachers.indexOf(teacherId) > -1 ? costForTeachers+=5 : allTeachers.push(teacherId);
-            allClasses.indexOf(classId) > -1 ? costForClasses+=5 : allClasses.push(classId);
-            allLabels.indexOf(label) > -1 ? costForLabels+=200 : allLabels.push(label);
+            allTeachers.indexOf(teacherId) > -1 ? costForTeachers+=3 : allTeachers.push(teacherId);
+            allClasses.indexOf(classId) > -1 ? costForClasses+=3 : allClasses.push(classId);
+            allLabels.indexOf(label) > -1 ? costForLabels+=100 : allLabels.push(label);
             clashPerWeek.indexOf(uniqueIndex) > -1 ? uniqueClashesPerWeek++ : clashPerWeek.push(uniqueIndex);
         });
     });
     // console.log('TOTAL', costForClasses + costForTeachers + costForLabels)
-    return costForClasses + costForTeachers + costForLabels + uniqueClashesPerWeek;
+    return (costForClasses + costForTeachers + costForLabels + uniqueClashesPerWeek);
 }
 
 

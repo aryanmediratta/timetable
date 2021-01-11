@@ -217,7 +217,7 @@ const specificClassData6 = {
             periodsPerWeek: 3,
         },
         {
-            teacherId: 4,
+            teacherId: 2,
             periodsPerWeek: 4,
         },
         {
@@ -286,9 +286,10 @@ module.exports = {
     NUM_CLASSES: 7,
     NUM_TEACHERS: 10,
     NUM_PERIODS: 30,
-    NUM_CHROMOSOMES: 80,
-    NUM_GENERATIONS: 5000,
-    MUTATION_RATE: 60,
+    NUM_CHROMOSOMES: 32,
+    NUM_GENERATIONS: 8192,
+    MUTATION_RATE: 64,
+    POPULATION_RATIO: 0.63,
     DAYS_OF_WEEK,
     specificClassData1,
     specificClassData2,

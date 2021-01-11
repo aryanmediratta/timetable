@@ -1,4 +1,4 @@
-const { NUM_CLASSES, NUM_PERIODS, NUM_GENERATIONS, MUTATION_RATE } = require('./constants');
+const { NUM_CLASSES, NUM_PERIODS, NUM_GENERATIONS, MUTATION_RATE, POPULATION_RATIO } = require('./constants');
 const { costFunction } = require('./calculateFitness');
 const { probability } = require('./utils');
 const { createTimeTables } = require('./generateRandomTimetables');
@@ -40,28 +40,39 @@ function crossTwoParents (parent1, parent2, crossoverPoint, mutationRate) {
 
 // Receives all children + parents, return the average of new gen AND fittest members from the old generation.
 function speciesPropogation (generation) {
-    const costOfTempGeneration = [];
+    const tempGeneration = [];
     let bestFamilyMember;
     generation.forEach(parent => {
         const cost = costFunction(parent);
-        costOfTempGeneration.push({
+        tempGeneration.push({
             cost: cost,
             parent: parent,
         });
     });
-    costOfTempGeneration.sort((a,b) => a.cost - b.cost);
-    const costOfBestMemberInFamily = costOfTempGeneration[0].cost;
+    tempGeneration.sort((a,b) => a.cost - b.cost);
+    const costOfBestMemberInFamily = tempGeneration[0].cost;
     const fittestMembers = [];
     let total = 0;
-    costOfTempGeneration.forEach((member, id) => {
-        if (id < costOfTempGeneration.length/2) {
-            total = total + member.cost;
-            fittestMembers.push(member.parent);
+    const sizeOfGoodPopulation = (tempGeneration.length/2) * POPULATION_RATIO;
+    const sizeOfBadPopulation = (tempGeneration.length/2 - sizeOfGoodPopulation);
+    for (i = 0; i < tempGeneration.length-1; i++) {
+        if (i < sizeOfGoodPopulation) {
+            total = total + tempGeneration[i].cost;
+            fittestMembers.push(tempGeneration[i].parent);
+        } else if (i > sizeOfGoodPopulation && i < (sizeOfGoodPopulation + sizeOfBadPopulation)) {
+            // Random member ->
+            const randomMember1 = tempGeneration[Math.floor(Math.random() * tempGeneration.length)];
+            total = total + randomMember1.cost;
+            fittestMembers.push(randomMember1.parent);
+
+            // One of Worst Members.
+            // total = total + tempGeneration[tempGeneration.length-1-i].cost;
+            // fittestMembers.push(tempGeneration[tempGeneration.length-1-i].parent);
         }
-    });
-    if (costOfBestMemberInFamily < 10) {
-        bestFamilyMember = fittestMembers[0];
     }
+    // if (costOfBestMemberInFamily < 10) {
+        bestFamilyMember = fittestMembers[0];
+    // }
     return {
         averageCostOfGeneration: total/fittestMembers.length,
         newGeneration: fittestMembers,
@@ -70,6 +81,42 @@ function speciesPropogation (generation) {
     };
 }
 
+
+// Roulette Wheel Selection function. Selects member from population by probability of selection. Returns one member.
+function pickAWinningItem (population) {
+    const winner = Math.random();
+    let threshold = 0;
+    for (let i = 0; i < population.length; i++) {
+        threshold += parseFloat(population[i].probabilityOfSelection);
+        if (threshold > winner) {
+            return population[i].data;
+        }
+    }
+}
+
+
+// Find probability of selection of each member in population, returns population. 
+function addCostAndProbabilityOfSelectionToPopulation (population) {
+    const populationWithCost = [];
+    let sum = 0;
+    population.forEach(parent => {
+        const cost = costFunction(parent);
+        sum = sum + cost;
+        populationWithCost.push({
+            cost: cost,
+            data: parent,
+        });
+    });
+    const populationWithProbability = [];
+    populationWithCost.forEach(member => {
+        populationWithProbability.push({
+            cost: member.cost,
+            data: member.data,
+            probabilityOfSelection: (member.cost/sum), 
+        });
+    });
+    return populationWithProbability;
+}
 
 function easy () {
     let [population, avgCost] = createTimeTables();
@@ -81,11 +128,9 @@ function easy () {
     const mutationRate = (MUTATION_RATE/100);
     while ((costOfBestMemberInFamily > 0) && (index <= NUM_GENERATIONS)) {
         const tempGeneration = [];
-        const lengthOfPop = population.length;
-        for (k = 0; k < lengthOfPop; k+=2) {
-            // Ideally remove this random member from the population so we have a crossover between all the parents.
-            const randomMember = population[Math.floor(Math.random() * population.length)];
-            const family = crossTwoParents(population[k], randomMember, null, mutationRate);
+        for (k = 0; k < population.length/2; k++) {
+            const randomMember1 = population[Math.floor(Math.random() * population.length)];
+            const family = crossTwoParents(randomMember1, population[k], null, mutationRate);
             tempGeneration.push(...family);
         }
         const newGen = speciesPropogation(tempGeneration);
@@ -104,7 +149,7 @@ function easy () {
     return bestFamilyMember;
 }
 
-// easy();
+easy();
 
 module.exports = {
     easy,
