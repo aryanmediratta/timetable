@@ -6,7 +6,7 @@ import { post } from '../utils';
 import SimpleSnackbar from '../utils/Popup';
 
 require('../../styles/Login.css');
-
+ 
 
 class Register extends React.Component {
 
