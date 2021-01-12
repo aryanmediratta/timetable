@@ -26,11 +26,6 @@ class CollapsibleSections extends React.Component {
 
 
   render = () => {
-    /*
-     * Only show the preview when we have some prefills and its not collapsed
-     */
-    let preview = '';
-    if (this.props.preFills && !this.state.showing) preview = this.props.preFills.join(', ');
     return (
       <div className="collapsibleSection pointer">
         <div onClick={()=>this.toggle()} className='header'>
@@ -44,6 +39,7 @@ class CollapsibleSections extends React.Component {
     );
   }
 }
+
 /*
  * Props Type Checking
  */
