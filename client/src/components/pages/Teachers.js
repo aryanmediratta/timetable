@@ -1,19 +1,25 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, TextField } from '@material-ui/core';
-import { element } from 'prop-types';
+import { Button, TextField, IconButton } from '@material-ui/core';
+import Dropdown from '../partials/Dropdown';
+
+import CloseIcon from '@material-ui/icons/Close';
 
 require('../../styles/Login.css');
+
+const options = [
+    { value: '1', label: '11-A' },
+    { value: '2', label: '11-B' },
+    { value: '3', label: '11-C' },
+    { value: '4', label: '11-D' },
+    { value: '5', label: '11-E' },
+];
 
 class Teachers extends React.Component {
     constructor(props) {
         super(props)
-
         this.state = {
-            input1: '',
-            input2: '',
-            input3: '',
-            countArr: [],
+            teachersList: [],
         }
     }
     
@@ -21,29 +27,26 @@ class Teachers extends React.Component {
         e.preventDefault();
     }
 
-    handleInputChange = (e, index) => {
-        const { name, value } = e.target;
-        const list = [...this.state.countArr];
-        list[index][name] = value;
-        this.setState({ countArr: list });
-    }
 
     addTeacher = () => {
         this.setState({
-            countArr : [...this.state.countArr, {input1: '', input2: '', input3: ''}]
+            teachersList : [...this.state.teachersList, {name: '', subject: '', classesList: []}]
         })
     }
 
+    updateOptions = (e, i) => {
+        const { teachersList } = this.state;
+        teachersList[i].classesList = e;
+        this.setState({teachersList});
+    }
+
     removeTeacher = index => {
-        const list = [...this.state.countArr];
-        list.splice(index, 1);
-        this.setState({countArr: list});
+        const teachersList = [...this.state.teachersList];
+        teachersList.splice(index, 1);
+        this.setState({ teachersList });
     }
 
     render() {
-
-        // const { countArr } = this.state
-
         return ( 
             <div>
                 <form onSubmit={this.submitHandler}>
@@ -60,33 +63,33 @@ class Teachers extends React.Component {
                         + Add Teacher
                         </Button>
                         </div>
-                        <br />
-                        <br />
-
                         <div>
-                            { this.state.countArr.map((e,i) => {
+                            { this.state.teachersList.map((e,i) => {
                                 return (
                                 <div>
                                     <div>
-                                        <h1>Teacher {i+1}</h1>
-                                        <Button
-                                            classes="login-button"
-                                            color="primary"
-                                            variant="contained"
-                                            type="submit"
-                                            onClick={()=> this.removeTeacher(i)}
-                                        >
-                                        Remove
-                                        </Button>
+                                        <br />
+                                        <br />
+                                        <br />
+                                        Teacher {i+1}
+                                        <span>
+                                        <IconButton size="small" aria-label="add teacher" color="inherit" onClick={() => this.removeTeacher(i)}>
+                                            <CloseIcon fontSize="small" />
+                                        </IconButton>
+                                        </span>
                                     </div>
                                     <br />
                                     <div>
                                         <TextField
                                         className="text-field"
-                                        label="Enter Input 1"
+                                        label="Enter Teacher Name"
                                         variant="outlined"
-                                        // value={e.input1}
-                                        onChange={e => handleInputChange(e,i)}
+                                        value={e.name}
+                                        onChange={(element) => {
+                                            const teachersList = [...this.state.teachersList];
+                                            teachersList[i] = { ...teachersList[i], name: element.target.value };
+                                            this.setState({ teachersList });
+                                          }}
                                         size="small"
                                         />
                                     </div>
@@ -96,23 +99,25 @@ class Teachers extends React.Component {
                                         className="text-field"
                                         label="Enter Input 2"
                                         variant="outlined"
-                                        // value={e.input2}
-                                        onChange={e => handleInputChange(e,i)}
+                                        value={e.input2}
+                                        oonChange={(element) => {
+                                            const teachersList = [...this.state.teachersList];
+                                            teachersList[i] = { ...teachersList[i], subject: element.target.value };
+                                            this.setState({ teachersList });
+                                          }}
                                         size="small"
                                         />
                                     </div>
                                     <br />
-                                    <div>
-                                        <TextField
-                                        className="text-field"
-                                        label="Enter Input 3"
-                                        variant="outlined"
-                                        // value={e.input3}
-                                        onChange={e => handleInputChange(e,i)}
-                                        size="small"
-                                        />
-                                    </div>
-                                    <br />
+                                    <span>Classes taught by teacher
+                                    <Dropdown
+                                        isMulti={true}
+                                        options={options}
+                                        onChange={el => this.updateOptions(el,i)}
+                                        value={e.classesList}
+                                        isSearchable={false}
+                                    />
+                                    </span>
                                 </div>
                                 );
                                 }) 
