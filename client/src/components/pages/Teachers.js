@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button, TextField, IconButton } from '@material-ui/core';
 import Dropdown from '../partials/Dropdown';
+import CollapsibleSections from '../partials/CollapsibleSections';
 
 import CloseIcon from '@material-ui/icons/Close';
 
@@ -47,7 +48,7 @@ class Teachers extends React.Component {
     }
 
     render() {
-        return ( 
+        return (
             <div>
                 <form onSubmit={this.submitHandler}>
                     <div>
@@ -67,10 +68,8 @@ class Teachers extends React.Component {
                             { this.state.teachersList.map((e,i) => {
                                 return (
                                 <div>
+                                    <CollapsibleSections title={e.name || `Teacher Number ${i+1}`} show={false}>
                                     <div>
-                                        <br />
-                                        <br />
-                                        <br />
                                         Teacher {i+1}
                                         <span>
                                         <IconButton size="small" aria-label="add teacher" color="inherit" onClick={() => this.removeTeacher(i)}>
@@ -97,9 +96,9 @@ class Teachers extends React.Component {
                                     <div>
                                         <TextField
                                         className="text-field"
-                                        label="Enter Input 2"
+                                        label="Enter Subject Taught"
                                         variant="outlined"
-                                        value={e.input2}
+                                        value={e.subject}
                                         oonChange={(element) => {
                                             const teachersList = [...this.state.teachersList];
                                             teachersList[i] = { ...teachersList[i], subject: element.target.value };
@@ -118,6 +117,7 @@ class Teachers extends React.Component {
                                         isSearchable={false}
                                     />
                                     </span>
+                                    </CollapsibleSections>
                                 </div>
                                 );
                                 }) 
