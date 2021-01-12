@@ -280,8 +280,6 @@ const specificClassData7 = {
     ]
 };
 
-const DAYS_OF_WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
-
 module.exports = {
     NUM_CLASSES: 7,
     NUM_TEACHERS: 10,
@@ -290,7 +288,6 @@ module.exports = {
     NUM_GENERATIONS: 8192,
     MUTATION_RATE: 64,
     POPULATION_RATIO: 0.33,
-    DAYS_OF_WEEK,
     specificClassData1,
     specificClassData2,
     specificClassData3,

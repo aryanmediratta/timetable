@@ -68,11 +68,11 @@ function speciesPropogation (generation) {
             // One of Worst Members.
             // total = total + tempGeneration[tempGeneration.length-1-i].cost;
             // fittestMembers.push(tempGeneration[tempGeneration.length-1-i].parent);
-        }
+        } else break;
     }
-    // if (costOfBestMemberInFamily < 10) {
+    if (costOfBestMemberInFamily < 20) {
         bestFamilyMember = fittestMembers[0];
-    // }
+    }
     return {
         averageCostOfGeneration: total/fittestMembers.length,
         newGeneration: fittestMembers,

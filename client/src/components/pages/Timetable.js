@@ -1,6 +1,6 @@
 import React from 'react';
 import { get } from '../utils';
-import { getTimetableForEntity } from '../utils';
+import { getTimetableForEntity, createTimetableForRendering } from '../utils';
 import { Button, TextField } from '@material-ui/core';
 
 import TimetableRow from '../partials/TimetableRow';
@@ -10,21 +10,13 @@ require('../../styles/Timetable.css');
 class Timetable extends React.Component {
     state = {
         timetable : [],
-        numPeriods: 0,
+        numPeriods: 6,
         entityId: 1,
     };
 
-    splitToChunks(array, parts) {
-        let result = [];
-        for (let i = parts; i > 0; i--) {
-            result.push(array.splice(0, Math.ceil(array.length / i)));
-        }
-        return result;
-    }
-
     updateTimetable = () => {
         const timetable = getTimetableForEntity(this.state.allData, 'class', parseInt(this.state.entityId || 1, 10));
-        const chunks = this.splitToChunks(timetable, 5);
+        const chunks = createTimetableForRendering(timetable, this.state.numPeriods);
         console.log('chunks', chunks);
         this.setState({
             timetable: chunks,
@@ -39,7 +31,7 @@ class Timetable extends React.Component {
         .then((res) => {
             console.log('res', res);
             const timetable = getTimetableForEntity(res.timetable, 'class', parseInt(this.state.entityId || 1, 10));
-            const chunks = this.splitToChunks(timetable, 5);
+            const chunks = createTimetableForRendering(timetable, this.state.numPeriods);
             console.log('chunks', chunks);
             this.setState({
                 allData: res.timetable,
@@ -85,9 +77,9 @@ class Timetable extends React.Component {
                     <div>
                         {
                             this.state.timetable.map((period) =>
-                            <div id="timetable-row">
-                            <TimetableRow row={period} />
-                            </div>
+                                <div id="timetable-row">
+                                    <TimetableRow row={period} />
+                                </div>
                             )
                         }
                     </div>

@@ -11,7 +11,7 @@ function costFunction (timetable) {
     timetable.forEach((period, periodNumber) => {
         const allClasses = [];
         const allTeachers = [];
-        if ((periodNumber+1) % (6) === 0) {
+        if ((periodNumber) % (6) === 0) {
             // console.log('Resetting clashes ----------------------------------------------');
             clashPerWeek = [];
         }

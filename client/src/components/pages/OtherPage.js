@@ -4,7 +4,7 @@ import { Button } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 
 import { post } from '../utils';
-
+import Dropdown from '../partials/Dropdown';
 
 class OtherPage extends React.Component {
 
@@ -49,6 +49,11 @@ class OtherPage extends React.Component {
                   onChange={e => this.setState({ post: e.target.value })}
                   size="small"
                 />
+                <br/>
+                <br/>
+                <Dropdown isMulti={true} showAnimations={true} />
+                <br/>
+                <br/>            
                 <Button
                   color="primary"
                   variant="contained"

@@ -8,11 +8,16 @@ class TimetableRow extends React.Component {
     return (
         <div>
             {
-                Object.keys(this.props.row).map((period) => {
+                Object.keys(this.props.row).map((period, index) => {
                     return (
                         <div>
                             <span>
-                                Teacher ID - {this.props.row[period].entityId} &nbsp;
+                                {
+                                    this.props.row[period] && this.props.row[period].entityId ?
+                                        `Teacher No. - ${this.props.row[period].entityId}`
+                                        :
+                                        this.props.row[index]
+                                } &nbsp;
                             </span>
                         </div>
                     )

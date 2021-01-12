@@ -1,3 +1,6 @@
+const DAYS_OF_WEEK = [' ', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+const PERIOD_NUMBER = ['1st Period', '2nd Period', '3rd Period', '4th Period', '5th Period', '6th Period'];
+
 function getTimetableForEntity (timetable, entityType, entityId) {
     const myTable = [];
     let index = 1;
@@ -21,8 +24,23 @@ function getTimetableForEntity (timetable, entityType, entityId) {
             }
         });
     });
-    console.log('My Table', myTable);
     return myTable;
+}
+
+function createTimetableForRendering (timetable, numPeriods) {
+    const result = [];
+    for (let i = 0; i < numPeriods; i++) {
+        let periodRow = [];
+        for (let j = i; j < timetable.length; j=j+numPeriods) {
+            if (j === i) {
+                periodRow.push(PERIOD_NUMBER[i]);
+            }
+            periodRow.push(timetable[j]);
+        }
+        result.push(periodRow);
+    }
+    result.unshift(DAYS_OF_WEEK);
+    return result;
 }
 
 module.exports = {
@@ -47,4 +65,5 @@ module.exports = {
         method: 'POST',
     }),
     getTimetableForEntity,
+    createTimetableForRendering,
 };
