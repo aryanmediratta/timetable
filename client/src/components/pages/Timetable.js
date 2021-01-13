@@ -38,10 +38,6 @@ class Timetable extends React.Component {
         });
     }
 
-    componentDidMount() {
-        this.fetchTimetable();
-    }
-
     render() {
         return (
             <div>
