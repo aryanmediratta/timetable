@@ -28,7 +28,7 @@ signup = (req, res, next) => {
             passwordConfirmation: "required",
         });
     }
-    if (password != passwordConfirmation) {
+    if (password !== passwordConfirmation) {
         errors.push({ password: "mismatch" });
     }
     if (errors.length > 0) {
