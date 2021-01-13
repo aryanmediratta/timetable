@@ -8,7 +8,7 @@ import SimpleSnackbar from '../utils/Popup';
 import { registerUser } from "../../actions/authActions";
 
 require('../../styles/Login.css');
-
+ 
 
 class Register extends React.Component {
 

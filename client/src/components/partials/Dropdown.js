@@ -9,6 +9,8 @@ import makeAnimated from 'react-select/animated';
 
 const animatedComponents = makeAnimated();
 
+require('../../styles/Dropdown.css');
+
 const hardcodedOptions = [
     { value: 'chocolate', label: 'Chocolate' },
     { value: 'strawberry', label: 'Strawberry' },
@@ -34,7 +36,7 @@ const Dropdown = ({
                 isMulti={isMulti}
                 name={name}
                 options={options}
-                className={className}
+                className={`dropdown ${className}`}
                 components={showAnimations ? animatedComponents : null}
                 isClearable={isClearable}
                 isSearchable={isSearchable}
@@ -63,7 +65,7 @@ Dropdown.propTypes = {
 };
 
 Dropdown.defaultProps = {
-    defaultValues: [hardcodedOptions[2], hardcodedOptions[3]],
+    defaultValues: [],
     isMulti: false,
     name: 'select',
     options: hardcodedOptions,

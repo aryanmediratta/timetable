@@ -9,7 +9,6 @@ class MainPage extends React.Component {
     }
 
     componentDidMount() {
-        console.log('Mounting component');
         this.callApi();
       }
 
