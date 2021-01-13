@@ -5,7 +5,7 @@ import { get } from '../utils';
 
 class MainPage extends React.Component {
     state = {
-
+      response: '',
     }
 
     componentDidMount() {
@@ -16,7 +16,10 @@ class MainPage extends React.Component {
         get('/api/hello')
           .then(res => {
             this.setState({response: res.express});
-          });
+          })
+          .catch(err => {
+            this.setState({response: err});
+          })
       }
 
     render() {
@@ -26,6 +29,9 @@ class MainPage extends React.Component {
                 <Link to="/home" > Home </Link>
                 <br/>
                 <Link to="/login" > Login </Link>
+                <br />
+                {this.state.response}
+                <br />
                 <Timetable />
             </div>
         )

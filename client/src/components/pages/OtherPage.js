@@ -1,8 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@material-ui/core';
-import TextField from '@material-ui/core/TextField';
+import { TextField } from '@material-ui/core';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
+import { logoutUser } from '../../actions/authActions';
 import { post } from '../utils';
 import Dropdown from '../partials/Dropdown';
 
@@ -29,7 +32,6 @@ class OtherPage extends React.Component {
             }
           });
       };
-    
     render() {
         return(
             <div>
@@ -49,6 +51,7 @@ class OtherPage extends React.Component {
                   onChange={e => this.setState({ post: e.target.value })}
                   size="small"
                 />
+                <h2>{this.props.auth && this.props.auth.user && this.props.auth.user.email}</h2>
                 <br/>
                 <br/>
                 <Dropdown isMulti={true} showAnimations={true} />
@@ -62,10 +65,36 @@ class OtherPage extends React.Component {
                   Save
                 </Button>
                 </form>
+                <br />
+                <br/>
+                <Button
+                  classes="login-button"
+                  color="primary"
+                  variant="contained"
+                  type="submit"
+                  onClick={this.props.logoutUser}
+                >
+                Logout
+                </Button>
                 <p>{this.state.responseToPost}</p>
             </div>
         )
     }
 }
 
-export default OtherPage;
+
+OtherPage.propTypes = {
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+  errors: state.errors,
+});
+
+const mapDispatchToProps = {
+  logoutUser: logoutUser,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(OtherPage);

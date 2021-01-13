@@ -12,6 +12,7 @@ class Timetable extends React.Component {
         timetable : [],
         numPeriods: 6,
         entityId: 1,
+        loading: false,
     };
 
     updateTimetable = () => {
@@ -25,6 +26,7 @@ class Timetable extends React.Component {
     fetchTimetable = () => {
         this.setState({
             timetable: [],
+            loading: true,
         });
         get('/api/fetch_static_timetable')
         .then((res) => {
@@ -34,6 +36,7 @@ class Timetable extends React.Component {
                 allData: res.timetable,
                 timetable: chunks,
                 numPeriods: res.numPeriods/5,
+                loading: false,
             });
         });
     }
@@ -65,7 +68,7 @@ class Timetable extends React.Component {
                 <br/> <br/>
                 <h2>Timetable for Class - {this.state.entityId || 1}</h2>
                 {
-                    this.state.timetable && this.state.timetable.length > 0 ?
+                    this.state.timetable && this.state.timetable.length > 0 &&
                     <div>
                         {
                             this.state.timetable.map((period) =>
@@ -75,7 +78,9 @@ class Timetable extends React.Component {
                             )
                         }
                     </div>
-                    :
+                }
+                {
+                    this.state.loading === true &&
                     <h3>Loading, Please wait</h3>
                 }
             </div>

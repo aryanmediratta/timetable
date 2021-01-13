@@ -15,7 +15,7 @@ module.exports = {
         historyApiFallback: true,
         overlay: true,
         open: true,
-        proxy: { "/api/**": { target: 'http://localhost:5000', secure: false, changeOrigin: true }  }
+        proxy: { "/api/**": { target: 'http://localhost:5000', secure: true, changeOrigin: true }  }
     },
     module: {
         rules: [

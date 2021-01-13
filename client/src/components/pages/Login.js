@@ -1,9 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button, TextField } from '@material-ui/core';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
-import { post } from '../utils';
+import { loginUser } from '../../actions/authActions';
 import SimpleSnackbar from '../utils/Popup';
+
 require('../../styles/Login.css');
 
 
@@ -21,32 +24,34 @@ class Login extends React.Component {
             showPopup: false,
         });
     };
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.auth.isAuthenticated) {
+            this.props.history.push('/home'); // push user to home when they login
+        }
+        if (nextProps.errors) {
+            this.setState({
+                errors: nextProps.errors
+            });
+        }
+    }
+
+    componentDidMount() {
+        console.log('Mounting Login.js')
+        // If logged in and user navigates to Login page, should redirect them to home
+        if (this.props.auth.isAuthenticated) {
+            this.props.history.push('/home');
+        }
+    }
+
       
-    handleSubmit = e => {
+    handleSubmit = async e => {
         e.preventDefault();
         const data = {
             email: this.state.email,
             password: this.state.password,
         };
-
-        post('/api/signin', data)
-            .then((res) => {
-                const statusCode = res.status;
-                // const body = res.json();
-                console.log('StatusCode', statusCode);
-                // console.log('body!', body)
-                if (statusCode === 422 || statusCode === 404 || statusCode === 400 || statusCode === 500) {
-                    this.setState({
-                        // response: body.errors[0],
-                        showPopup: true,
-                    });
-                } else if (statusCode === 200) {
-                    this.setState({
-                        // response: body.token,
-                        showPopup: true,
-                    });
-                }
-        });
+        this.props.loginUser(data);
     };
 
     render() {
@@ -103,4 +108,19 @@ class Login extends React.Component {
     }
 }
 
-export default Login;
+Login.propTypes = {
+    loginUser: PropTypes.func.isRequired,
+    auth: PropTypes.object.isRequired,
+    errors: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+    auth: state.auth,
+    errors: state.errors
+});
+
+const mapDispatchToProps = {
+    loginUser: loginUser,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

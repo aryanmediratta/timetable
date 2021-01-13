@@ -1,9 +1,11 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { Button, TextField } from '@material-ui/core';
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
-import { post } from '../utils';
 import SimpleSnackbar from '../utils/Popup';
+import { registerUser } from "../../actions/authActions";
 
 require('../../styles/Login.css');
  
@@ -19,6 +21,14 @@ class Register extends React.Component {
         showPopup: false,
     };
 
+    componentDidMount() {
+        // If logged in and user navigates to Register page, should redirect them to home
+        if (this.props.auth.isAuthenticated) {
+            this.props.history.push('/home');
+        }
+    }
+    
+
     onClose = () => {
         this.setState({
             showPopup: false,
@@ -33,25 +43,7 @@ class Register extends React.Component {
             passwordConfirmation: this.state.passwordConfirmation,
             name: this.state.name,
         };
-
-        post('/api/signup', data)
-            .then((res) => {
-                const statusCode = res.status;
-                // const body = res.json();
-                console.log('StatusCode', statusCode);
-                // console.log('body!', body)
-                if (statusCode === 422 || statusCode === 404 || statusCode === 400 || statusCode === 500) {
-                    this.setState({
-                        // response: body.errors[0],
-                        showPopup: true,
-                    });
-                } else if (statusCode === 200) {
-                    this.setState({
-                        // response: body.token,
-                        showPopup: true,
-                    });
-                }
-        });
+        this.props.registerUser(data);
     };
 
     render() {
@@ -125,4 +117,19 @@ class Register extends React.Component {
     }
 }
 
-export default Register;
+Register.propTypes = {
+    registerUser: PropTypes.func.isRequired,
+    auth: PropTypes.object.isRequired,
+    errors: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+    auth: state.auth,
+    errors: state.errors
+});
+
+const mapDispatchToProps = {
+    registerUser: registerUser,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Register));
