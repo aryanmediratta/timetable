@@ -5,9 +5,7 @@ import CloseIcon from '@material-ui/icons/Close';
 export default function Popup(props) {
     const [open, setOpen] = useState(false);
   
-
     useEffect(() => {
-        console.log('Mounting Component');
         setOpen(true);
     }, []);
 

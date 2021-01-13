@@ -35,9 +35,13 @@ class Teachers extends React.Component {
         })
     }
 
-    updateOptions = (e, i) => {
+    updateOptions = (_, action, i) => {
         const { teachersList } = this.state;
-        teachersList[i].classesList = e;
+        if (action.action === 'select-option') {
+            teachersList[i].classesList.push(action.option);
+        } else if (action.action === 'remove-value') {
+            teachersList[i].classesList = teachersList[i].classesList.filter(item => item.value !== action.removedValue.value)
+        }
         this.setState({teachersList});
     }
 
@@ -99,7 +103,7 @@ class Teachers extends React.Component {
                                         label="Enter Subject Taught"
                                         variant="outlined"
                                         value={e.subject}
-                                        oonChange={(element) => {
+                                        onChange={(element) => {
                                             const teachersList = [...this.state.teachersList];
                                             teachersList[i] = { ...teachersList[i], subject: element.target.value };
                                             this.setState({ teachersList });
@@ -112,11 +116,30 @@ class Teachers extends React.Component {
                                     <Dropdown
                                         isMulti={true}
                                         options={options}
-                                        onChange={el => this.updateOptions(el,i)}
+                                        onChange={(option, action) => this.updateOptions(option, action, i)}
                                         value={e.classesList}
-                                        isSearchable={false}
+                                        isSearchable={true}
+                                        showAnimations
                                     />
                                     </span>
+                                    {e.classesList && e.classesList.length > 0 && e.classesList.map((teacher, index) => (
+                                        <div>
+                                            <br/>
+                                            <TextField
+                                        className="text-field"
+                                        label={`Enter periods per week for ${teacher.label}`}
+                                        variant="outlined"
+                                        value={teacher.periodsPerWeek}
+                                        onChange={(element) => {
+                                            const teachersList = [...this.state.teachersList];
+                                            const classesList = teachersList[i].classesList;
+                                            classesList[index] = { ...classesList[index], periodsPerWeek: element.target.value };
+                                            this.setState({ teachersList });
+                                          }}
+                                        size="small"
+                                        />
+                                        </div>
+                                    ))}
                                     </CollapsibleSections>
                                 </div>
                                 );

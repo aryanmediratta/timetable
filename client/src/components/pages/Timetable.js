@@ -17,7 +17,6 @@ class Timetable extends React.Component {
     updateTimetable = () => {
         const timetable = getTimetableForEntity(this.state.allData, 'class', parseInt(this.state.entityId || 1, 10));
         const chunks = createTimetableForRendering(timetable, this.state.numPeriods);
-        console.log('chunks', chunks);
         this.setState({
             timetable: chunks,
         });
@@ -29,10 +28,8 @@ class Timetable extends React.Component {
         });
         get('/api/fetch_static_timetable')
         .then((res) => {
-            console.log('res', res);
             const timetable = getTimetableForEntity(res.timetable, 'class', parseInt(this.state.entityId || 1, 10));
             const chunks = createTimetableForRendering(timetable, this.state.numPeriods);
-            console.log('chunks', chunks);
             this.setState({
                 allData: res.timetable,
                 timetable: chunks,
@@ -42,7 +39,6 @@ class Timetable extends React.Component {
     }
 
     componentDidMount() {
-        console.log('mounting')
         this.fetchTimetable();
     }
 

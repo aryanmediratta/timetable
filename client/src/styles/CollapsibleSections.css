@@ -12,12 +12,10 @@
 }
 
 .pointer {
-    display: inline;
     cursor: pointer;
 }
 
 .content {
-    cursor: pointer;
     border-left: solid 1px #f2f2f2;
     border-right: solid 1px #f2f2f2;
     border-bottom: solid 1px #f2f2f2;

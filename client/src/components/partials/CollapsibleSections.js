@@ -27,8 +27,8 @@ class CollapsibleSections extends React.Component {
 
   render = () => {
     return (
-      <div className="collapsibleSection pointer">
-        <div onClick={()=>this.toggle()} className='header'>
+      <div className="collapsibleSection">
+        <div onClick={()=>this.toggle()} className='header pointer'>
             {this.props.title}</div>
         {this.state.showing ? (
             <div className='content'>
