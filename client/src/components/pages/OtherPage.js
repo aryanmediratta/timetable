@@ -39,6 +39,8 @@ class OtherPage extends React.Component {
                 <Link to="/" > Main </Link>
                 <br/>
                 <Link to="/login" > Login </Link>
+                <br/>
+                <Link to="/addTeacher" > Add Teachers </Link>
                 <p>{this.state.response}</p>
                 <form onSubmit={this.handleSubmit}>
                 <p>
@@ -51,8 +53,7 @@ class OtherPage extends React.Component {
                   onChange={e => this.setState({ post: e.target.value })}
                   size="small"
                 />
-                <h2>{this.props.auth && this.props.auth.user && this.props.auth.user.email}</h2>
-                <br/>
+                <h2>User Email - {this.props.auth && this.props.auth.user && this.props.auth.user.email}</h2>
                 <br/>
                 <Dropdown isMulti={true} showAnimations={true} />
                 <br/>
