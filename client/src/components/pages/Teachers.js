@@ -23,7 +23,7 @@ class Teachers extends React.Component {
         super(props)
         this.state = {
             teachersList: [],
-            postResponse: 'LOLOLOL',
+            postResponse: 'Teachers Response',
         }
     }
     
@@ -44,7 +44,6 @@ class Teachers extends React.Component {
             }), ()=> console.log(this.state.response);
         });
     }
-
 
     addTeacher = () => {
         this.setState({
