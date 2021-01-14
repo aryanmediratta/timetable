@@ -6,6 +6,8 @@ import CollapsibleSections from '../partials/CollapsibleSections';
 
 import CloseIcon from '@material-ui/icons/Close';
 
+import { post } from '../utils'
+
 require('../../styles/Login.css');
 
 const options = [
@@ -21,11 +23,26 @@ class Teachers extends React.Component {
         super(props)
         this.state = {
             teachersList: [],
+            postResponse: 'LOLOLOL',
         }
     }
     
     submitHandler = e => {
         e.preventDefault();
+    }
+
+    saveCall = () => {
+        const data = {
+            lol: this.state.postResponse 
+        }
+        post('/api/save', data)
+        .then(res => res.json())
+        .then((res)  => {
+            console.log(this.state.postResponse)
+            this.setState({
+                postResponse: res.message,
+            }), ()=> console.log(this.state.response);
+        });
     }
 
 
@@ -146,6 +163,19 @@ class Teachers extends React.Component {
                                 }) 
                             }
                         </div>
+                    </div>
+                    <div>
+                        {this.state.teachersList.length > 0 &&
+                        <Button
+                            classes="login-button"
+                            color="primary"
+                            variant="contained"
+                            type="submit"
+                            onClick={this.saveCall}
+                        >
+                        Save
+                        </Button>
+                        }   
                     </div>
                 </form>
             </div>
