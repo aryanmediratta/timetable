@@ -5,6 +5,7 @@ function getTimetableForEntity (timetable, entityType, entityId) {
     const myTable = [];
     let index = 1;
     timetable.forEach(period => {
+        let flag = false;
         period.forEach(tuple => {
             const { classId, teacherId, label } = tuple;
             let tempEntity = null;
@@ -20,9 +21,18 @@ function getTimetableForEntity (timetable, entityType, entityId) {
                     label: label,
                     periodNo: index,
                 });
+                flag = true;
                 index < 6 ? index++ : index = 1;
             }
         });
+        if (flag == false) {
+            myTable.push({
+                entityId: '',
+                label:'',
+                periodNo: index,
+            });
+            index < 6 ? index++ : index = 1;
+        }
     });
     return myTable;
 }
