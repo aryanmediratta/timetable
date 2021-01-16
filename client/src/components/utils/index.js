@@ -27,8 +27,8 @@ function getTimetableForEntity (timetable, entityType, entityId) {
         });
         if (flag == false) {
             myTable.push({
-                entityId: '',
-                label:'',
+                entityId: ' ',
+                label:' ',
                 periodNo: index,
             });
             index < 6 ? index++ : index = 1;

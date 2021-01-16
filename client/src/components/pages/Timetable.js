@@ -66,7 +66,7 @@ class Timetable extends React.Component {
                     Generate New TimeTable
                 </Button>
                 <br/> <br/>
-                <h2>Timetable for Class - {this.state.entityId || 1}</h2>
+                <h2>Timetable for Teacher - {this.state.entityId || 1}</h2>
                 {
                     this.state.timetable && this.state.timetable.length > 0 &&
                     <div>
@@ -79,6 +79,7 @@ class Timetable extends React.Component {
                         }
                     </div>
                 }
+                
                 {
                     this.state.loading === true &&
                     <h3>Loading, Please wait</h3>
