@@ -12,6 +12,8 @@ import Modal from '../partials/Modal';
 import { addNewTeacher, getAllTeachers } from '../../actions/teacherActions';
 import Table from '../partials/Table';
 
+import { post } from '../utils'
+
 require('../../styles/Login.css');
 
 const options = [
@@ -38,6 +40,7 @@ class Teachers extends React.Component {
             showModal: false,
             newTeacher: {},
             teachersList: [],
+            postResponse: 'Teachers Response',
         }
     }
 
@@ -73,6 +76,19 @@ class Teachers extends React.Component {
         })
     }
 
+    saveCall = () => {
+        const data = {
+            lol: this.state.postResponse 
+        }
+        post('/api/save', data)
+        .then(res => res.json())
+        .then((res)  => {
+            console.log(this.state.postResponse)
+            this.setState({
+                postResponse: res.message,
+            }), ()=> console.log(this.state.response);
+        });
+    }
 
     addTeacher = () => {
         this.setState({

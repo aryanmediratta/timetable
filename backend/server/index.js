@@ -50,6 +50,15 @@ app.post('/api/world', (req, res) => {
     });
 });
 
+//Teachers.js Save Button POST Call
+app.post('/api/save', (req, res) => {
+    console.log(req.body);
+    res.send({
+        message: `Save Request POSTED!!!!. Have a look at it`,
+    });
+});
+
+
 app.use('/api', authRoutes);
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

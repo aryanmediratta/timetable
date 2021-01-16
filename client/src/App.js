@@ -14,6 +14,7 @@ import Login from './components/pages/Login';
 import Register from './components/pages/Register';
 import Header from './components/partials/Header';
 import Teachers from './components/pages/Teachers';
+import Classes from './components/pages/Classes';
 
 
 // Check for token to keep user logged in
@@ -47,6 +48,7 @@ class App extends React.Component {
                             <PrivateRoute exact path='/home' component={OtherPage} />
                             <Route exact path='/login' component={Login}></Route>
                             <Route exact path='/signup' component={Register}></Route>
+                            <Route exact path ='/classes' component={Classes}></Route>
                             <PrivateRoute exact path='/addTeacher' component={Teachers} />
                         </Switch>
                     </BrowserRouter>
