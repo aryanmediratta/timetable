@@ -1,25 +1,24 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, TextField, IconButton } from '@material-ui/core';
+import { Button, TextField } from '@material-ui/core';
 import Dropdown from '../partials/Dropdown';
+import { connect } from 'react-redux';
 
-import CloseIcon from '@material-ui/icons/Close';
-
-import { post } from '../utils'
+import { addNewClasses } from '../../actions/teacherActions';
 
 const options = [
-    { value: '1', label: '1', section: 0 },
-    { value: '2', label: '2', section: 0 },
-    { value: '3', label: '3', section: 0 },
-    { value: '4', label: '4', section: 0 },
-    { value: '5', label: '5', section: 0 },
-    { value: '6', label: '6', section: 0 },
-    { value: '7', label: '7', section: 0 },
-    { value: '8', label: '8', section: 0 },
-    { value: '9', label: '9', section: 0 },
-    { value: '10', label: '10', section: 0 },
-    { value: '11', label: '11', section: 0 },
-    { value: '12', label: '12', section: 0 },
+    { value: '1', label: '1', section: '' },
+    { value: '2', label: '2', section: '' },
+    { value: '3', label: '3', section: '' },
+    { value: '4', label: '4', section: '' },
+    { value: '5', label: '5', section: '' },
+    { value: '6', label: '6', section: '' },
+    { value: '7', label: '7', section: '' },
+    { value: '8', label: '8', section: '' },
+    { value: '9', label: '9', section: '' },
+    { value: '10', label: '10', section: '' },
+    { value: '11', label: '11', section: '' },
+    { value: '12', label: '12', section: '' },
 ];
 
 class Classes extends React.Component {
@@ -33,9 +32,11 @@ class Classes extends React.Component {
 
     submitHandler = e => {
         e.preventDefault();
+        console.log('classes list ->', this.state.classList);
+        this.props.addNewClasses(this.state.classList);
     }
 
-    updateOptions = (option, action) => {
+    updateOptions = (_, action) => {
         let { classList } = this.state;
         if (action.action === 'select-option') {
             classList.push(action.option);
@@ -46,13 +47,14 @@ class Classes extends React.Component {
     }
 
     render() {
-
-        // const renderClasses = [...options];
-        // console.log(renderClasses);
-
         return (
             <div>
-                <div>Papadam</div>
+                <br/>
+                <Link to="/" > Main </Link>
+                <br/>
+                <Link to="/home"> Home </Link>
+                <br/>
+                <Link to="/addTeacher"> Add Teachers </Link>
                 <br />  
                 <div>
                     <span>Select Class
@@ -67,13 +69,13 @@ class Classes extends React.Component {
                     </span>
                     <br />
                     {   this.state.classList.map((e) => (
-                        // this.state.classList[i] == e &&
                     <div>
                         <br /> 
                         <TextField
                             className="text-field"
                             label={`Enter Number of classes for Class ${e.label}`}
                             variant="outlined"
+                            size="small"
                             value={e.section}
                             onChange = {(element) => {
                                 e.section = element.target.value;
@@ -83,10 +85,29 @@ class Classes extends React.Component {
                             }}
                         />
                     </div> ))}
+                    <br />
+                    <Button
+                        color="primary"
+                        variant="contained"
+                        type="submit"
+                        onClick={this.submitHandler}
+                    >
+                    Save
+                    </Button>
                 </div>
             </div>
         );
     }
 }
 
-export default Classes;
+const mapStateToProps = state => ({
+    auth: state.auth,
+    errors: state.errors,
+    email: state.auth.user.email,
+});
+
+const mapDispatchToProps = {
+    addNewClasses: addNewClasses,
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Classes);

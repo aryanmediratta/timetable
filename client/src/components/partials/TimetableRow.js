@@ -15,7 +15,7 @@ class TimetableRow extends React.Component {
                                 {
                                     this.props.row[period] && this.props.row[period].entityId ?
                                         this.props.row[period].entityId === ' ' ? 
-                                        'Free' :
+                                        '  ' :
                                         `${this.props.entityType} No. - ${this.props.row[period].entityId}`
                                         :
                                         this.props.row[index] === ' ' ? ' ': this.props.row[index]

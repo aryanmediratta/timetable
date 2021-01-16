@@ -203,6 +203,8 @@ class Teachers extends React.Component {
                 <br/>
                 <Link to="/home"> Home </Link>
                 <br/>
+                <Link to="/classes"> Add Classes </Link>
+                <br/>
                 {
                     this.state.teachersList && this.state.teachersList.length > 0 &&
                 <Table
@@ -226,7 +228,7 @@ class Teachers extends React.Component {
                     onClick={this.addTeacher}
                 >
                 + Add Teacher
-                </Button>                        
+                </Button>
                 <br/>
             </div>
         );
@@ -252,4 +254,4 @@ const mapDispatchToProps = {
     getAllTeachers: getAllTeachers,
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Teachers);  
+export default connect(mapStateToProps, mapDispatchToProps)(Teachers);

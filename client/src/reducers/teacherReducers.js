@@ -1,7 +1,8 @@
-import { SET_ALL_TEACHERS, ADD_NEW_TEACHER } from "../actions/types";
+import { SET_ALL_TEACHERS, ADD_NEW_TEACHER, ADD_NEW_CLASSES } from "../actions/types";
 
 const initialState = {
     teachersList: [],
+    classList: [],
 };
 
 export default function(state = initialState, action) {
@@ -15,6 +16,12 @@ export default function(state = initialState, action) {
             return {
                 ...state,
                 teachersList: [...state.teachersList, action.payload],
+            };
+        // Modify this
+        case ADD_NEW_CLASSES:
+            return {
+                ...state,
+                classList,
             };
         default:
             return state;

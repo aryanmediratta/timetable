@@ -2,6 +2,7 @@ import {
     GET_ERRORS,
     SET_ALL_TEACHERS,
     ADD_NEW_TEACHER,
+    ADD_NEW_CLASSES,
 } from './types';
 
 import { post, get, constructURL } from '../utils';
@@ -16,7 +17,7 @@ export const addNewTeacher = (userData) => dispatch => {
                 dispatch({
                     type: ADD_NEW_TEACHER,
                     payload: res.newTeacher,
-                });    
+                });
             }
         })
 };
@@ -31,4 +32,22 @@ export const getAllTeachers = (email) => dispatch => {
                 payload: res.teachers,
             });
         });
+}
+
+export const addNewClasses = (classesData) => dispatch => {
+    post('/api/add_new_class', classesData)
+        .then(res => res.json())
+        .then(res => {
+            console.log('res', res);
+            dispatch({
+                type: ADD_NEW_CLASSES,
+                payload: res.classes,
+            });
+        })
+        .catch(res => {
+            dispatch({
+                type: GET_ERRORS,
+                payload: res.newTeacher,
+            });
+        })
 }

@@ -9,8 +9,8 @@ import TimetableRow from '../partials/TimetableRow';
 require('../../styles/Timetable.css');
 
 const options = [
-    {value: 'teacher', label: 'teacher'},
-    {value: 'class', label: 'class'},
+    {value: 'teacher', label: 'Teacher'},
+    {value: 'class', label: 'Class'},
 ];
 
 class Timetable extends React.Component {
@@ -19,11 +19,12 @@ class Timetable extends React.Component {
         numPeriods: 6,
         entityId: 1,
         loading: false,
-        entityType: 'teacher',
+        entityType: options[0],
+        allData: [],
     };
 
     updateTimetable = () => {
-        const timetable = getTimetableForEntity(this.state.allData, this.state.entityType, parseInt(this.state.entityId || 1, 10));
+        const timetable = getTimetableForEntity(this.state.allData, this.state.entityType.value, parseInt(this.state.entityId || 1, 10));
         const chunks = createTimetableForRendering(timetable, this.state.numPeriods);
         this.setState({
             timetable: chunks,
@@ -37,7 +38,7 @@ class Timetable extends React.Component {
         });
         get('/api/fetch_static_timetable')
         .then((res) => {
-            const timetable = getTimetableForEntity(res.timetable, this.state.entityType, parseInt(this.state.entityId || 1, 10));
+            const timetable = getTimetableForEntity(res.timetable, this.state.entityType.value, parseInt(this.state.entityId || 1, 10));
             const chunks = createTimetableForRendering(timetable, this.state.numPeriods);
             this.setState({
                 allData: res.timetable,
@@ -50,7 +51,7 @@ class Timetable extends React.Component {
 
     updateOptions = (option, action) => {
         if (action.action === 'select-option') {
-            this.setState({entityType: option.value}, () => 
+            this.setState({entityType: option}, () => 
             console.log(this.state.entityType));
         }
     }
@@ -79,7 +80,7 @@ class Timetable extends React.Component {
                     }}
                   size="small"
                 />
-                <p>By default, it shows timetable of 1st {this.state.entityType}</p>
+                <p>By default, it shows timetable of 1st {this.state.entityType.label}</p>
                 <Button
                     color="primary"
                     variant="contained"
@@ -89,14 +90,14 @@ class Timetable extends React.Component {
                     Generate New TimeTable
                 </Button>
                 <br/> <br/>
-                <h2>Timetable for {this.state.entityType} - {this.state.entityId || 1}</h2>
+                <h2>Timetable for {this.state.entityType.label} - {this.state.entityId || 1}</h2>
                 {
                     this.state.timetable && this.state.timetable.length > 0 &&
                     <div>
                         {
                             this.state.timetable.map((period) =>
                                 <div id="timetable-row">
-                                    <TimetableRow row={period} entityType={this.state.entityType} />
+                                    <TimetableRow row={period} entityType={this.state.entityType.label} />
                                 </div>
                             )
                         }

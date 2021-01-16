@@ -29,6 +29,10 @@ class MainPage extends React.Component {
                 <Link to="/home" > Home </Link>
                 <br/>
                 <Link to="/login" > Login </Link>
+                <br/>
+                <Link to="/classes"> Add Classes </Link>
+                <br/>
+                <Link to="/addTeacher"> Add Teachers </Link>
                 <br />
                 {this.state.response}
                 <br />
