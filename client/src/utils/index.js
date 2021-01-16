@@ -33,4 +33,22 @@ module.exports = {
         method: 'POST',
     }),
     updateAuthToken,
+
+    constructURL: (baseUrl, queryParams) => {
+        let URL = baseUrl;
+        const params = Object.keys(queryParams);
+        let prefix = '?';
+        let first = true;
+    
+        params.forEach((param) => {
+            prefix = first ? '?' : '&';
+
+            if (queryParams[param]) {
+            first = false;
+            URL = `${URL}${prefix}${param}=${queryParams[param]}`;
+            }
+        });
+        return URL;
+      },
+
 };

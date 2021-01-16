@@ -47,7 +47,7 @@ class App extends React.Component {
                             <PrivateRoute exact path='/home' component={OtherPage} />
                             <Route exact path='/login' component={Login}></Route>
                             <Route exact path='/signup' component={Register}></Route>
-                            <Route exact path='/addTeacher' component={Teachers}></Route>
+                            <PrivateRoute exact path='/addTeacher' component={Teachers} />
                         </Switch>
                     </BrowserRouter>
                 </Provider>

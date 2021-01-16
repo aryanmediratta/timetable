@@ -69,7 +69,6 @@ class OtherPage extends React.Component {
                 <br />
                 <br/>
                 <Button
-                  classes="login-button"
                   color="primary"
                   variant="contained"
                   type="submit"
