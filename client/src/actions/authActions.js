@@ -23,12 +23,9 @@ export const registerUser = (userData, history) => dispatch => {
 
 // Login - get user token
 export const loginUser = (userData) => async (dispatch) => {
-    console.log('userData',userData)
     const req = await post('/api/signin', userData);
     const statusCode = req.status;
-    console.log('StatusCode', statusCode);
     const res = await req.json();
-    console.log('body!', res)
     if (statusCode === 422 || statusCode === 404 || statusCode === 400 || statusCode === 500) {
         dispatch({
             type: GET_ERRORS,
@@ -43,7 +40,6 @@ export const loginUser = (userData) => async (dispatch) => {
             const decoded = jwt_decode(token);
             // Set current user
             dispatch(setCurrentUser(decoded));
-            console.log('If this aint working i know what the issue is ', decoded)
     }
 };
 
@@ -64,6 +60,3 @@ export const logoutUser = () => dispatch => {
         payload: null,
     });
 };
-
-
-// module.exports = loginUser;

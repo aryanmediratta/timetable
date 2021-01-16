@@ -1,10 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button, TextField, IconButton } from '@material-ui/core';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import CloseIcon from '@material-ui/icons/Close';
+
 import Dropdown from '../partials/Dropdown';
 import CollapsibleSections from '../partials/CollapsibleSections';
+import Modal from '../partials/Modal';
 
-import CloseIcon from '@material-ui/icons/Close';
+import { addNewTeacher, getAllTeachers } from '../../actions/teacherActions';
+import Table from '../partials/Table';
 
 import { post } from '../utils'
 
@@ -17,18 +23,57 @@ const options = [
     { value: '4', label: '11-D' },
     { value: '5', label: '11-E' },
 ];
+ 
+const columns = [{
+    Header: 'Name',
+    accessor: 'teacherName' // String-based value accessors!
+  }, {
+    Header: 'Subject',
+    accessor: 'teacherSubject',
+    Cell: props => <span className='number'>{props.value}</span> // Custom cell components!
+  }]
 
 class Teachers extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            showModal: false,
+            newTeacher: {},
             teachersList: [],
             postResponse: 'Teachers Response',
+        }
+    }
+
+    componentDidMount() {
+        this.props.getAllTeachers(this.props.email);
+        console.log('Mounting Teacher page');
+        this.setState({
+            teachersList: this.props.teachersList,
+        });
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.teachersList !== this.props.teachersList) {
+            console.log('Update MAN');
+            this.setState({
+                teachersList: this.props.teachersList
+            });
         }
     }
     
     submitHandler = e => {
         e.preventDefault();
+        const data = {
+            newTeacher: this.state.newTeacher,
+            email: this.props.email,
+        }
+        this.props.addNewTeacher(data);
+    }
+
+    toggleModal = () => {
+        this.setState({
+            showModal: !this.state.showModal,
+        })
     }
 
     saveCall = () => {
@@ -47,139 +92,164 @@ class Teachers extends React.Component {
 
     addTeacher = () => {
         this.setState({
-            teachersList : [...this.state.teachersList, {name: '', subject: '', classesList: []}]
+            newTeacher: {name: '', subject: '', classesList: []},
+            showModal: !this.state.showModal,
         })
     }
 
-    updateOptions = (_, action, i) => {
-        const { teachersList } = this.state;
+    updateOptions = (_, action) => {
+        const { newTeacher } = this.state;
         if (action.action === 'select-option') {
-            teachersList[i].classesList.push(action.option);
+            newTeacher.classesList.push(action.option);
         } else if (action.action === 'remove-value') {
-            teachersList[i].classesList = teachersList[i].classesList.filter(item => item.value !== action.removedValue.value)
+            newTeacher.classesList = newTeacher.classesList.filter(item => item.value !== action.removedValue.value)
         }
-        this.setState({teachersList});
+        this.setState({ newTeacher });
     }
 
-    removeTeacher = index => {
-        const teachersList = [...this.state.teachersList];
-        teachersList.splice(index, 1);
-        this.setState({ teachersList });
+    modalBody = () => {
+        const { newTeacher } = this.state;
+        return (
+            <div>
+            <CollapsibleSections title={newTeacher.name || `Teacher`} show={false}>
+            <div>
+            {newTeacher.name || `Teacher`}
+                <span>
+                <IconButton size="small" aria-label="add teacher" color="inherit" onClick={() => this.removeTeacher(i)}>
+                    <CloseIcon fontSize="small" />
+                </IconButton>
+                </span>
+            </div>
+            <br />
+            <div>
+                <TextField
+                className="text-field"
+                label="Enter Teacher Name"
+                variant="outlined"
+                value={newTeacher.name || ''}
+                onChange={(element) => {
+                    let { newTeacher } =  this.state;
+                    newTeacher = { ...newTeacher, name: element.target.value };
+                    this.setState({ newTeacher });
+                    }}
+                size="small"
+                />
+            </div>
+            <br />
+            <div>
+                <TextField
+                className="text-field"
+                label="Enter Subject Taught"
+                variant="outlined"
+                value={newTeacher.subject || ''}
+                onChange={(element) => {
+                    let { newTeacher } = this.state;
+                    newTeacher = { ...newTeacher, subject: element.target.value };
+                    this.setState({ newTeacher });
+                    }}
+                size="small"
+                />
+            </div>
+            <br />
+            <span>Classes taught by teacher
+            <Dropdown
+                className="classes-dropdown"
+                isMulti={true}
+                options={options}
+                onChange={(option, action) => this.updateOptions(option, action)}
+                value={newTeacher.classesList}
+                isSearchable={true}
+                showAnimations
+            />
+            </span>
+            {newTeacher.classesList && newTeacher.classesList.length > 0 && newTeacher.classesList.map((teacher, index) => (
+                <div>
+                    <br/>
+                    <TextField
+                        className="text-field"
+                        label={`Enter periods per week for ${teacher.label}`}
+                        variant="outlined"
+                        value={teacher.periodsPerWeek || ''}
+                        onChange={(element) => {
+                            const { newTeacher } = this.state;
+                            const classesList = newTeacher.classesList;
+                            classesList[index] = { ...classesList[index], periodsPerWeek: element.target.value };
+                            this.setState({ newTeacher });
+                            }}
+                        size="small"
+                    />
+                </div>
+            ))}
+            <br/>
+            <br/>
+            <Button
+                color="primary"
+                variant="contained"
+                type="submit"
+                onClick={this.submitHandler}
+            >
+                Save
+            </Button>
+            </CollapsibleSections>
+        </div>
+        );
     }
 
     render() {
         return (
             <div>
-                <form onSubmit={this.submitHandler}>
-                    <div>
-                        <br />
-                        <div>
-                        <Button
-                            classes="login-button"
-                            color="primary"
-                            variant="contained"
-                            type="submit"
-                            onClick={this.addTeacher}
-                        >
-                        + Add Teacher
-                        </Button>
-                        </div>
-                        <div>
-                            { this.state.teachersList.map((e,i) => {
-                                return (
-                                <div>
-                                    <CollapsibleSections title={e.name || `Teacher Number ${i+1}`} show={false}>
-                                    <div>
-                                        Teacher {i+1}
-                                        <span>
-                                        <IconButton size="small" aria-label="add teacher" color="inherit" onClick={() => this.removeTeacher(i)}>
-                                            <CloseIcon fontSize="small" />
-                                        </IconButton>
-                                        </span>
-                                    </div>
-                                    <br />
-                                    <div>
-                                        <TextField
-                                        className="text-field"
-                                        label="Enter Teacher Name"
-                                        variant="outlined"
-                                        value={e.name}
-                                        onChange={(element) => {
-                                            const teachersList = [...this.state.teachersList];
-                                            teachersList[i] = { ...teachersList[i], name: element.target.value };
-                                            this.setState({ teachersList });
-                                          }}
-                                        size="small"
-                                        />
-                                    </div>
-                                    <br />
-                                    <div>
-                                        <TextField
-                                        className="text-field"
-                                        label="Enter Subject Taught"
-                                        variant="outlined"
-                                        value={e.subject}
-                                        onChange={(element) => {
-                                            const teachersList = [...this.state.teachersList];
-                                            teachersList[i] = { ...teachersList[i], subject: element.target.value };
-                                            this.setState({ teachersList });
-                                          }}
-                                        size="small"
-                                        />
-                                    </div>
-                                    <br />
-                                    <span>Classes taught by teacher
-                                    <Dropdown
-                                        isMulti={true}
-                                        options={options}
-                                        onChange={(option, action) => this.updateOptions(option, action, i)}
-                                        value={e.classesList}
-                                        isSearchable={true}
-                                        showAnimations
-                                    />
-                                    </span>
-                                    {e.classesList && e.classesList.length > 0 && e.classesList.map((teacher, index) => (
-                                        <div>
-                                            <br/>
-                                            <TextField
-                                        className="text-field"
-                                        label={`Enter periods per week for ${teacher.label}`}
-                                        variant="outlined"
-                                        value={teacher.periodsPerWeek}
-                                        onChange={(element) => {
-                                            const teachersList = [...this.state.teachersList];
-                                            const classesList = teachersList[i].classesList;
-                                            classesList[index] = { ...classesList[index], periodsPerWeek: element.target.value };
-                                            this.setState({ teachersList });
-                                          }}
-                                        size="small"
-                                        />
-                                        </div>
-                                    ))}
-                                    </CollapsibleSections>
-                                </div>
-                                );
-                                }) 
-                            }
-                        </div>
-                    </div>
-                    <div>
-                        {this.state.teachersList.length > 0 &&
-                        <Button
-                            classes="login-button"
-                            color="primary"
-                            variant="contained"
-                            type="submit"
-                            onClick={this.saveCall}
-                        >
-                        Save
-                        </Button>
-                        }   
-                    </div>
-                </form>
+                <br/>
+                <Link to="/" > Main </Link>
+                <br/>
+                <Link to="/home"> Home </Link>
+                <br/>
+                {
+                    this.state.teachersList && this.state.teachersList.length > 0 &&
+                <Table
+                    data={this.state.teachersList}
+                    columns={columns}
+                    defaultPageSize={5}
+                    title='Teachers'
+                />
+                }
+                <Modal 
+                    displayModal={this.state.showModal}
+                    closeModal={this.toggleModal}
+                    body={this.modalBody()}
+                />
+                <br/>
+                <br />
+                <Button
+                    color="primary"
+                    variant="contained"
+                    type="submit"
+                    onClick={this.addTeacher}
+                >
+                + Add Teacher
+                </Button>                        
+                <br/>
             </div>
         );
     }
 }
 
-export default Teachers;
+// export default Teachers;
+
+Teachers.propTypes = {
+    auth: PropTypes.object.isRequired,
+    errors: PropTypes.object.isRequired,
+};
+  
+const mapStateToProps = state => ({
+    auth: state.auth,
+    errors: state.errors,
+    email: state.auth.user.email,
+    teachersList: state.teachers && state.teachers.teachersList && state.teachers.teachersList.length > 0 && state.teachers.teachersList,
+});
+
+const mapDispatchToProps = {
+    addNewTeacher: addNewTeacher,
+    getAllTeachers: getAllTeachers,
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Teachers);  

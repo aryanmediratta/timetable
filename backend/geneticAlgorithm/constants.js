@@ -287,7 +287,7 @@ module.exports = {
     NUM_CHROMOSOMES: 32,
     NUM_GENERATIONS: 8192,
     MUTATION_RATE: 64,
-    POPULATION_RATIO: 0.33,
+    POPULATION_RATIO: 0.65,
     specificClassData1,
     specificClassData2,
     specificClassData3,
