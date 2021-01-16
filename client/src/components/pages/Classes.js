@@ -43,7 +43,6 @@ class Classes extends React.Component {
             classList = classList.filter(item => item.value !== action.removedValue.value)
         }
         this.setState({classList});
-        console.log(action.option);
     }
 
     render() {
