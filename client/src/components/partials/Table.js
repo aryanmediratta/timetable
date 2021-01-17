@@ -3,6 +3,7 @@ import React from 'react';
 import Fuse from 'fuse.js';
 import PropTypes from 'prop-types';
 import ReactTable from 'react-table';
+import { TextField } from '@material-ui/core';
 
 const PageCounter = require('./PageCounter');
 
@@ -10,13 +11,16 @@ require('react-table/react-table.css');
 require('../../styles/Table.scss');
 
 class Table extends React.Component {
-  state = {
-    filterTerm: '',
-    page: this.props.page || 0,
-    filteredData: this.props.data,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      filterTerm: '',
+      page: this.props.page || 0,
+      filteredData: this.props.data,
+    };
+  }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.page !== undefined) {
       this.setState({ filteredData: nextProps.data, page: nextProps.page });
     } else {
@@ -63,7 +67,6 @@ class Table extends React.Component {
       rowcount,
       searchable,
       emptyState,
-      selectTable,
       onSortedChange,
       showPageCounter,
       removeExtraRows,
@@ -73,7 +76,7 @@ class Table extends React.Component {
       RowCountComponent,
       additionalHeaderContentLeft,
       additionalHeaderContentRight,
-      onPageChange = page => this.setState({ page }),
+      onPageChange = (page) => this.setState({ page }),
       ...tableProps
     } = this.props;
 
@@ -82,67 +85,79 @@ class Table extends React.Component {
 
     return (
       <div className="ef-table-container">
-        <div className="ef-table-card" >
+        <div className="ef-table-card">
           <div className="ef-table-header">
             {
-              (title || additionalHeaderContentLeft) &&
-              <div className="ef-table-header-left">
-                {
-                  title &&
-                  <h3 className="ef-table-title">
-                    { title }
-                  </h3>
-                }
-                { additionalHeaderContentLeft && additionalHeaderContentLeft }
-              </div>
+              (title || additionalHeaderContentLeft)
+              && (
+                <div className="ef-table-header-left">
+                  {
+                    title
+                  && (
+                    <h3 className="ef-table-title">
+                      { title }
+                    </h3>
+                  )
+                  }
+                  { additionalHeaderContentLeft && additionalHeaderContentLeft }
+                </div>
+              )
             }
             <div className="ef-table-header-right">
               {
-                searchable &&
-                <TextInput
-                  className="ef-table-filter"
-                  inputRef={this.props.searchRef}
-                  onChange={(term) => {
-                    this.filterData(term);
-                    onPageChange(0);
-                  }}
-                  placeholderText={filterPlaceholder}
-                  value={this.state.filterTerm}
-                />
+                searchable
+                && (
+                  <TextField
+                    className="ef-table-filter"
+                    inputRef={this.props.searchRef}
+                    onChange={(term) => {
+                      this.filterData(term);
+                      onPageChange(0);
+                    }}
+                    placeholderText={filterPlaceholder}
+                    value={this.state.filterTerm}
+                    label="Confirm Password"
+                    type="password"
+                    variant="outlined"
+                    size="small"
+                  />
+                )
               }
               { additionalHeaderContentRight && additionalHeaderContentRight }
               { RowCountComponent && <RowCountComponent count={rowcount || filteredData.length} /> }
             </div>
           </div>
           {(filteredData.length === 0 && emptyState) && emptyState}
-          {(filteredData.length > 0 || !emptyState) &&
-            <ReactTable
-              {...tableProps}
-              {...selectTableProps}
-              page={page}
-              resizable={false}
-              data={filteredData}
-              className="ef-table"
-              showPagination={false}
-              defaultPageSize={defaultPageSize}
-              pageSize={removeExtraRows ? Math.min(defaultPageSize, filteredData.length) : undefined}
-              onSortedChange={(props) => {
-                onSortedChange(props);
-                onPageChange(0);
-              }}
-            />
-          }
+          {(filteredData.length > 0 || !emptyState)
+            && (
+              <ReactTable
+                {...tableProps}
+                {...selectTableProps}
+                page={page}
+                resizable={false}
+                data={filteredData}
+                className="ef-table"
+                showPagination={false}
+                defaultPageSize={defaultPageSize}
+                pageSize={removeExtraRows ? Math.min(defaultPageSize, filteredData.length) : undefined}
+                onSortedChange={(props) => {
+                  onSortedChange(props);
+                  onPageChange(0);
+                }}
+              />
+            )}
         </div>
-        {(filteredData.length > 0 || !emptyState) && totalPages > 1 &&
-          <PageCounter
-            page={page}
-            show={showPageCounter}
-            totalPages={totalPages}
-            handlePageClick={onPageChange}
-            next={() => onPageChange(page + 1)}
-            previous={() => onPageChange(page - 1)}
-          />
-        }
+        {(filteredData.length > 0 || !emptyState) && totalPages > 1
+          && (
+            <PageCounter
+              page={page}
+              show={showPageCounter}
+              totalPages={totalPages}
+              handlePageClick={onPageChange}
+              next={() => onPageChange(page + 1)}
+              previous={() => onPageChange(page - 1)}
+            />
+          )}
       </div>
     );
   }
@@ -159,7 +174,6 @@ Table.propTypes = {
   emptyState: PropTypes.node,
   getTrProps: PropTypes.func,
   selectTable: PropTypes.bool,
-  noDataText: PropTypes.string,
   onPageChange: PropTypes.func,
   defaultSorted: PropTypes.array,
   onSortedChange: PropTypes.func,
@@ -204,8 +218,7 @@ Table.defaultProps = {
   onSortedChange: () => {},
   additionalHeaderContentLeft: null,
   additionalHeaderContentRight: null,
-  // filterPlaceholder: i18nUtils.gettext('Search'),
-  // noDataText: i18nUtils.gettext('No data available.'),
+  filterPlaceholder: 'Search',
   selectTableProps: {
     keyField: 'id',
     selectAll: false,

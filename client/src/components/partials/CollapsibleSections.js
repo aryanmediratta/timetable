@@ -23,33 +23,31 @@ class CollapsibleSections extends React.Component {
     }
   }
 
-  componentWillMount = () => this.setState({ showing: this.props.show });
+  UNSAFE_componentWillMount = () => this.setState({ showing: this.props.show });
 
-  toggle = () => this.setState({ showing: !this.state.showing });
+  toggle = () => this.setState((previousState) => ({ showing: !previousState.showing }));
 
-
-  render = () => {
-    return (
-      <div className="collapsibleSection">
-        <div onClick={()=>this.toggle()} className='header pointer'>
-        {this.props.title} &nbsp;&nbsp;
-          <IconButton>
-            {
-              this.state.showing === true ?
-              <ArrowUpwardIcon />
-              :
-              <ArrowDownwardIcon />
-            }
-          </IconButton>
-            </div>
-        {this.state.showing ? (
-            <div className='content'>
-            {this.props.children}
-            </div>
-            ) : null}
+  render = () => (
+    <div className="collapsibleSection">
+      <div onClick={() => this.toggle()} className="header pointer">
+        {this.props.title}
+        {' '}
+&nbsp;&nbsp;
+        <IconButton>
+          {
+            this.state.showing === true
+              ? <ArrowUpwardIcon />
+              : <ArrowDownwardIcon />
+          }
+        </IconButton>
+      </div>
+      {this.state.showing ? (
+        <div className="content">
+          {this.props.children}
+        </div>
+      ) : null}
     </div>
-    );
-  }
+  )
 }
 
 /*
@@ -58,7 +56,7 @@ class CollapsibleSections extends React.Component {
 CollapsibleSections.propTypes = {
   children: PropTypes.node,
   title: PropTypes.string,
-  show: PropTypes.bool.isRequired,
+  show: PropTypes.bool,
 };
 
 CollapsibleSections.defaultProps = {

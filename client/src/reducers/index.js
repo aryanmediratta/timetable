@@ -5,7 +5,7 @@ import errorReducer from './errorReducers';
 import teacherReducer from './teacherReducers';
 
 export default combineReducers({
-    auth: authReducer,
-    errors: errorReducer,
-    teachers: teacherReducer,
+  auth: authReducer,
+  errors: errorReducer,
+  teachers: teacherReducer,
 });

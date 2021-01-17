@@ -7,53 +7,54 @@ import { connect } from 'react-redux';
 import { logoutUser } from '../../actions/authActions';
 
 class OtherPage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      responseToPost: '',
+    };
+  }
 
-    state = {
-        response: '',
-        post: '',
-        responseToPost: '',
-      };
-      
-    render() {
-        return(
-            <div>
-                <h2>Home Page??</h2>
-                <Link to="/" > Main </Link>
-                <br/>
-                <Link to="/login" > Login </Link>
-                <br/>
-                <Link to="/teachers" > Add Teachers </Link>
-                <h2>User Email - {this.props.auth && this.props.auth.user && this.props.auth.user.email}</h2>
-                <br/>
-                <br />
-                <br/>
-                <Button
-                  color="primary"
-                  variant="contained"
-                  type="submit"
-                  onClick={this.props.logoutUser}
-                >
-                Logout
-                </Button>
-                <p>{this.state.responseToPost}</p>
-            </div>
-        )
-    }
+  render() {
+    return (
+      <div>
+        <h2>Home Page??</h2>
+        <Link to="/"> Main </Link>
+        <br />
+        <Link to="/login"> Login </Link>
+        <br />
+        <Link to="/teachers"> Add Teachers </Link>
+        <h2>
+          User Email -
+          {this.props.auth && this.props.auth.user && this.props.auth.user.email}
+        </h2>
+        <br />
+        <br />
+        <br />
+        <Button
+          color="primary"
+          variant="contained"
+          type="submit"
+          onClick={this.props.logoutUser}
+        >
+          Logout
+        </Button>
+        <p>{this.state.responseToPost}</p>
+      </div>
+    );
+  }
 }
-
 
 OtherPage.propTypes = {
   auth: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   auth: state.auth,
   errors: state.errors,
 });
 
 const mapDispatchToProps = {
-  logoutUser: logoutUser,
+  logoutUser,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(OtherPage);

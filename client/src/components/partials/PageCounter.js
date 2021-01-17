@@ -23,9 +23,21 @@ class PageCounter extends React.Component {
 
   render() {
     const start = this.props.page > 3 ? this.props.page - 2 : 0;
-    const Next = this.props.page < this.props.totalPages - 1 ?
-      (<a onClick={this.props.next} className="pull-right hover"> {'>'} </a>) : '';
-    const Prev = this.props.page > 1 ? (<a onClick={this.props.previous} className="pull-right hover"> {'<'} </a>) : '';
+    const Next = this.props.page < this.props.totalPages - 1
+      ? (
+        <a onClick={this.props.next} className="pull-right hover">
+          {' '}
+          {'>'}
+          {' '}
+        </a>
+      ) : '';
+    const Prev = this.props.page > 1 ? (
+      <a onClick={this.props.previous} className="pull-right hover">
+        {' '}
+        {'<'}
+        {' '}
+      </a>
+    ) : '';
     const Counter = (
       <div className="page-counter text-center clearfix">
         {Next}

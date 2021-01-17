@@ -1,7 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import { AppBar, Toolbar, Typography, IconButton, Button, Menu, MenuItem } from '@material-ui/core';
+import {
+  AppBar, Toolbar, Typography, IconButton, Button, Menu, MenuItem,
+} from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import { useSelector, useDispatch } from 'react-redux';
@@ -9,41 +11,40 @@ import { useSelector, useDispatch } from 'react-redux';
 import { logoutUser } from '../../actions/authActions';
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-      flexGrow: 1,
-    },
-    menuButton: {
-      marginRight: theme.spacing(2),
-    },
-    title: {
-      flexGrow: 1,
-    },
+  root: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    flexGrow: 1,
+  },
 }));
 
-
 export default function ButtonAppBar() {
-    const classes = useStyles();
-    const dispatch = useDispatch();
-    const auth = useSelector(state => state.auth);
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
+  const classes = useStyles();
+  const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
-    return (
+  return (
     <div className={classes.root}>
-        <AppBar position="static">
+      <AppBar position="static">
         <Toolbar>
-            <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-                <MenuIcon />
-            </IconButton>
-            <Typography variant="h6" className={classes.title}>
-                Scheduler
-            </Typography>
-            {auth && auth.isAuthenticated === true ? (
+          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" className={classes.title}>
+            Scheduler
+          </Typography>
+          {auth && auth.isAuthenticated === true ? (
             <div>
               <IconButton
                 aria-label="account of current user"
@@ -70,12 +71,12 @@ export default function ButtonAppBar() {
                 onClose={handleClose}
               >
                 <MenuItem onClick={handleClose}>
-                  <Link to='/teachers'>
+                  <Link to="/teachers">
                     Add Teachers
                   </Link>
                 </MenuItem>
                 <MenuItem onClick={handleClose}>
-                  <Link to='/classes'>
+                  <Link to="/classes">
                     Add Classes
                   </Link>
                 </MenuItem>
@@ -87,25 +88,25 @@ export default function ButtonAppBar() {
               </Menu>
             </div>
           ) : (
-              <div>
-                <Link to='/login'>
+            <div>
+              <Link to="/login">
                 <Button
                   color="primary"
                   variant="contained"
                 >
                   Login
                 </Button>
-            </Link>
+              </Link>
             &nbsp;&nbsp;
-            <Link to='/signup'>
+              <Link to="/signup">
                 <Button
-                    color="primary"
-                    variant="contained"
+                  color="primary"
+                  variant="contained"
                 >
-                Register
+                  Register
                 </Button>
-            </Link>
-              </div>
+              </Link>
+            </div>
           )}
         </Toolbar>
       </AppBar>
