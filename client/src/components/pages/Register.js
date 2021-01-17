@@ -22,9 +22,17 @@ class Register extends React.Component {
     };
 
     componentDidMount() {
-        // If logged in and user navigates to Register page, should redirect them to home
         if (this.props.auth.isAuthenticated) {
             this.props.history.push('/home');
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.errors !== this.props.errors) {
+            this.setState({
+                response: this.props.errors && this.props.errors.message,
+                showPopup: true,
+            });
         }
     }
     
@@ -47,6 +55,7 @@ class Register extends React.Component {
     };
 
     render() {
+        console.log('Resp', this.state.response);
         return (
             <div>
                 <br/>
@@ -119,7 +128,7 @@ class Register extends React.Component {
 Register.propTypes = {
     registerUser: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
-    errors: PropTypes.object.isRequired
+    errors: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({

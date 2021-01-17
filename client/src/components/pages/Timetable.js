@@ -9,51 +9,52 @@ import TimetableRow from '../partials/TimetableRow';
 require('../../styles/Timetable.css');
 
 const options = [
-    {value: 'teacher', label: 'Teacher'},
-    {value: 'class', label: 'Class'},
+  {value: 'teacher', label: 'Teacher'},
+  {value: 'class', label: 'Class'},
 ];
 
 class Timetable extends React.Component {
-    state = {
-        timetable : [],
-        numPeriods: 6,
-        entityId: 1,
-        loading: false,
-        entityType: options[0],
-        allData: [],
-    };
+  state = {
+    timetable : [],
+    numPeriods: 6,
+    entityId: 1,
+    loading: false,
+    entityType: options[0],
+    allData: [],
+  };
 
-    updateTimetable = () => {
-        const timetable = getTimetableForEntity(this.state.allData, this.state.entityType.value, parseInt(this.state.entityId || 1, 10));
+  updateTimetable = () => {
+    const timetable = getTimetableForEntity(this.state.allData, this.state.entityType.value, parseInt(this.state.entityId || 1, 10));
+    const chunks = createTimetableForRendering(timetable, this.state.numPeriods);
+    this.setState({
+        timetable: chunks,
+    });
+  }
+
+  fetchTimetable = () => {
+    this.setState({
+      timetable: [],
+      loading: true,
+    });
+    get('/api/fetch_static_timetable')
+    .then((res) => {
+        const timetable = getTimetableForEntity(res.timetable, this.state.entityType.value, parseInt(this.state.entityId || 1, 10));
         const chunks = createTimetableForRendering(timetable, this.state.numPeriods);
         this.setState({
-            timetable: chunks,
+          allData: res.timetable,
+          timetable: chunks,
+          numPeriods: res.numPeriods/5,
+          loading: false,
         });
-    }
-
-    fetchTimetable = () => {
-        this.setState({
-            timetable: [],
-            loading: true,
-        });
-        get('/api/fetch_static_timetable')
-        .then((res) => {
-            const timetable = getTimetableForEntity(res.timetable, this.state.entityType.value, parseInt(this.state.entityId || 1, 10));
-            const chunks = createTimetableForRendering(timetable, this.state.numPeriods);
-            this.setState({
-                allData: res.timetable,
-                timetable: chunks,
-                numPeriods: res.numPeriods/5,
-                loading: false,
-            });
-        });
-    }
+    });
+  }
 
     updateOptions = (option, action) => {
-        if (action.action === 'select-option') {
-            this.setState({entityType: option}, () => 
-            console.log(this.state.entityType));
-        }
+      if (action.action === 'select-option') {
+        this.setState({ entityType: option }, () => {
+          this.updateTimetable();
+        })
+      }
     }
 
     render() {
@@ -71,7 +72,7 @@ class Timetable extends React.Component {
                 <br />
                 <TextField
                   id="post"
-                  label="Enter ID of class"
+                  label={`Enter ID of ${this.state.entityType.label}`}
                   variant="outlined"
                   onChange={e => {
                       this.setState({ entityId: e.target.value }, () => {

@@ -8,10 +8,10 @@ import CloseIcon from '@material-ui/icons/Close';
 import Dropdown from '../partials/Dropdown';
 import CollapsibleSections from '../partials/CollapsibleSections';
 import Modal from '../partials/Modal';
+import Table from '../partials/Table';
+import FullWidthGrid from '../partials/TwoComponentGridSystem';
 
 import { addNewTeacher, getAllTeachers } from '../../actions/teacherActions';
-import Table from '../partials/Table';
-
 import { post } from '../utils'
 
 require('../../styles/Login.css');
@@ -151,17 +151,23 @@ class Teachers extends React.Component {
                 />
             </div>
             <br />
-            <span>Classes taught by teacher
-            <Dropdown
-                className="classes-dropdown"
-                isMulti={true}
-                options={options}
-                onChange={(option, action) => this.updateOptions(option, action)}
-                value={newTeacher.classesList}
-                isSearchable={true}
-                showAnimations
+            <FullWidthGrid
+                componentOneSize={3}
+                componentTwoSize={9}
+                spacing={2}
+                componentOne={(<span>Classes taught by teacher</span>)}
+                componentTwo={(
+                    <Dropdown
+                        className="classes-dropdown"
+                        isMulti={true}
+                        options={options}
+                        onChange={(option, action) => this.updateOptions(option, action)}
+                        value={newTeacher.classesList}
+                        isSearchable={true}
+                        showAnimations
+                    />
+                )}
             />
-            </span>
             {newTeacher.classesList && newTeacher.classesList.length > 0 && newTeacher.classesList.map((teacher, index) => (
                 <div>
                     <br/>

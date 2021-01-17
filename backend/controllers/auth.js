@@ -8,37 +8,43 @@ const { secretToken } = require('../server/config');
 
 const emailRegexp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 
+const DEFAULT_LOGIN_DURATION = 7200;
+
 signup = (req, res, next) => {
     let { name, email, password, passwordConfirmation } = req.body;
     let errors = [];
     if (!name) {
-        errors.push({ name: "required" });
+        errors.push('Name is Required.');
     }
     if (!email) {
-        errors.push({ email: "required" });
+        errors.push('Email is Required.');
     }
     if (!emailRegexp.test(email)) {
-        errors.push({ email: "invalid" });
+        errors.push('Invalid Email.');
     }
     if (!password) {
-        errors.push({ password: "required" });
+        errors.push('Password is Required.');
     }
     if (!passwordConfirmation) {
-        errors.push({
-            passwordConfirmation: "required",
-        });
+        errors.push('Please type password again.');
     }
     if (password !== passwordConfirmation) {
-        errors.push({ password: "mismatch" });
+        errors.push('Passwords dont match.');
     }
     if (errors.length > 0) {
-        return res.status(422).json({ errors: errors });
+        return res.status(200).json({
+            success: false,
+            message: errors[0],
+        });
     }
     // All Validations completed, checking Login Logic.
     User.findOne({ email: email })
         .then(user => {
             if (user) {
-                return res.status(422).json({ errors: [{ user: "email already exists" }] });
+                return res.status(200).json({
+                    success: false,
+                    message: 'Email Already Exists. Please Login or create new account',
+                });
             } else {
                 const user = new User({
                     name: name,
@@ -49,10 +55,24 @@ signup = (req, res, next) => {
                     if (err) throw err;
                     user.password = hash;
                     user.save()
-                        .then(response => {
-                            res.status(200).json({
-                                success: true,
-                                result: response
+                        .then(_res => {
+                            let accessToken = createJWT(
+                                user.email,
+                                user._id,
+                                DEFAULT_LOGIN_DURATION,
+                            );
+                            jwt.verify(accessToken, secretToken, (err, decoded) => {
+                                if (err) {
+                                    res.status(200).json({ success: false, message: 'Verification Failed. Please Try Again.' });
+                                }
+                                if (decoded) {
+                                    return res.status(200).json({
+                                        success: true,
+                                        token: accessToken,
+                                        userName: user.name,
+                                        message: 'User Created Succesfully',
+                                    });
+                                }
                             });
                         })
                         .catch(err => {
@@ -73,53 +93,58 @@ signup = (req, res, next) => {
 signin = (req, res) => {
     let { email, password } = req.body;
     let errors = [];
-    if (!email) {
-        errors.push({ email: "required" });
-    }
-    if (!emailRegexp.test(email)) {
-        errors.push({ email: "invalid email" });
-    }
-    if (!password) {
-        errors.push({ passowrd: "required" });
-    }
-    if (errors.length > 0) {
-        return res.status(422).json({ errors: errors });
-    }
+  if (!email) {
+      errors.push('Email is Required.');
+  }
+  if (!emailRegexp.test(email)) {
+      errors.push('Invalid Email.');
+  }
+  if (!password) {
+      errors.push('Password is Required.');
+  }
+  if (errors.length > 0) {
+    return res.status(200).json({
+        success: false,
+        message: errors[0],
+    });
+  }
     User.findOne({ email: email }).then(user => {
         if (!user) {
-            return res.status(404).json({
-                errors: [{ user: "not found" }],
+            return res.status(200).json({
+              success: false,
+              message: 'User Not Found',
             });
         } else {
             bcrypt.compare(password, user.password).then(isMatch => {
                 if (!isMatch) {
-                    return res.status(400).json({ errors: [{ password: "incorrect" }]});
+                    return res.status(200).json({ success: false, message: 'Incorrect Password' });
                 }
                 let accessToken = createJWT(
                     user.email,
                     user._id,
-                    3600
+                    DEFAULT_LOGIN_DURATION,
                 );
                 jwt.verify(accessToken, secretToken, (err, decoded) => {
                     if (err) {
-                        res.status(500).json({ errors: err });
+                        res.status(200).json({ success: false, message: 'Verification Failed. Please Try again.' });
                     }
                     if (decoded) {
                         return res.status(200).json({
                             success: true,
                             token: accessToken,
-                            message: user
+                            user: user,
+                            userName: user.name,
                         });
                     }
                 });
             })
             .catch(err => {
-                res.status(500).json({ errors: err });
+                res.status(500).json({ success: false, message: 'Verification Failed. Please Try again.' });
             });
         }
     })
     .catch(err => {
-        res.status(500).json({ errors: err });
+        res.status(500).json({ success: false, message: 'Verification Failed. Please Try again.' });
     });
 }
 

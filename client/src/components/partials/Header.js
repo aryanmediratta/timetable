@@ -1,24 +1,37 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import { AppBar, Toolbar, Typography, IconButton, Button } from '@material-ui/core';
+import { AppBar, Toolbar, Typography, IconButton, Button, Menu, MenuItem } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import { useSelector, useDispatch } from 'react-redux';
+
+import { logoutUser } from '../../actions/authActions';
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        flexGrow: 1,
+      flexGrow: 1,
     },
     menuButton: {
-        marginRight: theme.spacing(2),
+      marginRight: theme.spacing(2),
     },
     title: {
-        flexGrow: 1,
+      flexGrow: 1,
     },
 }));
 
 
 export default function ButtonAppBar() {
     const classes = useStyles();
+    const dispatch = useDispatch();
+    const auth = useSelector(state => state.auth);
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
 
     return (
     <div className={classes.root}>
@@ -30,12 +43,57 @@ export default function ButtonAppBar() {
             <Typography variant="h6" className={classes.title}>
                 Scheduler
             </Typography>
-            <Link to='/login'>
+            {auth && auth.isAuthenticated === true ? (
+            <div>
+              <IconButton
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleClick}
+                color="inherit"
+              >
+                <AccountCircle />
+              </IconButton>
+              <Menu
+                anchorEl={anchorEl}
+                id="menu-appbar"
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={handleClose}>
+                  <Link to='/teachers'>
+                    Add Teachers
+                  </Link>
+                </MenuItem>
+                <MenuItem onClick={handleClose}>
+                  <Link to='/classes'>
+                    Add Classes
+                  </Link>
+                </MenuItem>
+                <MenuItem onClick={handleClose}>
+                  <Link onClick={() => dispatch(logoutUser())}>
+                    Logout
+                  </Link>
+                </MenuItem>
+              </Menu>
+            </div>
+          ) : (
+              <div>
+                <Link to='/login'>
                 <Button
-                    color="primary"
-                    variant="contained"
+                  color="primary"
+                  variant="contained"
                 >
-                Login
+                  Login
                 </Button>
             </Link>
             &nbsp;&nbsp;
@@ -47,6 +105,8 @@ export default function ButtonAppBar() {
                 Register
                 </Button>
             </Link>
+              </div>
+          )}
         </Toolbar>
       </AppBar>
     </div>

@@ -1,10 +1,13 @@
 function updateAuthToken () {
     // Not going to send tokens. Update this to take token from the global state.
-    const token = null;
+    let token = null;
+    if (localStorage.jwtToken) {
+      token = localStorage.jwtToken;
+    }
     let header = new Headers();
     console.log('KEKW', token);
     if (token) {
-        header['authorization'] = token;
+      header['authorization'] = token;
     }
     header = { ...header, 'Content-Type': 'application/json' }
     console.log('header',header);

@@ -4,6 +4,7 @@ import { Button, TextField } from '@material-ui/core';
 import Dropdown from '../partials/Dropdown';
 import { connect } from 'react-redux';
 
+import FullWidthGrid from '../partials/TwoComponentGridSystem';
 import { addNewClasses } from '../../actions/teacherActions';
 
 const options = [
@@ -37,13 +38,13 @@ class Classes extends React.Component {
     }
 
     updateOptions = (_, action) => {
-        let { classList } = this.state;
-        if (action.action === 'select-option') {
-            classList.push(action.option);
-        } else if (action.action === 'remove-value') {
-            classList = classList.filter(item => item.value !== action.removedValue.value)
-        }
-        this.setState({classList});
+      let { classList } = this.state;
+      if (action.action === 'select-option') {
+        classList.push(action.option);
+      } else if (action.action === 'remove-value') {
+        classList = classList.filter(item => item.value !== action.removedValue.value)
+      }
+      this.setState({classList});
     }
 
     render() {
@@ -54,19 +55,25 @@ class Classes extends React.Component {
                 <br/>
                 <Link to="/home"> Home </Link>
                 <br/>
-                <Link to="/addTeacher"> Add Teachers </Link>
+                <Link to="/teachers"> Add Teachers </Link>
                 <br />  
                 <div>
-                    <span>Select Class
-                        <Dropdown
-                            isMulti={true}
-                            options={options}
-                            onChange={(option, action) => this.updateOptions(option, action)}
-                            value={options.value}
-                            isSearchable={true}
-                            showAnimations
-                        />
-                    </span>
+                <FullWidthGrid
+                  componentOneSize={3}
+                  componentTwoSize={9}
+                  spacing={2}
+                  componentOne={(<h3>Select Class</h3>)}
+                  componentTwo={(
+                                <Dropdown
+                                  isMulti={true}
+                                  options={options}
+                                  onChange={(option, action) => this.updateOptions(option, action)}
+                                  value={options.value}
+                                  isSearchable={true}
+                                  showAnimations
+                                />
+                              )}
+                />
                     <br />
                     {   this.state.classList.map((e) => (
                     <div>

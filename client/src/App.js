@@ -18,23 +18,19 @@ import Classes from './components/pages/Classes';
 
 
 // Check for token to keep user logged in
-// if (localStorage.jwtToken) {
-//     // Set auth token header auth
-//     const token = localStorage.jwtToken;
-//     // setAuthToken(token);
-//     // Decode token and get user info and exp
-//     const decoded = jwt_decode(token);
-//     // Set user and isAuthenticated
-//     store.dispatch(setCurrentUser(decoded));
-//     // Check for expired token
-//     const currentTime = Date.now() / 1000; // to get in milliseconds
-//     if (decoded.exp < currentTime) {
-//         // Logout user
-//         store.dispatch(logoutUser());
-//         // Redirect to login
-//         window.location.href = '/login';
-//     }
-// }
+
+if (localStorage.jwtToken) {
+    const token = localStorage.jwtToken;
+    // setAuthToken(token);
+    const decoded = jwt_decode(token);
+    store.dispatch(setCurrentUser(decoded));
+    const currentTime = Date.now() / 1000; // to get in milliseconds
+    if (decoded.exp < currentTime) {
+        localStorage.removeItem('jwtToken');
+        store.dispatch(logoutUser());
+        window.location.href = '/login';
+    }
+}
 
 class App extends React.Component {
     render() {
@@ -48,8 +44,8 @@ class App extends React.Component {
                             <PrivateRoute exact path='/home' component={OtherPage} />
                             <Route exact path='/login' component={Login}></Route>
                             <Route exact path='/signup' component={Register}></Route>
-                            <Route exact path ='/classes' component={Classes}></Route>
-                            <PrivateRoute exact path='/addTeacher' component={Teachers} />
+                            <PrivateRoute exact path ='/classes' component={Classes} />
+                            <PrivateRoute exact path='/teachers' component={Teachers} />
                         </Switch>
                     </BrowserRouter>
                 </Provider>

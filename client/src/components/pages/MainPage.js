@@ -32,7 +32,7 @@ class MainPage extends React.Component {
                 <br/>
                 <Link to="/classes"> Add Classes </Link>
                 <br/>
-                <Link to="/addTeacher"> Add Teachers </Link>
+                <Link to="/teachers"> Add Teachers </Link>
                 <br />
                 {this.state.response}
                 <br />

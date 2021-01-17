@@ -1,12 +1,23 @@
-import { GET_ERRORS } from "../actions/types";
+import { GET_ERRORS, SET_RANDOM_ERRORS } from "../actions/types";
 
-const initialState = {};
+const initialState = {
+    message: '',
+    otherErrors: {},
+};
 
 export default function(state = initialState, action) {
-    switch (action.type) {
-    case GET_ERRORS:
-        return action.payload;
-    default:
-        return state;
+  switch (action.type) {
+  case GET_ERRORS:
+    return {
+      ...state,
+      message: action.payload,
     }
+  case SET_RANDOM_ERRORS:
+    return {
+      ...state,
+      otherErrors: action.payload,
+    }
+  default:
+    return state;
+  }
 }

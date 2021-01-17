@@ -17,6 +17,7 @@ class Login extends React.Component {
         password: '',
         response: '',
         showPopup: false,
+        errorMessage: '',
     };
 
     onClose = () => {
@@ -44,6 +45,14 @@ class Login extends React.Component {
         }
     }
 
+    componentDidUpdate(prevProps) {
+      if (prevProps.errors !== this.props.errors) {
+          this.setState({
+              errorMessage: this.props.errors && this.props.errors.message,
+              showPopup: true,
+          });
+      }
+    }
       
     handleSubmit = async e => {
         e.preventDefault();
@@ -62,7 +71,7 @@ class Login extends React.Component {
                 <br/>
                 <Link to="/home"> Home </Link>
                 <br/>
-                <Link to="/addTeacher"> Add Teachers </Link>
+                <Link to="/teachers"> Add Teachers </Link>
                 <br/>
                 <form onSubmit={this.handleSubmit}>
                     <div className="box">
@@ -100,7 +109,7 @@ class Login extends React.Component {
                 </form>
                 {
                     this.state.showPopup &&
-                    <SimpleSnackbar onClose={this.onClose} message={this.state.response} />
+                    <SimpleSnackbar onClose={this.onClose} message={this.state.errorMessage} />
                 }
             </div>
         );

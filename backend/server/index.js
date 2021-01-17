@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const { saveDataInDatabase } = require('../database/utils');
 const { backendPort, uri, connectionParams } = require('./config');
 
-const authRoutes = require('../routes/auth');
+const allApis = require('../routes/apis');
 const { easy } = require('../geneticAlgorithm/performCrossover');
 const { NUM_PERIODS } = require('../geneticAlgorithm/constants');
 
@@ -59,6 +59,6 @@ app.post('/api/save', (req, res) => {
 });
 
 
-app.use('/api', authRoutes);
+app.use('/api', allApis);
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
