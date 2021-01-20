@@ -1,8 +1,10 @@
-import { SET_ALL_TEACHERS, ADD_NEW_TEACHER, ADD_NEW_CLASSES } from '../actions/types';
+import {
+  SET_ALL_TEACHERS, ADD_NEW_TEACHER, ADD_NEW_CLASSES, SET_ALL_CLASSES, UPDATE_EXISTING_TEACHER,
+} from '../actions/types';
 
 const initialState = {
   teachersList: [],
-  classList: [],
+  classesList: [],
 };
 
 export default function teacherReducer(state = initialState, action) {
@@ -21,7 +23,26 @@ export default function teacherReducer(state = initialState, action) {
   case ADD_NEW_CLASSES:
     return {
       ...state,
-      classList,
+      classesList: [...state.classesList, action.payload],
+    };
+  case SET_ALL_CLASSES:
+    return {
+      ...state,
+      classesList: [...action.payload],
+    };
+  case UPDATE_EXISTING_TEACHER:
+    const { teachersList } = state;
+    const updatedTeachersList = [];
+    teachersList.forEach((teacher) => {
+      if (teacher._id !== action.payload._id) {
+        updatedTeachersList.push(teacher);
+      } else {
+        updatedTeachersList.push(action.payload);
+      }
+    });
+    return {
+      ...state,
+      teachersList: [...updatedTeachersList],
     };
   default:
     return state;

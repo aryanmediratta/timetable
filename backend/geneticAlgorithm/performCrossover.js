@@ -142,8 +142,7 @@ function easy () {
         console.log(`Average of ${population.length} parents in ${index} Generation is -> ${avg} with BEST as ${costOfBestMemberInFamily}`);
         index++;
     }
-    console.log('Total improvement', totalImprovement);
-    console.log('bestFamilyMember',bestFamilyMember);
+    // console.log('bestFamilyMember',bestFamilyMember);
     console.log('-------------------------------------------------------------------------------');
     console.log(`Average of ${population.length} parents in ${index} Generation is -> ${avg} with BEST as ${costOfBestMemberInFamily}`);
     return bestFamilyMember;

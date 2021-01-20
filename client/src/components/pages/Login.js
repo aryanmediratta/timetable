@@ -7,6 +7,8 @@ import { connect } from 'react-redux';
 import { loginUser } from '../../actions/authActions';
 import SimpleSnackbar from '../utils/Popup';
 
+import { getAllTeachers, getAllClasses } from '../../actions/teacherActions';
+
 require('../../styles/Login.css');
 
 class Login extends React.Component {
@@ -44,6 +46,14 @@ class Login extends React.Component {
         errorMessage: this.props.errors && this.props.errors.message,
         showPopup: true,
       });
+    }
+  }
+
+  componentWillUnmount() {
+    const { email } = this.state;
+    if (email !== '') {
+      this.props.getAllTeachers(email);
+      this.props.getAllClasses(email);
     }
   }
 
@@ -128,6 +138,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   loginUser,
+  getAllTeachers,
+  getAllClasses,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

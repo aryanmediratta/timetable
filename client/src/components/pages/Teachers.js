@@ -1,9 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, TextField, IconButton } from '@material-ui/core';
+import { Button, TextField } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import CloseIcon from '@material-ui/icons/Close';
 
 import Dropdown from '../partials/Dropdown';
 import CollapsibleSections from '../partials/CollapsibleSections';
@@ -11,26 +10,9 @@ import Modal from '../partials/Modal';
 import Table from '../partials/Table';
 import FullWidthGrid from '../partials/TwoComponentGridSystem';
 
-import { addNewTeacher, getAllTeachers } from '../../actions/teacherActions';
+import { addNewTeacher, getAllTeachers, getAllClasses } from '../../actions/teacherActions';
 
 require('../../styles/Login.css');
-
-const options = [
-  { value: '1', label: '11-A' },
-  { value: '2', label: '11-B' },
-  { value: '3', label: '11-C' },
-  { value: '4', label: '11-D' },
-  { value: '5', label: '11-E' },
-];
-
-const columns = [{
-  Header: 'Name',
-  accessor: 'teacherName', // String-based value accessors!
-}, {
-  Header: 'Subject',
-  accessor: 'teacherSubject',
-  Cell: (props) => <span className="number">{props.value}</span>, // Custom cell components!
-}];
 
 class Teachers extends React.Component {
   constructor(props) {
@@ -38,22 +20,15 @@ class Teachers extends React.Component {
     this.state = {
       showModal: false,
       newTeacher: {},
-      teachersList: [],
     };
   }
 
   componentDidMount() {
-    this.props.getAllTeachers(this.props.email);
-    this.setState({
-      teachersList: this.props.teachersList,
-    });
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.teachersList !== this.props.teachersList) {
-      this.setState({
-        teachersList: this.props.teachersList,
-      });
+    const { email } = this.props;
+    // If user refreshes page, the store is empty thus these values are false. so we fetch them again.
+    if ((this.props.teachersList === false) || (this.props.classesList === false)) {
+      this.props.getAllTeachers(email);
+      this.props.getAllClasses(email);
     }
   }
 
@@ -83,10 +58,14 @@ class Teachers extends React.Component {
 
     updateOptions = (_, action) => {
       const { newTeacher } = this.state;
+      let selectedOption = {};
       if (action.action === 'select-option') {
-        newTeacher.classesList.push(action.option);
+        selectedOption = action.option;
+        selectedOption = { ...selectedOption, _id: selectedOption.value };
+        // delete selectedOption.value;
+        newTeacher.classesList.push(selectedOption);
       } else if (action.action === 'remove-value') {
-        newTeacher.classesList = newTeacher.classesList.filter((item) => item.value !== action.removedValue.value);
+        newTeacher.classesList = newTeacher.classesList.filter((item) => item._id !== action.removedValue.value);
       }
       this.setState({ newTeacher });
     }
@@ -96,15 +75,6 @@ class Teachers extends React.Component {
       return (
         <div>
           <CollapsibleSections title={newTeacher.name || 'Teacher'} show={false}>
-            <div>
-              {newTeacher.name || 'Teacher'}
-              <span>
-                <IconButton size="small" aria-label="add teacher" color="inherit" onClick={() => this.removeTeacher(i)}>
-                  <CloseIcon fontSize="small" />
-                </IconButton>
-              </span>
-            </div>
-            <br />
             <div>
               <TextField
                 className="text-field"
@@ -142,9 +112,11 @@ class Teachers extends React.Component {
                 <Dropdown
                   className="classes-dropdown"
                   isMulti
-                  options={options}
+                  options={this.props.classList && this.props.classList.length > 0
+                    && this.props.classList.map((myClass) => ({ value: myClass._id, label: myClass.label }))}
                   onChange={(option, action) => this.updateOptions(option, action)}
-                  value={newTeacher.classesList}
+                  value={newTeacher.classesList && newTeacher.classesList.length > 0
+                    && newTeacher.classesList.map((myClass) => ({ value: myClass._id, label: myClass.label }))}
                   isSearchable
                   showAnimations
                 />
@@ -182,7 +154,61 @@ class Teachers extends React.Component {
       );
     }
 
+    updateDataForTable = () => {
+      const data = [];
+      this.props.teachersList && this.props.teachersList.length > 0 && this.props.teachersList.forEach((teacher) => {
+        const obj = {};
+        obj.name = teacher.teacherName;
+        obj.subject = teacher.teacherSubject;
+        obj._id = teacher._id;
+        obj.classesList = teacher.classesTaught;
+        const classesForTeacher = [];
+        let totalClasses = 0;
+        teacher.classesTaught.forEach((classObject, index) => {
+          classesForTeacher.push(classObject.label);
+          if (teacher.classesTaught.length > index + 1) {
+            classesForTeacher.push(', ');
+          }
+          totalClasses += parseInt(classObject.periodsPerWeek, 10);
+        });
+        obj.allClassesTaught = classesForTeacher;
+        obj.classesPerWeek = totalClasses;
+        data.push(obj);
+      });
+      return data;
+    }
+
+    editTeacherInfo = (id) => {
+      const selectedTeacher = this.updateDataForTable().filter((teacher) => teacher._id === id);
+      console.log('selectedTeacher', selectedTeacher);
+      if (selectedTeacher && selectedTeacher.length > 0) {
+        const { showModal } = this.state;
+        this.setState({
+          newTeacher: selectedTeacher[0],
+          showModal: !showModal,
+        });
+      }
+    }
+
     render() {
+      const data = this.updateDataForTable();
+
+      const columns = [{
+        Header: 'Name',
+        accessor: 'name',
+        Cell: ({ original }) => <span className="pointer link" onClick={() => this.editTeacherInfo(original._id)}>{original.name}</span>,
+      }, {
+        Header: 'Subject',
+        accessor: 'subject',
+        Cell: (props) => <span className="number">{props.value}</span>,
+      }, {
+        Header: 'Classes Taught',
+        accessor: 'allClassesTaught',
+      }, {
+        Header: 'Classes Per Week',
+        accessor: 'classesPerWeek',
+      }];
+
       return (
         <div>
           <br />
@@ -192,15 +218,27 @@ class Teachers extends React.Component {
           <br />
           <Link to="/classes"> Add Classes </Link>
           <br />
+          <br />
           {
-            this.state.teachersList && this.state.teachersList.length > 0
+            this.props.teachersList && this.props.teachersList.length > 0
                 && (
-                  <Table
-                    data={this.state.teachersList}
-                    columns={columns}
-                    defaultPageSize={5}
-                    title="Teachers"
+                  <FullWidthGrid
+                    componentOneSize={9}
+                    componentTwoSize={3}
+                    spacing={2}
+                    componentOne={(
+                      <Table
+                        data={data}
+                        columns={columns}
+                        defaultPageSize={6}
+                        title="Teachers"
+                      />
+                    )}
+                    componentTwo={(
+                      <div />
+                    )}
                   />
+
                 )
           }
           <Modal
@@ -234,11 +272,13 @@ const mapStateToProps = (state) => ({
   errors: state.errors,
   email: state.auth && state.auth.user && state.auth.user.email,
   teachersList: state.teachers && state.teachers.teachersList && state.teachers.teachersList.length > 0 && state.teachers.teachersList,
+  classesList: state.teachers && state.teachers.classesList && state.teachers.classesList.length > 0 && state.teachers.classesList,
 });
 
 const mapDispatchToProps = {
   addNewTeacher,
   getAllTeachers,
+  getAllClasses,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Teachers);

@@ -12,3 +12,11 @@
 .text-field {
     width: 300px;
 }
+
+.pointer {
+  cursor: pointer;
+}
+
+.link {
+  color:lightskyblue;
+}

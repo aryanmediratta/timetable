@@ -37,6 +37,14 @@ function getTimetableForEntity(timetable, entityType, entityId) {
   return myTable;
 }
 
+function showAllSections(numberOfSections) {
+  const alphabets = [];
+  for (let i = 0; i < numberOfSections; i++) {
+    alphabets.push((i + 10).toString(36).toUpperCase());
+  }
+  return alphabets;
+}
+
 function createTimetableForRendering(timetable, numPeriods) {
   const result = [];
   for (let i = 0; i < numPeriods; i++) {
@@ -76,4 +84,5 @@ module.exports = {
   }),
   getTimetableForEntity,
   createTimetableForRendering,
+  showAllSections,
 };

@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { logoutUser } from '../../actions/authActions';
+import { getAllTeachers, getAllClasses } from '../../actions/teacherActions';
 
 class OtherPage extends React.Component {
   constructor(props) {
@@ -51,10 +52,13 @@ OtherPage.propTypes = {
 const mapStateToProps = (state) => ({
   auth: state.auth,
   errors: state.errors,
+  email: state.auth && state.auth.user && state.auth.user.email,
 });
 
 const mapDispatchToProps = {
   logoutUser,
+  getAllClasses,
+  getAllTeachers,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(OtherPage);
