@@ -49,7 +49,7 @@ class Classes extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.classesList === false) {
+    if (prevProps.classesList === false && (this.props.classesList && this.props.classesList.length > 0)) {
       this.updateData();
     }
   }
