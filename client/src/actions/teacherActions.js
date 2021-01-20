@@ -3,6 +3,8 @@ import {
   SET_ALL_TEACHERS,
   ADD_NEW_TEACHER,
   ADD_NEW_CLASSES,
+  POST_CLASSES,
+  GET_ALL_CLASSES,
 } from './types';
 
 import { post, get, constructURL } from '../utils';
@@ -45,6 +47,30 @@ export const addNewClasses = (classesData) => (dispatch) => {
       dispatch({
         type: GET_ERRORS,
         payload: res.newTeacher,
+      });
+    });
+};
+
+export const postClasses = (sectionData) => (dispatch) => {
+  post('/api/post_all_classes', sectionData)
+    .then((res) => res.json())
+    .then((res) => {
+      if (res.success === true) {
+        dispatch({
+          type: POST_CLASSES,
+          payload: res.sections,
+        });
+      }
+    });
+}
+
+export const getAllClasses = (email) => (dispatch) => {
+  const URL = constructURL('/api/get_all_classes', { email });
+  get(URL)
+    .then((res) => {
+      dispatch({
+        type: GET_ALL_CLASSES,
+        payload: res.classes,
       });
     });
 };

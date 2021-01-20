@@ -1,8 +1,14 @@
-import { SET_ALL_TEACHERS, ADD_NEW_TEACHER, ADD_NEW_CLASSES } from '../actions/types';
+import {
+  SET_ALL_TEACHERS,
+  ADD_NEW_TEACHER,
+  ADD_NEW_CLASSES,
+  GET_ALL_CLASSES,
+} from '../actions/types';
 
 const initialState = {
   teachersList: [],
   classList: [],
+  sectionList: [],
 };
 
 export default function teacherReducer(state = initialState, action) {
@@ -22,6 +28,11 @@ export default function teacherReducer(state = initialState, action) {
     return {
       ...state,
       classList,
+    };
+  case GET_ALL_CLASSES:
+    return {
+      ...state,
+      sectionList: action.payload,
     };
   default:
     return state;

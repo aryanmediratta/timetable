@@ -5,49 +5,74 @@ import { connect } from 'react-redux';
 import Dropdown from '../partials/Dropdown';
 
 import FullWidthGrid from '../partials/TwoComponentGridSystem';
-import { addNewClasses } from '../../actions/teacherActions';
+import { postClasses, getAllClasses } from '../../actions/teacherActions';
+
+// const options = [
+//   { value: '1', label: '1', section: '' },
+//   { value: '2', label: '2', section: '' },
+//   { value: '3', label: '3', section: '' },
+//   { value: '4', label: '4', section: '' },
+//   { value: '5', label: '5', section: '' },
+//   { value: '6', label: '6', section: '' },
+//   { value: '7', label: '7', section: '' },
+//   { value: '8', label: '8', section: '' },
+//   { value: '9', label: '9', section: '' },
+//   { value: '10', label: '10', section: '' },
+//   { value: '11', label: '11', section: '' },
+//   { value: '12', label: '12', section: '' },
+// ];
 
 const options = [
-  { value: '1', label: '1', section: '' },
-  { value: '2', label: '2', section: '' },
-  { value: '3', label: '3', section: '' },
-  { value: '4', label: '4', section: '' },
-  { value: '5', label: '5', section: '' },
-  { value: '6', label: '6', section: '' },
-  { value: '7', label: '7', section: '' },
-  { value: '8', label: '8', section: '' },
-  { value: '9', label: '9', section: '' },
-  { value: '10', label: '10', section: '' },
-  { value: '11', label: '11', section: '' },
-  { value: '12', label: '12', section: '' },
+  { value: '1', label: '1', section: 0 },
+  { value: '2', label: '2', section: 0 },
+  // { value: '3', label: '3', section: 0 },
+  // { value: '4', label: '4', section: 0 },
+  // { value: '5', label: '5', section: 0 },
+  // { value: '6', label: '6', section: 6 },
+  // { value: '7', label: '7', section: 0 },
+  // { value: '8', label: '8', section: 0 },
+  // { value: '9', label: '9', section: 0 },
+  // { value: '10', label: '10', section: 0 },
+  // { value: '11', label: '11', section: 0 },
+  // { value: '12', label: '12', section: 0 },
 ];
 
 class Classes extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      classList: [],
+      // classList: [...options],
+      currentSection: options[0],
+      // sections: options[0].section,
     };
+  }
+
+  componentDidMount() {
+    this.props.getAllClasses(this.props.email);
+    // this.setState({
+    //   teachersList: this.props.teachersList,
+    // });
   }
 
     submitHandler = (e) => {
       e.preventDefault();
-      const { classList } = this.state;
-      this.props.addNewClasses(classList);
+      const data = {
+        sections: this.state.currentSection,
+        email: this.props.email,
+      };
+      this.props.postClasses(data);
     }
 
-    updateOptions = (_, action) => {
-      let { classList } = this.state;
+    updateOptions = (option, action) => {
       if (action.action === 'select-option') {
-        classList.push(action.option);
-      } else if (action.action === 'remove-value') {
-        classList = classList.filter((item) => item.value !== action.removedValue.value);
+        this.setState({
+          currentSection: option,
+          // sections: this.state.currentSection.section,
+        });
       }
-      this.setState({ classList });
     }
 
     render() {
-      const { classList } = this.state;
       return (
         <div>
           <br />
@@ -65,34 +90,28 @@ class Classes extends React.Component {
               componentOne={(<h3>Select Class</h3>)}
               componentTwo={(
                 <Dropdown
-                  isMulti
+                  isMulti={false}
                   options={options}
                   onChange={(option, action) => this.updateOptions(option, action)}
-                  value={options.value}
+                  value={this.state.currentSection}
                   isSearchable
                   showAnimations
                 />
               )}
             />
             <br />
-            { classList.map((e) => (
-              <div>
-                <br />
-                <TextField
-                  className="text-field"
-                  label={`Enter Number of classes for Class ${e.label}`}
-                  variant="outlined"
-                  size="small"
-                  value={e.section}
-                  onChange={(element) => {
-                    e.section = element.target.value;
-                    this.setState({
-                      classList,
-                    });
-                  }}
-                />
-              </div>
-            ))}
+            <TextField
+              id="post"
+              label={`Enter no.of sections for ${this.state.currentSection.label}`}
+              variant="outlined"
+              value={this.state.currentSection.section}
+              onChange={(e) => {
+                const { currentSection } = this.state;
+                currentSection.section = e.target.value;
+                this.setState({ currentSection });
+              }}
+              size="small"
+            />
             <br />
             <Button
               color="primary"
@@ -115,7 +134,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  addNewClasses,
+  postClasses,
+  getAllClasses,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Classes);

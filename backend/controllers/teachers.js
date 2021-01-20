@@ -1,4 +1,5 @@
 const Teacher = require('../models/Teachers');
+const Classes = require('../models/Classes');
 
 addTeacher = (req, res, next) => {
     let { newTeacher, email } = req.body;
@@ -70,9 +71,54 @@ addClasses = (req, res, next) => {
         })
 }
 
-// Modify this too
-getAllClasses = (req, res, next) => {
 
+// Posting and Getting Sections
+
+//Get All Classes
+getAllClasses = (req, res, next) => {
+  const url = new URL(`https://dukhadsamaachar.com/${req.originalUrl}`);
+  const email = url.searchParams.get('email');
+  Classes.find({ userEmail: email })
+   .then(data => {
+      res.status(200).json({
+        success: true,
+        classes: data,
+        message:'FETCHED Classes And Sections'
+      });
+   })
+   .catch(err => {
+      res.status(200).json({
+        success: false,
+        response: err,
+        message: 'Could Not Fetch Class/Section',
+    });
+  });
+}
+
+//Posting Classes As Objects of Label, Value and Section
+postAllClasses = (req, res, next) => {
+    console.log('BELLOOOOOOOOO')
+    let { sections, email } = req.body;
+    console.log(sections);
+    const section = new Classes({
+        addClasses: sections,
+        userEmail: email,
+    });
+    section.save()
+      .then(data => {
+        res.status(200).json({
+          success: true,
+          sections: data,
+          message: 'Section Post Request Recieved'
+        });
+      })
+    .catch(err => {
+        res.status(200).json({
+            success: false,
+            response: err,
+            message: "Caught Error, Please Fix Code"
+        });
+    })
 }
 
 module.exports = {
@@ -80,4 +126,5 @@ module.exports = {
     fetchTeachers,
     addClasses,
     getAllClasses,
+    postAllClasses,
 };

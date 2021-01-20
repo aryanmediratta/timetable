@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 
-const { saveDataInDatabase } = require('../database/utils');
+// const { saveDataInDatabase } = require('../database/utils');
 const { backendPort, uri, connectionParams } = require('./config');
 
 const allApis = require('../routes/apis');
@@ -38,17 +38,17 @@ app.get('/api/fetch_static_timetable', (_req, res) => {
 });
 
 // Testing code, Will remove
-app.post('/api/world', (req, res) => {
-    console.log(req.body);
-    const data = {
-        text: req.body.post,
-    };
-    saveDataInDatabase('testing-db', 'testing-db', data);
-    res.send({
-        success: true,
-        message: `I received your POST request. This is what you sent me: ${req.body.post}`,
-    });
-});
+// app.post('/api/world', (req, res) => {
+//     console.log(req.body);
+//     const data = {
+//         text: req.body.post,
+//     };
+//     saveDataInDatabase('testing-db', 'testing-db', data);
+//     res.send({
+//         success: true,
+//         message: `I received your POST request. This is what you sent me: ${req.body.post}`,
+//     });
+// });
 
 //Teachers.js Save Button POST Call
 app.post('/api/save', (req, res) => {
