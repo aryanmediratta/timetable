@@ -1,10 +1,11 @@
 import {
-  SET_ALL_TEACHERS, ADD_NEW_TEACHER, ADD_NEW_CLASSES, SET_ALL_CLASSES, UPDATE_EXISTING_TEACHER,
+  SET_ALL_TEACHERS, ADD_NEW_TEACHER, ADD_NEW_CLASSES, SET_ALL_CLASSES, UPDATE_EXISTING_TEACHER, SET_TIMETABLE,
 } from '../actions/types';
 
 const initialState = {
   teachersList: [],
   classesList: [],
+  timetable: [],
 };
 
 export default function teacherReducer(state = initialState, action) {
@@ -19,7 +20,11 @@ export default function teacherReducer(state = initialState, action) {
       ...state,
       teachersList: [...state.teachersList, action.payload],
     };
-    // Modify this
+  case SET_TIMETABLE:
+    return {
+      ...state,
+      timetable: action.payload,
+    };
   case ADD_NEW_CLASSES:
     return {
       ...state,

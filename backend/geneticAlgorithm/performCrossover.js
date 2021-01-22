@@ -1,17 +1,17 @@
-const { NUM_CLASSES, NUM_PERIODS, NUM_GENERATIONS, MUTATION_RATE, POPULATION_RATIO } = require('./constants');
-const { costFunction } = require('./calculateFitness');
+const { NUM_GENERATIONS, MUTATION_RATE, POPULATION_RATIO } = require('./constants');
+const { costFunction, findClashes } = require('./calculateFitness');
 const { probability } = require('./utils');
 const { createTimeTables } = require('./generateRandomTimetables');
 
 
 // Receives two parents with the crossover point, returns the entire family.
-function crossTwoParents (parent1, parent2, crossoverPoint, mutationRate) {
+function crossTwoParents (parent1, parent2, crossoverPoint, mutationRate, numClasses, numPeriods) {
     const family = [];
-    const child1 = Array.from(Array(NUM_PERIODS), () => new Array(NUM_CLASSES));
-    const child2 = Array.from(Array(NUM_PERIODS), () => new Array(NUM_CLASSES));
-    for (i = 0; i < NUM_PERIODS; i++) {
-        for (j = 0; j < NUM_CLASSES; j++) {
-            if (j < crossoverPoint || Math.floor(Math.random() * NUM_CLASSES)) {
+    const child1 = Array.from(Array(numPeriods), () => new Array(numClasses));
+    const child2 = Array.from(Array(numPeriods), () => new Array(numClasses));
+    for (i = 0; i < numPeriods; i++) {
+        for (j = 0; j < numClasses; j++) {
+            if (j < crossoverPoint || Math.floor(Math.random() * numClasses)) {
                 child1[i][j] = parent1[i][j];
                 child2[i][j] = parent2[i][j];
             } else {
@@ -21,10 +21,10 @@ function crossTwoParents (parent1, parent2, crossoverPoint, mutationRate) {
         }
     }
     if (probability(mutationRate)) {
-        const i1 = Math.floor(Math.random() * NUM_PERIODS);
-        const i2 = Math.floor(Math.random() * NUM_PERIODS);
-        const j1 = Math.floor(Math.random() * NUM_CLASSES);
-        const j2 = Math.floor(Math.random() * NUM_CLASSES);
+        const i1 = Math.floor(Math.random() * numPeriods);
+        const i2 = Math.floor(Math.random() * numPeriods);
+        const j1 = Math.floor(Math.random() * numClasses);
+        const j2 = Math.floor(Math.random() * numClasses);
         const temp = child1[i1][j1];
         child1[i1][j1] = child1[i2][j2];
         child1[i2][j2] = temp;
@@ -54,12 +54,12 @@ function speciesPropogation (generation) {
     const fittestMembers = [];
     let total = 0;
     const sizeOfGoodPopulation = (tempGeneration.length/2) * POPULATION_RATIO;
-    const sizeOfBadPopulation = (tempGeneration.length/2 - sizeOfGoodPopulation);
+    const sizeOfBadPopulation = tempGeneration.length/2;
     for (i = 0; i < tempGeneration.length-1; i++) {
         if (i < sizeOfGoodPopulation) {
             total = total + tempGeneration[i].cost;
             fittestMembers.push(tempGeneration[i].parent);
-        } else if (i > sizeOfGoodPopulation && i < (sizeOfGoodPopulation + sizeOfBadPopulation)) {
+        } else if (i < sizeOfBadPopulation) {
             // Random member ->
             const randomMember1 = tempGeneration[Math.floor(Math.random() * tempGeneration.length)];
             total = total + randomMember1.cost;
@@ -70,7 +70,7 @@ function speciesPropogation (generation) {
             // fittestMembers.push(tempGeneration[tempGeneration.length-1-i].parent);
         } else break;
     }
-    if (costOfBestMemberInFamily < 20) {
+    if (costOfBestMemberInFamily < 200) {
         bestFamilyMember = fittestMembers[0];
     }
     return {
@@ -118,26 +118,27 @@ function addCostAndProbabilityOfSelectionToPopulation (population) {
     return populationWithProbability;
 }
 
-function easy () {
-    let [population, avgCost] = createTimeTables();
+function easy (data) {
+    let [population, _avgCost] = createTimeTables(data);
     let index = 2;
     let avg;
     let costOfBestMemberInFamily = 10;
-    let totalImprovement;
     let bestFamilyMember;
+    let crossoverPoint = null;
     const mutationRate = (MUTATION_RATE/100);
     while ((costOfBestMemberInFamily > 0) && (index <= NUM_GENERATIONS)) {
         const tempGeneration = [];
         for (k = 0; k < population.length/2; k++) {
             const randomMember1 = population[Math.floor(Math.random() * population.length)];
-            const family = crossTwoParents(randomMember1, population[k], null, mutationRate);
+            // Fixing crossover point for an entire generation.
+            // crossoverPoint = Math.floor(Math.random() * data.numClasses);
+            const family = crossTwoParents(randomMember1, population[k], crossoverPoint, mutationRate, data.numClasses, data.numPeriods);
             tempGeneration.push(...family);
         }
         const newGen = speciesPropogation(tempGeneration);
         avg = newGen.averageCostOfGeneration;
         population = newGen.newGeneration;
         costOfBestMemberInFamily = newGen.costOfBestMemberInFamily;
-        totalImprovement = avgCost - avg;
         bestFamilyMember = newGen.bestFamilyMember;
         console.log(`Average of ${population.length} parents in ${index} Generation is -> ${avg} with BEST as ${costOfBestMemberInFamily}`);
         index++;
@@ -145,6 +146,8 @@ function easy () {
     // console.log('bestFamilyMember',bestFamilyMember);
     console.log('-------------------------------------------------------------------------------');
     console.log(`Average of ${population.length} parents in ${index} Generation is -> ${avg} with BEST as ${costOfBestMemberInFamily}`);
+    myClashes = findClashes(bestFamilyMember);
+    console.log('HARD CLASHES', myClashes[0], ' SOFT CLASHES', myClashes[1]);
     return bestFamilyMember;
 }
 

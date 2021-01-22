@@ -5,7 +5,7 @@ require('../../styles/Timetable.css');
 
 class TimetableRow extends React.Component {
   render() {
-    const inverseEntityType = this.props.entityType === 'Class' ? 'Teacher' : 'Class';
+    // const inverseEntityType = this.props.entityType === 'Class' ? 'Teacher' : 'Class';
     return (
       <div>
         {
@@ -16,7 +16,7 @@ class TimetableRow extends React.Component {
                   this.props.row[period] && this.props.row[period].entityId
                     ? this.props.row[period].entityId === ' '
                       ? '  '
-                      : `${inverseEntityType} No. - ${this.props.row[period].entityId}`
+                      : `${this.props.row[period].entityId} ${this.props.row[period].teacherName ? ` - - ${this.props.row[period].teacherName}` : ''}`
                     : this.props.row[index] === ' ' ? ' ' : this.props.row[index]
                 }
                 {' '}

@@ -74,7 +74,7 @@ class Teachers extends React.Component {
       let { newTeacher } = this.state;
       return (
         <div>
-          <CollapsibleSections title={newTeacher.name || 'Teacher'} show={false}>
+          <CollapsibleSections title={newTeacher.name || 'Teacher'} show>
             <div>
               <TextField
                 className="text-field"
@@ -112,8 +112,8 @@ class Teachers extends React.Component {
                 <Dropdown
                   className="classes-dropdown"
                   isMulti
-                  options={this.props.classList && this.props.classList.length > 0
-                    && this.props.classList.map((myClass) => ({ value: myClass._id, label: myClass.label }))}
+                  options={this.props.classesList && this.props.classesList.length > 0
+                    && this.props.classesList.map((myClass) => ({ value: myClass._id, label: myClass.label }))}
                   onChange={(option, action) => this.updateOptions(option, action)}
                   value={newTeacher.classesList && newTeacher.classesList.length > 0
                     && newTeacher.classesList.map((myClass) => ({ value: myClass._id, label: myClass.label }))}
@@ -166,6 +166,8 @@ class Teachers extends React.Component {
         let totalClasses = 0;
         teacher.classesTaught.forEach((classObject, index) => {
           classesForTeacher.push(classObject.label);
+          // classesForTeacher.push(': ');
+          // classesForTeacher.push(classObject.periodsPerWeek);
           if (teacher.classesTaught.length > index + 1) {
             classesForTeacher.push(', ');
           }

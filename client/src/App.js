@@ -39,7 +39,7 @@ class App extends React.Component {
           <BrowserRouter>
             <Header />
             <Switch>
-              <Route exact path="/" component={MainPage} />
+              <PrivateRoute exact path="/" component={MainPage} />
               <PrivateRoute exact path="/home" component={OtherPage} />
               <Route exact path="/login" component={Login} />
               <Route exact path="/signup" component={Register} />

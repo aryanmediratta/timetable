@@ -281,13 +281,15 @@ const specificClassData7 = {
 };
 
 module.exports = {
-    NUM_CLASSES: 7,
-    NUM_TEACHERS: 10,
-    NUM_PERIODS: 30,
+    // Variables impacting generic GA
     NUM_CHROMOSOMES: 32,
     NUM_GENERATIONS: 7999,
     MUTATION_RATE: 64,
-    POPULATION_RATIO: 0.90,
+    POPULATION_RATIO: 0.75,
+    // Hardcoded for constants. 
+    NUM_CLASSES: 7,
+    NUM_TEACHERS: 10,
+    NUM_PERIODS: 30,
     specificClassData1,
     specificClassData2,
     specificClassData3,

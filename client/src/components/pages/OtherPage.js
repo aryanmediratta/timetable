@@ -16,6 +16,7 @@ class OtherPage extends React.Component {
   }
 
   render() {
+    console.log('props', this.props);
     return (
       <div>
         <h2>Home Page??</h2>

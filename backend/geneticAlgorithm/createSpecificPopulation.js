@@ -28,12 +28,41 @@ function createTuplesForClass (specificClassData, population, index, uniqueIndex
     ];
 }
 
+function createTuplesForTeacher (teacherData, population, index, uniqueIndex) {
+  const { _id, classesTaught, teacherName, teacherSubject } = teacherData;
+  classesTaught.forEach(myClass => {
+        uniqueIndex++;
+        for (i = 0; i < myClass.periodsPerWeek ; i++) {
+            index++;
+            population.push({
+                label: index,
+                classId: myClass._id,
+                teacherId: _id,
+                uniqueIndex,
+                className: myClass.label,
+                teacherName,
+                subject: teacherSubject,
+            });
+        }
+    });
+    return [
+        population,
+        index,
+        uniqueIndex,
+    ];
+}
+
 
 // Returns the final population using a helper function: `createTuplesForClass()`. 
-function createAllTuples () {
-    let population = [];
-    let index = 0;
-    let uniqueIndex = 0;
+function createAllTuples (data) {
+  let population = [];
+  let index = 0;
+  let uniqueIndex = 0;
+  if (data && data.length > 0) {
+    data.forEach(teacher => {
+      [ population, index, uniqueIndex ] = createTuplesForTeacher(teacher, population, index, uniqueIndex);
+    });
+  } else {
     [ population, index, uniqueIndex ] = createTuplesForClass(specificClassData1, population, index, uniqueIndex);
     [ population, index, uniqueIndex ] = createTuplesForClass(specificClassData2, population, index, uniqueIndex);
     [ population, index, uniqueIndex ] = createTuplesForClass(specificClassData3, population, index, uniqueIndex);
@@ -41,7 +70,8 @@ function createAllTuples () {
     [ population, index, uniqueIndex ] = createTuplesForClass(specificClassData5, population, index, uniqueIndex);
     [ population, index, uniqueIndex ] = createTuplesForClass(specificClassData6, population, index, uniqueIndex);
     [ population, index, uniqueIndex ] = createTuplesForClass(specificClassData7, population, index, uniqueIndex);
-    return population;
+  }
+  return population;
 }
 
 module.exports = {

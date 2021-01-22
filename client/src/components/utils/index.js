@@ -4,19 +4,27 @@ const PERIOD_NUMBER = ['1st Period', '2nd Period', '3rd Period', '4th Period', '
 function getTimetableForEntity(timetable, entityType, entityId) {
   const myTable = [];
   let index = 1;
+  console.log('entityId', entityId);
+  console.log('entityType', entityType);
+  // entityId = parseInt(entityId, 10);
   timetable.forEach((period) => {
     let flag = false;
     period.forEach((tuple) => {
-      const { classId, teacherId, label } = tuple;
+      const {
+        classId, teacherId, label, className, teacherName, subject,
+      } = tuple;
       let tempEntity = null;
-      if (entityType === 'class' && entityId === classId) {
-        tempEntity = teacherId;
-      } else if (entityType === 'teacher' && entityId === teacherId) {
-        tempEntity = classId;
+      let otherTempEntity = null;
+      if (entityId === classId) {
+        otherTempEntity = teacherName;
+        tempEntity = subject;
+      } else if (entityId === teacherId) {
+        tempEntity = className;
       }
       // If we find it, then we push it. otherwise we dont :)
       if (tempEntity !== null) {
         myTable.push({
+          teacherName: otherTempEntity,
           entityId: tempEntity,
           label,
           periodNo: index,
