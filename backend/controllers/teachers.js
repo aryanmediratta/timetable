@@ -11,6 +11,7 @@ addTeacher = (req, res, next) => {
       userEmail: email,
       classesTaught: newTeacher.classesList,
     };
+    let errors = [];
     if (newTeacher._id) {
       Teacher.findOneAndReplace({ userEmail: email, _id: newTeacher._id }, replacement, { returnNewDocument: true })
         .then(_teacher => {
@@ -36,6 +37,27 @@ addTeacher = (req, res, next) => {
         teacherSubject: newTeacher.subject,
         classesTaught: newTeacher.classesList,
       });
+      if (!teacher.teacherName) {
+        errors.push('Teacher Name required');
+      }
+      if (!teacher.teacherSubject) {
+        errors.push('Subject Taught is Required');
+      }
+      if (teacher.classesTaught.length === 0) {
+        errors.push('Select Atleast One Class');
+      } else {
+        teacher.classesTaught.forEach( section => {
+          if (!section.periodsPerWeek) {
+            errors.push(`Please specify periods for ${section.label}`);
+          }
+        });
+      }
+      if (errors.length > 0) {
+        return res.status(200).json({
+            success: false,
+            message: errors[0],
+        });
+      }
       teacher.save()
         .then(response => {
           res.status(200).json({

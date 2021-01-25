@@ -10,6 +10,8 @@ import Modal from '../partials/Modal';
 import Table from '../partials/Table';
 import FullWidthGrid from '../partials/TwoComponentGridSystem';
 
+import SimpleSnackbar from '../utils/Popup';
+
 import { addNewTeacher, getAllTeachers, getAllClasses } from '../../actions/teacherActions';
 
 require('../../styles/Login.css');
@@ -20,6 +22,8 @@ class Teachers extends React.Component {
     this.state = {
       showModal: false,
       newTeacher: {},
+      showPopup: false,
+      errorMessage: '',
     };
   }
 
@@ -31,6 +35,29 @@ class Teachers extends React.Component {
       this.props.getAllClasses(email);
     }
   }
+
+  UNSAFE_componentWillReceiveProps(nextProps, nextState) {
+    if (nextProps.errors) {
+      this.setState({
+        errorMessage: nextProps.errors,
+      });
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.errors !== this.props.errors) {
+      this.setState({
+        errorMessage: this.props.errors && this.props.errors.message,
+        showPopup: true,
+      });
+    }
+  }
+
+  onClose = () => {
+    this.setState({
+      showPopup: false,
+    });
+  };
 
     submitHandler = (e) => {
       e.preventDefault();
@@ -182,7 +209,7 @@ class Teachers extends React.Component {
 
     editTeacherInfo = (id) => {
       const selectedTeacher = this.updateDataForTable().filter((teacher) => teacher._id === id);
-      console.log('selectedTeacher', selectedTeacher);
+      // console.log('selectedTeacher', selectedTeacher);
       if (selectedTeacher && selectedTeacher.length > 0) {
         const { showModal } = this.state;
         this.setState({
@@ -259,6 +286,10 @@ class Teachers extends React.Component {
             + Add Teacher
           </Button>
           <br />
+          {
+            this.state.showPopup
+                    && <SimpleSnackbar onClose={this.onClose} message={this.state.errorMessage} />
+          }
         </div>
       );
     }
