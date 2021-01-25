@@ -12,6 +12,27 @@ addTeacher = (req, res, next) => {
       classesTaught: newTeacher.classesList,
     };
     let errors = [];
+    if (!replacement.teacherName) {
+      errors.push('Teacher Name required');
+    }
+    if (!replacement.teacherSubject) {
+      errors.push('Subject Taught is Required');
+    }
+    if (replacement.classesTaught.length === 0) {
+      errors.push('Select Atleast One Class');
+    } else {
+      replacement.classesTaught.forEach( section => {
+        if (!section.periodsPerWeek) {
+          errors.push(`Please specify periods for ${section.label}`);
+        }
+      });
+    }
+    if (errors.length > 0) {
+      return res.status(200).json({
+          success: false,
+          message: errors[0],
+      });
+    }
     if (newTeacher._id) {
       Teacher.findOneAndReplace({ userEmail: email, _id: newTeacher._id }, replacement, { returnNewDocument: true })
         .then(_teacher => {
@@ -31,6 +52,7 @@ addTeacher = (req, res, next) => {
           });
         });
     } else {
+      errors = [];
       const teacher = new Teacher({
         teacherName: newTeacher.name,
         userEmail: email,
