@@ -183,6 +183,7 @@ class Teachers extends React.Component {
 
     updateDataForTable = () => {
       const data = [];
+      const confirmClass = [{ label: '11-Z' }];
       this.props.teachersList && this.props.teachersList.length > 0 && this.props.teachersList.forEach((teacher) => {
         const obj = {};
         obj.name = teacher.teacherName;
@@ -193,6 +194,16 @@ class Teachers extends React.Component {
         let totalClasses = 0;
         teacher.classesTaught.forEach((classObject, index) => {
           classesForTeacher.push(classObject.label);
+          // confirmClass && confirmClass.forEach((section) => {
+          const found = confirmClass.findIndex((e) => e.label === classObject.label);
+          if (found !== -1) {
+            const totalPeriods = confirmClass[found].periodsPerWeek + classObject.periodsPerWeek;
+            confirmClass[found] = { ...confirmClass[found], periodsPerWeek: totalPeriods };
+          } else {
+            // confirmClass.push({ label: classObject.label, periods: classObject.periodsPerWeek });
+            confirmClass.push({ ...classObject })
+          }
+          // });
           // classesForTeacher.push(': ');
           // classesForTeacher.push(classObject.periodsPerWeek);
           if (teacher.classesTaught.length > index + 1) {
@@ -204,12 +215,13 @@ class Teachers extends React.Component {
         obj.classesPerWeek = totalClasses;
         data.push(obj);
       });
+      console.log(confirmClass);
       return data;
     }
 
     editTeacherInfo = (id) => {
       const selectedTeacher = this.updateDataForTable().filter((teacher) => teacher._id === id);
-      // console.log('selectedTeacher', selectedTeacher);
+      console.log('selectedTeacher', selectedTeacher);
       if (selectedTeacher && selectedTeacher.length > 0) {
         const { showModal } = this.state;
         this.setState({
