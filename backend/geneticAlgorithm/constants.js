@@ -285,8 +285,11 @@ module.exports = {
     NUM_CHROMOSOMES: 32,
     NUM_GENERATIONS: 7999,
     MUTATION_RATE: 64,
-    POPULATION_RATIO: 0.75,
-    // Hardcoded for constants. 
+    POPULATION_RATIO: 0.90,
+    HARD_CLASH_WEIGHT: 7,
+
+    // Hardcoded for constants.
+    ALL_CLASS_IDS: [1,2,3,4,5,6,7],
     NUM_CLASSES: 7,
     NUM_TEACHERS: 10,
     NUM_PERIODS: 30,

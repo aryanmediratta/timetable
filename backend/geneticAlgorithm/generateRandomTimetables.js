@@ -16,7 +16,7 @@ function createTimeTables (data) {
         population.splice(population.indexOf(randomTuple), 1);
       }
     }
-    const totalCost = costFunction(timetable);
+    const totalCost = costFunction(timetable)[0];
     avgCost = avgCost + totalCost;
     allTimeTables.push(timetable);
     numArrays = numArrays + 1;
@@ -32,5 +32,5 @@ function createTimeTables (data) {
 // createTimeTables();
 
 module.exports = {
-    createTimeTables,
+  createTimeTables,
 };
