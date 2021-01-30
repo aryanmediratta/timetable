@@ -1,11 +1,10 @@
-const { NUM_GENERATIONS, MUTATION_RATE, POPULATION_RATIO } = require('./constants');
-const { costFunction, findClashes } = require('./calculateFitness');
-const { probability } = require('./utils');
+const { NUM_GENERATIONS, POPULATION_RATIO, MAX_HARD_CLASHES, MAX_SOFT_CLASHES } = require('./constants');
+const { NUM_PERIODS, NUM_CLASSES, NUM_TEACHERS } = require('./constants');
+const { costFunction, findAllClashingPeriods, findSoftClashingPeriods } = require('./calculateFitness');
 const { createTimeTables } = require('./generateRandomTimetables');
 
-
 // Receives two parents with the crossover point and mutation rate, returns the entire family.
-function crossTwoParents (parent1, parent2, crossoverPoint, mutationRate, numClasses, numPeriods) {
+function crossTwoParents (parent1, parent2, crossoverPoint, numClasses, numPeriods, hardClashingPeriods, softClashingPeriods) {
   const family = [];
   const child1 = Array.from(Array(numPeriods), () => new Array(numClasses));
   const child2 = Array.from(Array(numPeriods), () => new Array(numClasses));
@@ -20,7 +19,22 @@ function crossTwoParents (parent1, parent2, crossoverPoint, mutationRate, numCla
       }
     }
   }
-  if (probability(mutationRate)) {
+  // Mutating Child One.
+  if (hardClashingPeriods && hardClashingPeriods.length > 0) {
+    const { el1, el2 } = hardClashingPeriods[Math.floor(Math.random() * hardClashingPeriods.length)];
+    const x1 = Math.floor(Math.random() * numPeriods);
+    const x2 = Math.floor(Math.random() * numClasses);
+    const temp = child1[el1][el2];
+    child1[el1][el2] = child1[x1][x2];
+    child1[x1][x2] = temp;
+  } else if (softClashingPeriods && softClashingPeriods.length > 0) {
+    const { el1, el2 } = softClashingPeriods[Math.floor(Math.random() * softClashingPeriods.length)];
+    const x1 = Math.floor(Math.random() * numPeriods);
+    const x2 = Math.floor(Math.random() * numClasses);
+    const temp = child1[el1][el2];
+    child1[el1][el2] = child1[x1][x2];
+    child1[x1][x2] = temp;
+  } else {
     const i1 = Math.floor(Math.random() * numPeriods);
     const i2 = Math.floor(Math.random() * numPeriods);
     const j1 = Math.floor(Math.random() * numClasses);
@@ -28,9 +42,23 @@ function crossTwoParents (parent1, parent2, crossoverPoint, mutationRate, numCla
     const temp = child1[i1][j1];
     child1[i1][j1] = child1[i2][j2];
     child1[i2][j2] = temp;
-    // console.log('MUTATING THIS STRAIN HERE ----------------------');
   }
-  if (probability(mutationRate)) {
+  // Mutating Child Two.
+  if (hardClashingPeriods && hardClashingPeriods.length > 0) {
+    const { el1, el2 } = hardClashingPeriods[Math.floor(Math.random() * hardClashingPeriods.length)];
+    const x1 = Math.floor(Math.random() * numPeriods);
+    const x2 = Math.floor(Math.random() * numClasses);
+    const temp = child2[el1][el2];
+    child2[el1][el2] = child2[x1][x2];
+    child2[x1][x2] = temp;
+  } else if (softClashingPeriods && softClashingPeriods.length > 0) {
+    const { el1, el2 } = softClashingPeriods[Math.floor(Math.random() * softClashingPeriods.length)];
+    const x1 = Math.floor(Math.random() * numPeriods);
+    const x2 = Math.floor(Math.random() * numClasses);
+    const temp = child2[el1][el2];
+    child2[el1][el2] = child2[x1][x2];
+    child2[x1][x2] = temp;
+  } else {
     const k1 = Math.floor(Math.random() * numPeriods);
     const k2 = Math.floor(Math.random() * numPeriods);
     const l1 = Math.floor(Math.random() * numClasses);
@@ -38,7 +66,6 @@ function crossTwoParents (parent1, parent2, crossoverPoint, mutationRate, numCla
     const temp = child2[k1][l1];
     child2[k1][l1] = child2[k2][l2];
     child2[k2][l2] = temp;
-    // console.log('MUTATING THIS STRAIN HERE ----------------------');
   }
   family.push(parent1);
   family.push(parent2);
@@ -55,8 +82,8 @@ function speciesPropogation (generation) {
   generation.forEach(parent => {
     const [cost, hardClashes, softClashes] = costFunction(parent);
     tempGeneration.push({
-      cost: cost,
-      parent: parent,
+      cost,
+      parent,
       hardClashes,
       softClashes,
     });
@@ -135,16 +162,24 @@ function addCostAndProbabilityOfSelectionToPopulation (population) {
 }
 
 function easy (data) {
-  let [population, _avgCost] = createTimeTables(data);
+  let population = createTimeTables(data);
   let leastSoftClashes = 10, bestFamilyMember, avg, maxHardClashes = 10, index = 2, crossoverPoint = null, costOfBestMemberInFamily = 10;
-  const mutationRate = (MUTATION_RATE/100);
-  while ((costOfBestMemberInFamily > 0) && (index <= NUM_GENERATIONS) && (leastSoftClashes > 0)) {
+  while ((costOfBestMemberInFamily > 0) && (index <= NUM_GENERATIONS) && ((leastSoftClashes > 0) || (maxHardClashes > 0))) {
     const tempGeneration = [];
+    let hardClashingPeriods, softClashingPeriods;
+    const targetedMutationForHardClashes = maxHardClashes !== 0 && maxHardClashes < MAX_HARD_CLASHES ? true : false;
+    const targetedMutationForSoftClashes = maxHardClashes === 0 && leastSoftClashes < MAX_SOFT_CLASHES ? true : false;
+    if (targetedMutationForHardClashes) {
+      hardClashingPeriods = findAllClashingPeriods(population[0]);
+    }
+    if (targetedMutationForSoftClashes) {
+      softClashingPeriods = findSoftClashingPeriods(population[0]);
+    }
     for (k = 0; k < population.length/2; k++) {
       const randomMember1 = population[Math.floor(Math.random() * population.length)];
       // Fixing crossover point for an entire generation.
       // crossoverPoint = Math.floor(Math.random() * data.numClasses);
-      const family = crossTwoParents(randomMember1, population[k], crossoverPoint, mutationRate, data.numClasses, data.numPeriods);
+      const family = crossTwoParents(randomMember1, population[k], crossoverPoint, data.numClasses, data.numPeriods, hardClashingPeriods, softClashingPeriods);
       tempGeneration.push(...family);
     }
     const newGen = speciesPropogation(tempGeneration);
@@ -164,7 +199,21 @@ function easy (data) {
   return bestFamilyMember;
 }
 
-// easy();
+function createHardcodedTimetable () {
+  const numClasses = NUM_CLASSES;
+  const numTeachers = NUM_TEACHERS;
+  const numPeriods = NUM_PERIODS;
+  const allData = {
+    teachersList: [],
+    numClasses,
+    numTeachers,
+    numPeriods,
+  };
+  const tt = easy(allData);
+  console.log('tt', tt.length);
+}
+
+// createHardcodedTimetable();
 
 module.exports = {
     easy,

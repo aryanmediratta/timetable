@@ -27,6 +27,7 @@ function costFunction (timetable) {
   return [(costForClasses + costForTeachers + costForLabels + uniqueClashesPerWeek), hardClashes, softClashes];
 }
 
+// Returns a list of clash objects
 function findClashes (timetable, allClassIds) {
   let clashes = [];
   timetable.forEach((period, periodNumber) => {
@@ -47,7 +48,38 @@ function findClashes (timetable, allClassIds) {
   return clashes;
 }
 
+// Returns a list of periods having clashed entities.
+function findAllClashingPeriods(timetable) {
+  let clashes = [];
+  timetable.forEach((period, periodNumber) => {
+    const allClasses = [];
+    const allTeachers = [];
+    period.forEach((tuple, elementID) => {
+      const { teacherId, classId } = tuple;
+      allTeachers.indexOf(teacherId) > -1 ? clashes.push({ el1: periodNumber, el2: elementID }) : allTeachers.push(teacherId);
+      allClasses.indexOf(classId) > -1 ? clashes.push({ el1: periodNumber, el2: elementID }) : allClasses.push(classId);
+    });
+  });
+  return clashes;
+}
+
+function findSoftClashingPeriods (timetable) {
+  let clashes = [];
+  timetable.forEach((period, periodNumber) => {
+    if ((periodNumber) % (6) === 0) {
+      clashPerWeek = [];
+    }
+    period.forEach((tuple, elementID) => {
+      const { uniqueIndex } = tuple;
+      clashPerWeek.indexOf(uniqueIndex) > -1 ? clashes.push({ el1: periodNumber, el2: elementID }) : clashPerWeek.push(uniqueIndex);
+    });
+  });
+  return clashes;
+}
+
 module.exports = {
     costFunction,
     findClashes,
+    findAllClashingPeriods,
+    findSoftClashingPeriods,
 };

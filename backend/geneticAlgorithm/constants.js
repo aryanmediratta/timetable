@@ -282,14 +282,14 @@ const specificClassData7 = {
 
 module.exports = {
     // Variables impacting generic GA
-    NUM_CHROMOSOMES: 32,
-    NUM_GENERATIONS: 7999,
-    MUTATION_RATE: 64,
+    NUM_CHROMOSOMES: 16,
+    NUM_GENERATIONS: 2199,
     POPULATION_RATIO: 0.90,
     HARD_CLASH_WEIGHT: 7,
+    MAX_HARD_CLASHES: 500, // Threshold for number of hard clashes to perform targeted mutation.
+    MAX_SOFT_CLASHES: 500, // Threshold for number of soft clashes to perform targeted mutation.
 
     // Hardcoded for constants.
-    ALL_CLASS_IDS: [1,2,3,4,5,6,7],
     NUM_CLASSES: 7,
     NUM_TEACHERS: 10,
     NUM_PERIODS: 30,

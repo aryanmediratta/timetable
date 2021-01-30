@@ -23,13 +23,8 @@ function createTimeTables (data) {
   }
   avgCost = avgCost/numArrays;
   console.log('Avg cost of 1st gen ->', numArrays, 'parents is', avgCost);
-  return [
-    allTimeTables,
-    avgCost
-  ];
+  return allTimeTables;
 }
-
-// createTimeTables();
 
 module.exports = {
   createTimeTables,
