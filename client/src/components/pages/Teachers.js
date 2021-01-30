@@ -183,7 +183,7 @@ class Teachers extends React.Component {
 
     updateDataForTable = () => {
       const data = [];
-      const confirmClass = [{ label: '11-Z' }];
+      const confirmClass = [];
       this.props.teachersList && this.props.teachersList.length > 0 && this.props.teachersList.forEach((teacher) => {
         const obj = {};
         obj.name = teacher.teacherName;
@@ -195,7 +195,7 @@ class Teachers extends React.Component {
         teacher.classesTaught.forEach((classObject, index) => {
           classesForTeacher.push(classObject.label);
           // confirmClass && confirmClass.forEach((section) => {
-          const found = confirmClass.findIndex((e) => e.label === classObject.label);
+          const found = confirmClass.findIndex((e) => e._id === classObject._id);
           if (found !== -1) {
             const totalPeriods = confirmClass[found].periodsPerWeek + classObject.periodsPerWeek;
             confirmClass[found] = { ...confirmClass[found], periodsPerWeek: totalPeriods };
