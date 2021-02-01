@@ -116,8 +116,7 @@ class Table extends React.Component {
                     }}
                     placeholderText={filterPlaceholder}
                     value={this.state.filterTerm}
-                    label="Confirm Password"
-                    type="password"
+                    label="Type to search"
                     variant="outlined"
                     size="small"
                   />

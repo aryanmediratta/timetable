@@ -161,7 +161,7 @@ function addCostAndProbabilityOfSelectionToPopulation (population) {
   return populationWithProbability;
 }
 
-function easy (data) {
+function generateTimetable (data) {
   let population = createTimeTables(data);
   let leastSoftClashes = 10, bestFamilyMember, avg, maxHardClashes = 10, index = 2, crossoverPoint = null, costOfBestMemberInFamily = 10;
   while ((costOfBestMemberInFamily > 0) && (index <= NUM_GENERATIONS) && ((leastSoftClashes > 0) || (maxHardClashes > 0))) {
@@ -209,12 +209,12 @@ function createHardcodedTimetable () {
     numTeachers,
     numPeriods,
   };
-  const tt = easy(allData);
+  const tt = generateTimetable(allData);
   console.log('tt', tt.length);
 }
 
 // createHardcodedTimetable();
 
 module.exports = {
-    easy,
+  generateTimetable,
 };

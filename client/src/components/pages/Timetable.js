@@ -62,7 +62,7 @@ class Timetable extends React.Component {
     const { email, teachersList, classesList } = this.props;
     const numClasses = classesList.length;
     const numTeachers = teachersList.length;
-    const URL = constructURL('/api/fetch_static_timetable', { email, numClasses, numTeachers });
+    const URL = constructURL('/api/generate_timetable', { email, numClasses, numTeachers });
     get(URL)
       .then((res) => {
         const timetable = getTimetableForEntity(res.timetable, this.state.entityType.value, this.state.entityId.value);

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Timetable from './Timetable';
-import { get } from '../utils';
 
 class MainPage extends React.Component {
   constructor(props) {
@@ -9,20 +8,6 @@ class MainPage extends React.Component {
     this.state = {
       response: '',
     };
-  }
-
-  componentDidMount() {
-    this.callApi();
-  }
-
-  callApi = () => {
-    get('/api/hello')
-      .then((res) => {
-        this.setState({ response: res.express });
-      })
-      .catch((err) => {
-        this.setState({ response: err });
-      });
   }
 
   render() {
