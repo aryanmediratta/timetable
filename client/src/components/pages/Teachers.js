@@ -1,162 +1,42 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, TextField } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import Dropdown from '../partials/Dropdown';
-import CollapsibleSections from '../partials/CollapsibleSections';
-import Modal from '../partials/Modal';
-import Table from '../partials/Table';
-import FullWidthGrid from '../partials/TwoComponentGridSystem';
+import Table from '../common/Table';
+import FullWidthGrid from '../common/TwoComponentGridSystem';
+import ModifyTeacherModal from '../partials/ModifyTeacherModal';
 
-import { addNewTeacher, getAllTeachers, getAllClasses } from '../../actions/teacherActions';
+import { getAllTeachers, getAllClasses } from '../../actions/teacherActions';
+import store from '../../store';
+import { TEACHER_TYPES } from '../../actions/teacher.actions';
 
 require('../../styles/Login.css');
 
 class Teachers extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      showModal: false,
-      newTeacher: {},
-    };
-  }
-
-  componentDidMount() {
-    const { email } = this.props;
+    const { email, teachers: { teachersList } } = this.props;
     // If user refreshes page, the store is empty thus these values are false. so we fetch them again.
-    if ((this.props.teachersList === false) || (this.props.classesList === false)) {
+    if ((teachersList.length === 0) || (this.props.classesList === false)) {
       this.props.getAllTeachers(email);
       this.props.getAllClasses(email);
     }
   }
 
-    submitHandler = (e) => {
-      e.preventDefault();
-      const data = {
-        newTeacher: this.state.newTeacher,
-        email: this.props.email,
-      };
-      this.props.addNewTeacher(data);
-    }
-
     toggleModal = () => {
-      const { showModal } = this.state;
-      this.setState({
-        showModal: !showModal,
-      });
+      store.dispatch({ type: TEACHER_TYPES.TOGGLE_TEACHER_POPUP, payload: {} });
     }
 
     addTeacher = () => {
-      const { showModal } = this.state;
-      this.setState({
-        newTeacher: { name: '', subject: '', classesList: [] },
-        showModal: !showModal,
-      });
-    }
-
-    updateOptions = (_, action) => {
-      const { newTeacher } = this.state;
-      let selectedOption = {};
-      if (action.action === 'select-option') {
-        selectedOption = action.option;
-        selectedOption = { ...selectedOption, _id: selectedOption.value };
-        // delete selectedOption.value;
-        newTeacher.classesList.push(selectedOption);
-      } else if (action.action === 'remove-value') {
-        newTeacher.classesList = newTeacher.classesList.filter((item) => item._id !== action.removedValue.value);
-      }
-      this.setState({ newTeacher });
-    }
-
-    modalBody = () => {
-      let { newTeacher } = this.state;
-      return (
-        <div>
-          <CollapsibleSections title={newTeacher.name || 'Teacher'} show>
-            <div>
-              <TextField
-                className="text-field"
-                label="Enter Teacher Name"
-                variant="outlined"
-                value={newTeacher.name || ''}
-                onChange={(element) => {
-                  newTeacher = { ...newTeacher, name: element.target.value };
-                  this.setState({ newTeacher });
-                }}
-                size="small"
-              />
-            </div>
-            <br />
-            <div>
-              <TextField
-                className="text-field"
-                label="Enter Subject Taught"
-                variant="outlined"
-                value={newTeacher.subject || ''}
-                onChange={(element) => {
-                  newTeacher = { ...newTeacher, subject: element.target.value };
-                  this.setState({ newTeacher });
-                }}
-                size="small"
-              />
-            </div>
-            <br />
-            <FullWidthGrid
-              componentOneSize={3}
-              componentTwoSize={9}
-              spacing={2}
-              componentOne={(<span>Classes taught by teacher</span>)}
-              componentTwo={(
-                <Dropdown
-                  className="classes-dropdown"
-                  isMulti
-                  options={this.props.classesList && this.props.classesList.length > 0
-                    && this.props.classesList.map((myClass) => ({ value: myClass._id, label: myClass.label }))}
-                  onChange={(option, action) => this.updateOptions(option, action)}
-                  value={newTeacher.classesList && newTeacher.classesList.length > 0
-                    && newTeacher.classesList.map((myClass) => ({ value: myClass._id, label: myClass.label }))}
-                  isSearchable
-                  showAnimations
-                />
-              )}
-            />
-            {newTeacher.classesList && newTeacher.classesList.length > 0 && newTeacher.classesList.map((teacher, index) => (
-              <div>
-                <br />
-                <TextField
-                  className="text-field"
-                  label={`Enter periods per week for ${teacher.label}`}
-                  variant="outlined"
-                  value={teacher.periodsPerWeek || ''}
-                  onChange={(element) => {
-                    const { classesList } = newTeacher;
-                    classesList[index] = { ...classesList[index], periodsPerWeek: element.target.value };
-                    this.setState({ newTeacher });
-                  }}
-                  size="small"
-                />
-              </div>
-            ))}
-            <br />
-            <br />
-            <Button
-              color="primary"
-              variant="contained"
-              type="submit"
-              onClick={this.submitHandler}
-            >
-              Save
-            </Button>
-          </CollapsibleSections>
-        </div>
-      );
+      store.dispatch({ type: TEACHER_TYPES.TOGGLE_TEACHER_POPUP, payload: { name: '', subject: '', classesList: [] } });
     }
 
     updateDataForTable = () => {
       const data = [];
-      this.props.teachersList && this.props.teachersList.length > 0 && this.props.teachersList.forEach((teacher) => {
+      const { teachers: { teachersList } } = this.props;
+      teachersList && teachersList.length > 0 && teachersList.forEach((teacher) => {
         const obj = {};
         obj.name = teacher.teacherName;
         obj.subject = teacher.teacherSubject;
@@ -171,7 +51,7 @@ class Teachers extends React.Component {
           if (teacher.classesTaught.length > index + 1) {
             classesForTeacher.push(', ');
           }
-          totalClasses += parseInt(classObject.periodsPerWeek, 10);
+          totalClasses += classObject.periodsPerWeek && parseInt(classObject.periodsPerWeek, 10);
         });
         obj.allClassesTaught = classesForTeacher;
         obj.classesPerWeek = totalClasses;
@@ -182,17 +62,13 @@ class Teachers extends React.Component {
 
     editTeacherInfo = (id) => {
       const selectedTeacher = this.updateDataForTable().filter((teacher) => teacher._id === id);
-      console.log('selectedTeacher', selectedTeacher);
       if (selectedTeacher && selectedTeacher.length > 0) {
-        const { showModal } = this.state;
-        this.setState({
-          newTeacher: selectedTeacher[0],
-          showModal: !showModal,
-        });
+        store.dispatch({ type: TEACHER_TYPES.TOGGLE_TEACHER_POPUP, payload: selectedTeacher[0] });
       }
     }
 
     render() {
+      const { teachers: { showModal, newTeacher, teachersList } } = this.props;
       const data = this.updateDataForTable();
 
       const columns = [{
@@ -222,7 +98,7 @@ class Teachers extends React.Component {
           <br />
           <br />
           {
-            this.props.teachersList && this.props.teachersList.length > 0
+            teachersList && teachersList.length > 0
                 && (
                   <FullWidthGrid
                     componentOneSize={9}
@@ -240,13 +116,13 @@ class Teachers extends React.Component {
                       <div />
                     )}
                   />
-
                 )
           }
-          <Modal
-            displayModal={this.state.showModal}
-            closeModal={this.toggleModal}
-            body={this.modalBody()}
+          <ModifyTeacherModal
+            showModal={showModal}
+            toggleModal={this.toggleModal}
+            teacherData={newTeacher}
+            classesList={this.props.classesList}
           />
           <br />
           <br />
@@ -264,21 +140,18 @@ class Teachers extends React.Component {
     }
 }
 
-// export default Teachers;
-
 Teachers.propTypes = {
   email: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  errors: state.errors,
   email: state.auth && state.auth.user && state.auth.user.email,
+  teachers: state.teachers,
   teachersList: state.teachers && state.teachers.teachersList && state.teachers.teachersList.length > 0 && state.teachers.teachersList,
   classesList: state.teachers && state.teachers.classesList && state.teachers.classesList.length > 0 && state.teachers.classesList,
 });
 
 const mapDispatchToProps = {
-  addNewTeacher,
   getAllTeachers,
   getAllClasses,
 };

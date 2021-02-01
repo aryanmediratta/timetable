@@ -4,8 +4,6 @@ const PERIOD_NUMBER = ['1st Period', '2nd Period', '3rd Period', '4th Period', '
 function getTimetableForEntity(timetable, entityType, entityId) {
   const myTable = [];
   let index = 1;
-  console.log('entityId', entityId);
-  console.log('entityType', entityType);
   // entityId = parseInt(entityId, 10);
   timetable.forEach((period) => {
     let flag = false;

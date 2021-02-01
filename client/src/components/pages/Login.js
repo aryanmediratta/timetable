@@ -7,72 +7,47 @@ import { connect } from 'react-redux';
 import { loginUser } from '../../actions/authActions';
 import SimpleSnackbar from '../utils/Popup';
 
-import { getAllTeachers, getAllClasses } from '../../actions/teacherActions';
+import { AUTH_TYPES } from '../../actions/auth.actions';
+import store from '../../store';
 
 require('../../styles/Login.css');
 
 class Login extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      email: '',
-      password: '',
-      showPopup: false,
-      errorMessage: '',
-    };
-  }
-
-  componentDidMount() {
-    // If logged in and user navigates to Login page, should redirect them to home
-    if (this.props.auth.isAuthenticated) {
+    const { auth: { isAuthenticated } } = this.props;
+    if (isAuthenticated) {
       this.props.history.push('/home');
     }
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if (nextProps.auth.isAuthenticated) {
-      this.props.history.push('/home'); // push user to home when they login
-    }
-    if (nextProps.errors) {
-      this.setState({
-        errorMessage: nextProps.errors,
-      });
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.errors !== this.props.errors) {
-      this.setState({
-        errorMessage: this.props.errors && this.props.errors.message,
-        showPopup: true,
-      });
-    }
-  }
-
-  componentWillUnmount() {
-    const { email } = this.state;
-    if (email !== '') {
-      this.props.getAllTeachers(email);
-      this.props.getAllClasses(email);
+  componentDidUpdate() {
+    const { auth: { isAuthenticated } } = this.props;
+    if (isAuthenticated) {
+      this.props.history.push('/home');
     }
   }
 
     onClose = () => {
-      this.setState({
-        showPopup: false,
+      store.dispatch({
+        type: AUTH_TYPES.TOGGLE_POPUP,
+        payload: null,
       });
     };
 
     handleSubmit = async (e) => {
       e.preventDefault();
+      const { auth: { loginInfo: { email, password } } } = this.props;
       const data = {
-        email: this.state.email,
-        password: this.state.password,
+        email,
+        password,
       };
       this.props.loginUser(data);
     };
 
     render() {
+      const { auth: { errorMessage, showPopup } } = this.props;
+      let { auth: { loginInfo } } = this.props;
       return (
         <div>
           <br />
@@ -88,19 +63,29 @@ class Login extends React.Component {
                 <h2>Enter Login</h2>
                 <TextField
                   className="text-field"
+                  id="email"
                   label="Enter Email"
                   variant="outlined"
-                  onChange={(e) => this.setState({ email: e.target.value })}
+                  value={loginInfo.email}
+                  onChange={(e) => {
+                    loginInfo = { ...loginInfo, email: e.target.value };
+                    store.dispatch({ type: AUTH_TYPES.SET_LOGIN_FIELD, payload: loginInfo });
+                  }}
                   size="small"
                 />
                 <br />
                 <br />
                 <TextField
                   className="text-field"
+                  id="password"
                   label="Enter Password"
                   type="password"
                   variant="outlined"
-                  onChange={(e) => this.setState({ password: e.target.value })}
+                  value={loginInfo.password}
+                  onChange={(e) => {
+                    loginInfo = { ...loginInfo, password: e.target.value };
+                    store.dispatch({ type: AUTH_TYPES.SET_LOGIN_FIELD, payload: loginInfo });
+                  }}
                   size="small"
                 />
                 <br />
@@ -117,8 +102,7 @@ class Login extends React.Component {
             </div>
           </form>
           {
-            this.state.showPopup
-                    && <SimpleSnackbar onClose={this.onClose} message={this.state.errorMessage} />
+            showPopup && <SimpleSnackbar onClose={this.onClose} message={errorMessage} />
           }
         </div>
       );
@@ -128,18 +112,14 @@ class Login extends React.Component {
 Login.propTypes = {
   loginUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  errors: state.errors,
 });
 
 const mapDispatchToProps = {
   loginUser,
-  getAllTeachers,
-  getAllClasses,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

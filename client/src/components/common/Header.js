@@ -81,7 +81,7 @@ export default function ButtonAppBar() {
                   </Link>
                 </MenuItem>
                 <MenuItem onClick={handleClose}>
-                  <Link onClick={() => dispatch(logoutUser())}>
+                  <Link onClick={() => dispatch(logoutUser())} to="/login">
                     Logout
                   </Link>
                 </MenuItem>

@@ -2,9 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button, TextField } from '@material-ui/core';
 import { connect } from 'react-redux';
-import Dropdown from '../partials/Dropdown';
+import Dropdown from '../common/Dropdown';
 
-import FullWidthGrid from '../partials/TwoComponentGridSystem';
+import FullWidthGrid from '../common/TwoComponentGridSystem';
 import { addNewClasses, getAllClasses } from '../../actions/teacherActions';
 
 import { showAllSections } from '../utils';

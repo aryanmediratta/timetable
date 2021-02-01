@@ -3,18 +3,12 @@
 
 import jwt_decode from 'jwt-decode';
 
-import {
-  GET_ERRORS,
-  SET_CURRENT_USER,
-  UNSET_CURRENT_USER,
-  SET_RANDOM_ERRORS,
-} from './types';
-
+import { AUTH_TYPES } from './auth.actions';
 import { post } from '../utils';
 
 // Set logged in user
 export const setCurrentUser = (decoded) => ({
-  type: SET_CURRENT_USER,
+  type: AUTH_TYPES.SET_CURRENT_USER,
   payload: decoded,
 });
 
@@ -23,7 +17,7 @@ export const logoutUser = () => (dispatch) => {
   // setAuthToken(false);
   localStorage.removeItem('jwtToken');
   dispatch({
-    type: UNSET_CURRENT_USER,
+    type: AUTH_TYPES.UNSET_CURRENT_USER,
     payload: null,
   });
 };
@@ -45,13 +39,13 @@ export const registerUser = (userData, history) => (dispatch) => {
         history.push('/classes');
       } else {
         dispatch({
-          type: GET_ERRORS,
+          type: AUTH_TYPES.TOGGLE_POPUP,
           payload: res.message,
         });
       }
     })
     .catch((err) => dispatch({
-      type: SET_RANDOM_ERRORS,
+      type: AUTH_TYPES.TOGGLE_POPUP,
       payload: err,
     }));
 };
@@ -63,7 +57,7 @@ export const loginUser = (userData) => async (dispatch) => {
   const res = await req.json();
   if (statusCode !== 200) {
     dispatch({
-      type: SET_RANDOM_ERRORS,
+      type: AUTH_TYPES.TOGGLE_POPUP,
       payload: res.errors,
     });
   } else if (statusCode === 200) {
@@ -79,7 +73,7 @@ export const loginUser = (userData) => async (dispatch) => {
       dispatch(setCurrentUser(decoded));
     } else {
       dispatch({
-        type: GET_ERRORS,
+        type: AUTH_TYPES.TOGGLE_POPUP,
         payload: res.message,
       });
     }

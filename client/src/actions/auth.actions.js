@@ -1,0 +1,8 @@
+// eslint-disable-next-line import/prefer-default-export
+export const AUTH_TYPES = {
+  SET_LOGIN_FIELD: 'SET_LOGIN_FIELD',
+  SET_REGISTER_FIELD: 'SET_REGISTER_FIELD',
+  TOGGLE_POPUP: 'TOGGLE_POPUP',
+  SET_CURRENT_USER: 'SET_CURRENT_USER',
+  UNSET_CURRENT_USER: 'UNSET_CURRENT_USER',
+};

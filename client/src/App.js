@@ -12,7 +12,7 @@ import MainPage from './components/pages/MainPage';
 import OtherPage from './components/pages/OtherPage';
 import Login from './components/pages/Login';
 import Register from './components/pages/Register';
-import Header from './components/partials/Header';
+import Header from './components/common/Header';
 import Teachers from './components/pages/Teachers';
 import Classes from './components/pages/Classes';
 

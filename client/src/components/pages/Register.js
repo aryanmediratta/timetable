@@ -127,12 +127,10 @@ class Register extends React.Component {
 Register.propTypes = {
   registerUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  errors: state.errors,
 });
 
 const mapDispatchToProps = {

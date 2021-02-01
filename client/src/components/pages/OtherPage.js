@@ -5,18 +5,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { logoutUser } from '../../actions/authActions';
-import { getAllTeachers, getAllClasses } from '../../actions/teacherActions';
 
 class OtherPage extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      responseToPost: '',
-    };
-  }
-
   render() {
-    console.log('props', this.props);
     return (
       <div>
         <h2>Home Page??</h2>
@@ -40,7 +31,6 @@ class OtherPage extends React.Component {
         >
           Logout
         </Button>
-        <p>{this.state.responseToPost}</p>
       </div>
     );
   }
@@ -58,8 +48,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   logoutUser,
-  getAllClasses,
-  getAllTeachers,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(OtherPage);

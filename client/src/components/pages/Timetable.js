@@ -9,10 +9,10 @@ import { constructURL } from '../../utils';
 
 import store from '../../store';
 
-import Dropdown from '../partials/Dropdown';
+import Dropdown from '../common/Dropdown';
 import TimetableRow from '../partials/TimetableRow';
 import { SET_TIMETABLE } from '../../actions/types';
-import FullWidthGrid from '../partials/TwoComponentGridSystem';
+import FullWidthGrid from '../common/TwoComponentGridSystem';
 
 require('../../styles/Timetable.css');
 
@@ -27,7 +27,7 @@ class Timetable extends React.Component {
     this.state = {
       timetable: [],
       numPeriods: 6,
-      entityId: 1,
+      entityId: '',
       loading: false,
       entityType: options[0],
       allData: [],
@@ -37,7 +37,6 @@ class Timetable extends React.Component {
   componentDidMount() {
     // If user refreshes page, the store is empty thus these values are false. so we fetch them again.
     if (this.props.timetable) {
-      console.log('Wow Found timetable', this.props.timetable);
       this.setState({
         allData: this.props.timetable,
       });
@@ -121,11 +120,7 @@ class Timetable extends React.Component {
     }
 
     render() {
-      console.log('------------------------------------------------------------------------ RE RENDER');
-      console.log('Entity', this.state.entityId);
-      console.log('props', this.props);
       const data = this.getAllDataForDropdown();
-      console.log('Nice', data);
       return (
         <div>
           <h2>TimeTable :)</h2>

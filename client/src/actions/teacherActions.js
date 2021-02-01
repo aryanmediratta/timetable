@@ -1,14 +1,10 @@
 import {
-  GET_ERRORS,
-  SET_ALL_TEACHERS,
-  ADD_NEW_TEACHER,
   ADD_NEW_CLASSES,
   SET_ALL_CLASSES,
-  UPDATE_EXISTING_TEACHER,
-  SET_RANDOM_ERRORS,
 } from './types';
 
 import { post, get, constructURL } from '../utils';
+import { TEACHER_TYPES } from './teacher.actions';
 
 export const addNewTeacher = (userData) => (dispatch) => {
   post('/api/add_teacher', userData)
@@ -17,15 +13,19 @@ export const addNewTeacher = (userData) => (dispatch) => {
       if (res.success === true) {
         if (res.updated === true) {
           dispatch({
-            type: UPDATE_EXISTING_TEACHER,
+            type: TEACHER_TYPES.UPDATE_EXISTING_TEACHER,
             payload: res.newTeacher,
           });
         } else {
           dispatch({
-            type: ADD_NEW_TEACHER,
+            type: TEACHER_TYPES.ADD_NEW_TEACHER,
             payload: res.newTeacher,
           });
         }
+        dispatch({
+          type: TEACHER_TYPES.TOGGLE_TEACHER_POPUP,
+          payload: {},
+        });
       } else {
         dispatch({
           type: GET_ERRORS,
@@ -46,7 +46,7 @@ export const getAllTeachers = (email) => (dispatch) => {
   get(URL)
     .then((res) => {
       dispatch({
-        type: SET_ALL_TEACHERS,
+        type: TEACHER_TYPES.SET_ALL_TEACHERS,
         payload: res.teachers,
       });
     });

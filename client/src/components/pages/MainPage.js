@@ -3,13 +3,6 @@ import { Link } from 'react-router-dom';
 import Timetable from './Timetable';
 
 class MainPage extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      response: '',
-    };
-  }
-
   render() {
     return (
       <div>
@@ -22,7 +15,6 @@ class MainPage extends React.Component {
         <br />
         <Link to="/teachers"> Add Teachers </Link>
         <br />
-        {this.state.response}
         <br />
         <Timetable />
       </div>
