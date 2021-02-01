@@ -82,6 +82,7 @@ const modalBody = (teacherData, allClassesList) => {
             <TextField
               className="text-field"
               label={`Enter periods per week for ${teacher.label}`}
+              type="number"
               variant="outlined"
               value={teacher.periodsPerWeek || ''}
               onChange={(element) => {

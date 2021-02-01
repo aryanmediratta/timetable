@@ -23,19 +23,23 @@ export const addNewTeacher = (userData) => (dispatch) => {
           });
         }
         dispatch({
-          type: TEACHER_TYPES.TOGGLE_TEACHER_POPUP,
+          type: TEACHER_TYPES.TOGGLE_TEACHER_MODAL,
           payload: {},
+        });
+        dispatch({
+          type: TEACHER_TYPES.TOGGLE_POPUP,
+          payload: res.message,
         });
       } else {
         dispatch({
-          type: GET_ERRORS,
+          type: TEACHER_TYPES.TOGGLE_POPUP,
           payload: res.message,
         });
       }
     })
     .catch((err) => {
       dispatch({
-        type: SET_RANDOM_ERRORS,
+        type: TEACHER_TYPES.TOGGLE_POPUP,
         payload: err,
       });
     });
@@ -63,8 +67,8 @@ export const addNewClasses = (classesData) => (dispatch) => {
     })
     .catch((res) => {
       dispatch({
-        type: GET_ERRORS,
-        payload: res.newTeacher,
+        type: TEACHER_TYPES.TOGGLE_POPUP,
+        payload: res.errors,
       });
     });
 };

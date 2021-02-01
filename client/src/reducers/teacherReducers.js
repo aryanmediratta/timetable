@@ -7,6 +7,8 @@ import { TEACHER_TYPES } from '../actions/teacher.actions';
 const initialState = {
   teachersList: [],
   showModal: false,
+  showPopup: false,
+  errorMessage: '',
   newTeacher: {
     name: '',
     subject: '',
@@ -23,7 +25,7 @@ export default function teacherReducer(state = initialState, action) {
       ...state,
       teachersList: action.payload,
     };
-  case TEACHER_TYPES.TOGGLE_TEACHER_POPUP:
+  case TEACHER_TYPES.TOGGLE_TEACHER_MODAL:
     return {
       ...state,
       showModal: !state.showModal,
@@ -43,6 +45,19 @@ export default function teacherReducer(state = initialState, action) {
       ...state,
       teachersList: [...state.teachersList, action.payload],
     };
+  case TEACHER_TYPES.TOGGLE_POPUP:
+    if (action.payload === null) {
+      return {
+        ...state,
+        showPopup: false,
+        errorMessage: '',
+      };
+    }
+    return {
+      ...state,
+      showPopup: true,
+      errorMessage: action.payload,
+    };
   // case SET_TIMETABLE:
   //   return {
   //     ...state,
@@ -58,20 +73,20 @@ export default function teacherReducer(state = initialState, action) {
       ...state,
       classesList: [...action.payload],
     };
-  // case UPDATE_EXISTING_TEACHER:
-  //   const { teachersList } = state;
-  //   const updatedTeachersList = [];
-  //   teachersList.forEach((teacher) => {
-  //     if (teacher._id !== action.payload._id) {
-  //       updatedTeachersList.push(teacher);
-  //     } else {
-  //       updatedTeachersList.push(action.payload);
-  //     }
-  //   });
-  //   return {
-  //     ...state,
-  //     teachersList: [...updatedTeachersList],
-  //   };
+  case TEACHER_TYPES.UPDATE_EXISTING_TEACHER:
+    const { teachersList } = state;
+    const updatedTeachersList = [];
+    teachersList.forEach((teacher) => {
+      if (teacher._id !== action.payload._id) {
+        updatedTeachersList.push(teacher);
+      } else {
+        updatedTeachersList.push(action.payload);
+      }
+    });
+    return {
+      ...state,
+      teachersList: [...updatedTeachersList],
+    };
   default:
     return state;
   }

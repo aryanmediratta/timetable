@@ -131,6 +131,7 @@ class Classes extends React.Component {
                 className="text-field"
                 label={`Enter Number of classes for Class ${e.label}`}
                 variant="outlined"
+                type="number"
                 size="small"
                 value={e.numberOfSections}
                 onChange={(element) => {

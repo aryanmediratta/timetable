@@ -1,7 +1,23 @@
 const Teacher = require('../models/Teachers');
 
 addTeacher = (req, res, next) => {
-    const { newTeacher, email } = req.body;
+  const { newTeacher, email } = req.body;
+  let errors = [];
+  if (!newTeacher.name) {
+    errors.push('Teacher name is required');
+  }
+  if (!newTeacher.subject) {
+    errors.push('Subject taught is required');
+  }
+  if (newTeacher.classesList.length === 0) {
+    errors.push('Select atleast one class.');
+  }
+  if (errors.length > 0) {
+    return res.status(200).json({
+      success: false,
+      message: errors[0],
+    });
+  } else {
     const replacement = {
       _id: newTeacher._id,
       teacherName: newTeacher.name,
@@ -51,6 +67,7 @@ addTeacher = (req, res, next) => {
           });
         })
     }
+  }
 }
 
 fetchTeachers = (req, res, next) => {

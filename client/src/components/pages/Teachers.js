@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import Table from '../common/Table';
 import FullWidthGrid from '../common/TwoComponentGridSystem';
 import ModifyTeacherModal from '../partials/ModifyTeacherModal';
+import SimpleSnackbar from '../utils/Popup';
 
 import { getAllTeachers, getAllClasses } from '../../actions/teacherActions';
 import store from '../../store';
@@ -25,119 +26,133 @@ class Teachers extends React.Component {
     }
   }
 
-    toggleModal = () => {
-      store.dispatch({ type: TEACHER_TYPES.TOGGLE_TEACHER_POPUP, payload: {} });
-    }
+  onClose = () => {
+    store.dispatch({
+      type: TEACHER_TYPES.TOGGLE_POPUP,
+      payload: null,
+    });
+  };
 
-    addTeacher = () => {
-      store.dispatch({ type: TEACHER_TYPES.TOGGLE_TEACHER_POPUP, payload: { name: '', subject: '', classesList: [] } });
-    }
+  toggleModal = () => {
+    store.dispatch({ type: TEACHER_TYPES.TOGGLE_TEACHER_MODAL, payload: {} });
+  }
 
-    updateDataForTable = () => {
-      const data = [];
-      const { teachers: { teachersList } } = this.props;
-      teachersList && teachersList.length > 0 && teachersList.forEach((teacher) => {
-        const obj = {};
-        obj.name = teacher.teacherName;
-        obj.subject = teacher.teacherSubject;
-        obj._id = teacher._id;
-        obj.classesList = teacher.classesTaught;
-        const classesForTeacher = [];
-        let totalClasses = 0;
-        teacher.classesTaught.forEach((classObject, index) => {
-          classesForTeacher.push(classObject.label);
-          // classesForTeacher.push(': ');
-          // classesForTeacher.push(classObject.periodsPerWeek);
-          if (teacher.classesTaught.length > index + 1) {
-            classesForTeacher.push(', ');
-          }
-          totalClasses += classObject.periodsPerWeek && parseInt(classObject.periodsPerWeek, 10);
-        });
-        obj.allClassesTaught = classesForTeacher;
-        obj.classesPerWeek = totalClasses;
-        data.push(obj);
+  addTeacher = () => {
+    store.dispatch({ type: TEACHER_TYPES.TOGGLE_TEACHER_MODAL, payload: { name: '', subject: '', classesList: [] } });
+  }
+
+  updateDataForTable = () => {
+    const data = [];
+    const { teachers: { teachersList } } = this.props;
+    teachersList && teachersList.length > 0 && teachersList.forEach((teacher) => {
+      const obj = {};
+      obj.name = teacher.teacherName;
+      obj.subject = teacher.teacherSubject;
+      obj._id = teacher._id;
+      obj.classesList = teacher.classesTaught;
+      const classesForTeacher = [];
+      let totalClasses = 0;
+      teacher.classesTaught.forEach((classObject, index) => {
+        classesForTeacher.push(classObject.label);
+        // classesForTeacher.push(': ');
+        // classesForTeacher.push(classObject.periodsPerWeek);
+        if (teacher.classesTaught.length > index + 1) {
+          classesForTeacher.push(', ');
+        }
+        totalClasses += classObject.periodsPerWeek && parseInt(classObject.periodsPerWeek, 10);
       });
-      return data;
+      obj.allClassesTaught = classesForTeacher;
+      obj.classesPerWeek = totalClasses;
+      data.push(obj);
+    });
+    return data;
+  }
+
+  editTeacherInfo = (id) => {
+    const selectedTeacher = this.updateDataForTable().filter((teacher) => teacher._id === id);
+    if (selectedTeacher && selectedTeacher.length > 0) {
+      store.dispatch({ type: TEACHER_TYPES.TOGGLE_TEACHER_MODAL, payload: selectedTeacher[0] });
     }
+  }
 
-    editTeacherInfo = (id) => {
-      const selectedTeacher = this.updateDataForTable().filter((teacher) => teacher._id === id);
-      if (selectedTeacher && selectedTeacher.length > 0) {
-        store.dispatch({ type: TEACHER_TYPES.TOGGLE_TEACHER_POPUP, payload: selectedTeacher[0] });
-      }
-    }
+  render() {
+    const {
+      teachers: {
+        showModal, newTeacher, teachersList, errorMessage, showPopup,
+      },
+    } = this.props;
+    const data = this.updateDataForTable();
 
-    render() {
-      const { teachers: { showModal, newTeacher, teachersList } } = this.props;
-      const data = this.updateDataForTable();
+    const columns = [{
+      Header: 'Name',
+      accessor: 'name',
+      Cell: ({ original }) => <span className="pointer link" onClick={() => this.editTeacherInfo(original._id)}>{original.name}</span>,
+    }, {
+      Header: 'Subject',
+      accessor: 'subject',
+      Cell: (props) => <span className="number">{props.value}</span>,
+    }, {
+      Header: 'Classes Taught',
+      accessor: 'allClassesTaught',
+    }, {
+      Header: 'Classes Per Week',
+      accessor: 'classesPerWeek',
+    }];
 
-      const columns = [{
-        Header: 'Name',
-        accessor: 'name',
-        Cell: ({ original }) => <span className="pointer link" onClick={() => this.editTeacherInfo(original._id)}>{original.name}</span>,
-      }, {
-        Header: 'Subject',
-        accessor: 'subject',
-        Cell: (props) => <span className="number">{props.value}</span>,
-      }, {
-        Header: 'Classes Taught',
-        accessor: 'allClassesTaught',
-      }, {
-        Header: 'Classes Per Week',
-        accessor: 'classesPerWeek',
-      }];
-
-      return (
-        <div>
-          <br />
-          <Link to="/"> Main </Link>
-          <br />
-          <Link to="/home"> Home </Link>
-          <br />
-          <Link to="/classes"> Add Classes </Link>
-          <br />
-          <br />
-          {
-            teachersList && teachersList.length > 0
-                && (
-                  <FullWidthGrid
-                    componentOneSize={9}
-                    componentTwoSize={3}
-                    spacing={2}
-                    componentOne={(
-                      <Table
-                        data={data}
-                        columns={columns}
-                        defaultPageSize={6}
-                        title="Teachers"
-                      />
-                    )}
-                    componentTwo={(
-                      <div />
-                    )}
-                  />
-                )
-          }
-          <ModifyTeacherModal
-            showModal={showModal}
-            toggleModal={this.toggleModal}
-            teacherData={newTeacher}
-            classesList={this.props.classesList}
-          />
-          <br />
-          <br />
-          <Button
-            color="primary"
-            variant="contained"
-            type="submit"
-            onClick={this.addTeacher}
-          >
-            + Add Teacher
-          </Button>
-          <br />
-        </div>
-      );
-    }
+    return (
+      <div>
+        <br />
+        <Link to="/"> Main </Link>
+        <br />
+        <Link to="/home"> Home </Link>
+        <br />
+        <Link to="/classes"> Add Classes </Link>
+        <br />
+        <br />
+        {
+          teachersList && teachersList.length > 0
+              && (
+                <FullWidthGrid
+                  componentOneSize={9}
+                  componentTwoSize={3}
+                  spacing={2}
+                  componentOne={(
+                    <Table
+                      data={data}
+                      columns={columns}
+                      defaultPageSize={6}
+                      title="Teachers"
+                    />
+                  )}
+                  componentTwo={(
+                    <div />
+                  )}
+                />
+              )
+        }
+        <ModifyTeacherModal
+          showModal={showModal}
+          toggleModal={this.toggleModal}
+          teacherData={newTeacher}
+          classesList={this.props.classesList}
+        />
+        <br />
+        <br />
+        <Button
+          color="primary"
+          variant="contained"
+          type="submit"
+          onClick={this.addTeacher}
+        >
+          + Add Teacher
+        </Button>
+        <br />
+        {
+          showPopup && <SimpleSnackbar onClose={this.onClose} message={errorMessage} />
+        }
+      </div>
+    );
+  }
 }
 
 Teachers.propTypes = {
