@@ -10,30 +10,26 @@ function getTimetableForEntity(timetable, entityId) {
       const {
         classId, teacherId, className, teacherName, subject,
       } = tuple;
-      let tempEntity = null;
-      let otherTempEntity = null;
+      let tempEntity = null; let otherTempEntity; let objId;
+      let teacherClassCombo;
       if (entityId === classId) {
         otherTempEntity = teacherName;
         tempEntity = subject;
+        objId = teacherId;
       } else if (entityId === teacherId) {
         tempEntity = className;
+        objId = classId;
       }
       // If we find it, then we push it. otherwise we dont :)
       if (tempEntity !== null) {
-        myTable.push({
-          teacherName: otherTempEntity,
-          entityId: tempEntity,
-          periodNo: index,
-        });
+        teacherClassCombo = `${otherTempEntity ? `${otherTempEntity} -- ` : ''} ${tempEntity}`;
+        myTable.push({ cell: teacherClassCombo, id: `${objId}` });
         flag = true;
         index < 6 ? index++ : index = 1;
       }
     });
     if (flag === false) {
-      myTable.push({
-        entityId: ' ',
-        periodNo: index,
-      });
+      myTable.push({ cell: ' ' });
       index < 6 ? index++ : index = 1;
     }
   });

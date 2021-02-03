@@ -75,7 +75,6 @@ class Teachers extends React.Component {
   }
 
   render() {
-    console.log('props', this.props);
     const {
       teachers: {
         showModal, newTeacher, errorMessage, showPopup,
