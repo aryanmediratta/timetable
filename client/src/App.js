@@ -11,7 +11,7 @@ import PrivateRoute from './utils/privateRoutes';
 import MainPage from './components/pages/MainPage';
 import OtherPage from './components/pages/OtherPage';
 import Login from './components/pages/Login';
-import Register from './components/pages/Register';
+import RegisterForm from './components/pages/RegisterForm';
 import Header from './components/common/Header';
 import Teachers from './components/pages/Teachers';
 import Classes from './components/pages/Classes';
@@ -42,7 +42,7 @@ class App extends React.Component {
               <PrivateRoute exact path="/" component={MainPage} />
               <PrivateRoute exact path="/home" component={OtherPage} />
               <Route exact path="/login" component={Login} />
-              <Route exact path="/signup" component={Register} />
+              <Route exact path="/signup" component={RegisterForm} />
               <PrivateRoute exact path="/classes" component={Classes} />
               <PrivateRoute exact path="/teachers" component={Teachers} />
             </Switch>

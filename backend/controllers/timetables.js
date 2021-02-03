@@ -1,4 +1,4 @@
-const Timetables = require('../models/Timetables');
+const Timetable = require('../models/Timetables');
 const Teacher = require('../models/Teachers');
 const Classes = require('../models/Classes');
 
@@ -42,14 +42,15 @@ generateNewTimetable = (req, res, next) => {
     if (flag === false) {
       const allData = {
         teachersList: teacherData,
-        numClasses,
-        numTeachers,
-        numPeriods,
+        numClasses: parseInt(numClasses, 10),
+        numTeachers: parseInt(numTeachers, 10),
+        numPeriods: parseInt(numPeriods, 10),
       };
       const tt = generateTimetable(allData);
       res.send({
+        success: true,
         timetable: tt,
-        numPeriods: numPeriods,
+        numPeriods: parseInt(numPeriods, 10),
       });
     }
   })
@@ -61,6 +62,51 @@ generateNewTimetable = (req, res, next) => {
   })
 }
 
+saveTimetable = (req, res, next) => {
+  const { schoolTimetable, email } = req.body;
+  const newTimeable = {
+    userEmail: email,
+    timetable: schoolTimetable,
+  };
+  Timetable.findOneAndReplace({ userEmail: email }, newTimeable, { returnNewDocument: true })
+    .then(_resp => {
+          res.status(200).json({
+            success: true,
+            schoolTimetable: newTimeable.timetable,
+            message: 'Save Successful',
+        });
+    })
+    .catch(err => {
+      console.log('Errorrr', err);
+      res.status(200).json({
+        success: false,
+        response: err,
+        message: 'Save Unsuccessful'
+      });
+    });
+}
+
+fetchTimetable = (req, res, next) => {
+  const url = new URL(`https://anyrandomwebsite.com/${req.originalUrl}`);
+  const email = url.searchParams.get('email');
+  Timetable.findOne({ userEmail: email })
+    .then((data) => {
+      res.status(200).json({
+        success: true,
+        schoolTimetable: data.timetable,
+      });
+    })
+    .catch(err => {
+      res.status(200).json({
+        success: false,
+        response: err,
+        message: 'Could not fetch data, please try again',
+      });
+    });
+}
+
 module.exports = {
   generateNewTimetable,
+  saveTimetable,
+  fetchTimetable,
 };

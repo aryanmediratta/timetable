@@ -13,7 +13,7 @@ class OtherPage extends React.Component {
         <h2>Home Page??</h2>
         <Link to="/"> Main </Link>
         <br />
-        <Link to="/login"> Login </Link>
+        <Link to="/signup"> Register </Link>
         <br />
         <Link to="/teachers"> Add Teachers </Link>
         <h2>
@@ -42,7 +42,6 @@ OtherPage.propTypes = {
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  errors: state.errors,
   email: state.auth && state.auth.user && state.auth.user.email,
 });
 

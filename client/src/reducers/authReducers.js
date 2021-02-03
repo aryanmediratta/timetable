@@ -23,6 +23,9 @@ const initialState = {
   errorMessage: '',
   isAuthenticated: false,
   user: {},
+  userName: '',
+  schoolName: '',
+  updatedRegisterView: false,
 };
 
 export default function authReducer(state = initialState, action) {
@@ -60,6 +63,20 @@ export default function authReducer(state = initialState, action) {
       user: action.payload,
       loginInfo: { ...initialLoginInfo },
       registerInfo: { ...initialRegisterInfo },
+    };
+
+  // Set School Name
+  case AUTH_TYPES.SET_SCHOOL_NAME:
+    return {
+      ...state,
+      schoolName: action.payload,
+    };
+
+  // Toggle View
+  case AUTH_TYPES.TOGGLE_REGISTER_FORM:
+    return {
+      ...state,
+      updatedRegisterView: !state.updatedRegisterView,
     };
 
   // Successful Logout

@@ -2,17 +2,16 @@ import React from 'react';
 import { Button } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import {
-  get, getTimetableForEntity, createTimetableForRendering,
-} from '../utils';
-import { constructURL } from '../../utils';
 
+import { getSpecificTimetable } from '../utils';
 import store from '../../store';
-
 import Dropdown from '../common/Dropdown';
 import TimetableRow from '../partials/TimetableRow';
-import { SET_TIMETABLE } from '../../actions/types';
+import { TIMETABLE_TYPES } from '../../actions/timetable.actions';
 import FullWidthGrid from '../common/TwoComponentGridSystem';
+import { generateNewTimetable, saveTimetable, getTimetable } from '../../actions/timetableActions';
+import { getAllClasses } from '../../actions/classesActions';
+import { getAllTeachers } from '../../actions/teacherActions';
 
 require('../../styles/Timetable.css');
 
@@ -24,103 +23,115 @@ const options = [
 class Timetable extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      timetable: [],
-      numPeriods: 6,
-      entityId: '',
-      loading: false,
-      entityType: options[0],
-      allData: [],
-    };
+    const {
+      teachers: { teachersList }, classes: { classesList }, email, timetables: { schoolTimetable },
+    } = this.props;
+    if (schoolTimetable.length === 0) {
+      this.props.getTimetable(email);
+    }
+    if (classesList.length === 0) {
+      this.props.getAllClasses(email);
+    }
+    if (teachersList.length === 0) {
+      this.props.getAllTeachers(email);
+    }
   }
 
-  componentDidMount() {
-    // If user refreshes page, the store is empty thus these values are false. so we fetch them again.
-    if (this.props.timetable) {
-      this.setState({
-        allData: this.props.timetable,
-      });
+  componentDidUpdate(prevProps) {
+    const { timetables: { entityId, entityType } } = this.props;
+    if (prevProps.timetables.entityId.value !== entityId.value) {
+      this.updateTimetable();
+    }
+    if (prevProps.timetables.entityType.value !== entityType.value) {
+      this.updateTimetable();
     }
   }
 
   updateTimetable = () => {
-    const { numPeriods } = this.state;
-    const timetable = getTimetableForEntity(this.state.allData || this.props.timetable, this.state.entityType.value, this.state.entityId.value);
-    const chunks = createTimetableForRendering(timetable, numPeriods);
-    this.setState({
-      timetable: chunks,
+    const {
+      timetables: {
+        numPeriods, schoolTimetable, entityId,
+      },
+    } = this.props;
+    const timetable = getSpecificTimetable(schoolTimetable, entityId.value, numPeriods);
+    store.dispatch({
+      type: TIMETABLE_TYPES.SET_TIMETABLE,
+      payload: timetable,
     });
   }
 
   fetchTimetable = () => {
-    this.setState({
-      timetable: [],
-      loading: true,
-    });
-    const { numPeriods } = this.state;
-    const { email, teachersList, classesList } = this.props;
-    const numClasses = classesList.length;
-    const numTeachers = teachersList.length;
-    const URL = constructURL('/api/generate_timetable', { email, numClasses, numTeachers });
-    get(URL)
-      .then((res) => {
-        const timetable = getTimetableForEntity(res.timetable, this.state.entityType.value, this.state.entityId.value);
-        const chunks = createTimetableForRendering(timetable, numPeriods);
-        store.dispatch({
-          type: SET_TIMETABLE,
-          payload: res.timetable,
-        });
-        this.setState({
-          allData: res.timetable,
-          timetable: chunks,
-          numPeriods: res.numPeriods / 5,
-          loading: false,
-        });
-      });
+    const {
+      email, classes: { classesList }, teachers: { teachersList }, timetables: { numPeriods, entityId },
+    } = this.props;
+    const timetableData = {
+      email,
+      classesList,
+      teachersList,
+      numPeriods,
+      entityId,
+    };
+    this.props.generateNewTimetable(timetableData);
   }
 
   updateOptions = (option, action) => {
     if (action.action === 'select-option') {
-      this.setState({ entityType: option }, () => {
-        this.updateTimetable();
+      store.dispatch({
+        type: TIMETABLE_TYPES.SET_ENTITY_TYPE,
+        payload: option,
       });
     }
   }
 
     updateEntityId = (option, action) => {
       if (action.action === 'select-option') {
-        this.setState({ entityId: option }, () => {
-          this.updateTimetable();
+        store.dispatch({
+          type: TIMETABLE_TYPES.SET_ENTITY_ID,
+          payload: option,
         });
       }
     }
 
+    // Fix Logic to handle all cases.
     getAllDataForDropdown = () => {
+      const {
+        classes: { classesList }, teachers: { teachersList }, timetables: { entityType },
+      } = this.props;
       const data = [];
-      if (this.state.entityType.value === 'class') {
-        if (this.props.classesList && this.props.classesList.length > 0) {
-          this.props.classesList.forEach((myClass) => {
-            const obj = {};
-            obj.value = myClass._id;
-            obj.label = myClass.label;
-            data.push(obj);
-          });
-        }
-      } else if (this.state.entityType.value === 'teacher') {
-        if (this.props.teachersList && this.props.teachersList.length > 0) {
-          this.props.teachersList.forEach((teacher) => {
-            const obj = {};
-            obj.value = teacher._id;
-            obj.label = teacher.teacherName;
-            data.push(obj);
-          });
-        }
+      if (entityType.value === 'class') {
+        classesList && classesList.length > 0 && classesList.forEach((myClass) => {
+          const obj = {};
+          obj.value = myClass._id;
+          obj.label = myClass.label;
+          data.push(obj);
+        });
+      } else {
+        teachersList && teachersList.length > 0 && teachersList.forEach((teacher) => {
+          const obj = {};
+          obj.value = teacher._id;
+          obj.label = teacher.teacherName;
+          data.push(obj);
+        });
       }
       return data;
     }
 
+    saveEntireTimetable = () => {
+      const { timetables: { schoolTimetable }, email } = this.props;
+      const timetableData = {
+        schoolTimetable,
+        email,
+      };
+      this.props.saveTimetable(timetableData);
+    }
+
     render() {
       const data = this.getAllDataForDropdown();
+      const {
+        timetables: {
+          entityType, entityId, timetable, loading, schoolTimetable,
+        },
+      } = this.props;
       return (
         <div>
           <h2>TimeTable :)</h2>
@@ -134,7 +145,7 @@ class Timetable extends React.Component {
                 isMulti={false}
                 options={options}
                 onChange={(option, action) => this.updateOptions(option, action)}
-                value={this.state.entityType}
+                value={entityType}
                 isSearchable
                 showAnimations
               />
@@ -144,40 +155,58 @@ class Timetable extends React.Component {
                 isMulti={false}
                 options={data}
                 onChange={(option, action) => this.updateEntityId(option, action)}
-                value={this.state.entityId || data[0]}
+                value={entityId}
                 isSearchable
                 showAnimations
               />
             )}
           />
           <br />
-          <Button
-            color="primary"
-            variant="contained"
-            type="submit"
-            onClick={() => this.fetchTimetable()}
-          >
-            Generate New TimeTable
-          </Button>
+          <FullWidthGrid
+            componentOneSize={6}
+            componentTwoSize={6}
+            spacing={4}
+            componentOne={(
+              <Button
+                color="primary"
+                variant="contained"
+                type="submit"
+                onClick={() => this.fetchTimetable()}
+              >
+                Generate New TimeTable
+              </Button>
+            )}
+            componentTwo={schoolTimetable && schoolTimetable.length > 0
+              && (
+                <Button
+                  color="primary"
+                  variant="contained"
+                  type="submit"
+                  onClick={() => this.saveEntireTimetable()}
+                >
+                  Save timetable
+                </Button>
+              )}
+          />
           <br />
           {' '}
           <br />
           <h2>
             Timetable for
             {' '}
-            {this.state.entityType.label}
+            {entityType.label}
             {' '}
             -
-            {this.state.entityId.label || 1}
+            {entityId.label}
           </h2>
           {
-            this.state.timetable && this.state.timetable.length > 0
+            schoolTimetable && schoolTimetable.length > 0
                     && (
                       <div>
                         {
-                          this.state.timetable.map((period) => (
+                          timetable && timetable.length > 0 && timetable.map((period) => (
                             <div id="timetable-row">
-                              <TimetableRow row={period} entityType={this.state.entityType.label} />
+                              <TimetableRow row={period} entityType={entityType.label} />
                             </div>
                           ))
                         }
@@ -186,7 +215,7 @@ class Timetable extends React.Component {
           }
 
           {
-            this.state.loading === true
+            loading === true
                     && <h3>Loading, Please wait</h3>
           }
         </div>
@@ -199,14 +228,18 @@ Timetable.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  errors: state.errors,
   email: state.auth && state.auth.user && state.auth.user.email,
-  timetable: state.teachers && state.teachers.timetable,
-  teachersList: state.teachers && state.teachers.teachersList && state.teachers.teachersList.length > 0 && state.teachers.teachersList,
-  classesList: state.teachers && state.teachers.classesList && state.teachers.classesList.length > 0 && state.teachers.classesList,
+  timetables: state.timetables,
+  teachers: state.teachers,
+  classes: state.classes,
 });
 
 const mapDispatchToProps = {
+  generateNewTimetable,
+  getAllTeachers,
+  getAllClasses,
+  saveTimetable,
+  getTimetable,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Timetable);

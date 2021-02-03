@@ -1,9 +1,11 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-undef */
-
 import jwt_decode from 'jwt-decode';
 
 import { AUTH_TYPES } from './auth.actions';
+import { TEACHER_TYPES } from './teacher.actions';
+import { CLASSES_TYPE } from './classes.actions';
+import { TIMETABLE_TYPES } from './timetable.actions';
 import { post } from '../utils';
 
 // Set logged in user
@@ -18,6 +20,18 @@ export const logoutUser = () => (dispatch) => {
   localStorage.removeItem('jwtToken');
   dispatch({
     type: AUTH_TYPES.UNSET_CURRENT_USER,
+    payload: null,
+  });
+  dispatch({
+    type: TEACHER_TYPES.CLEAR_STATE,
+    payload: null,
+  });
+  dispatch({
+    type: CLASSES_TYPE.CLEAR_STATE,
+    payload: null,
+  });
+  dispatch({
+    type: TIMETABLE_TYPES.CLEAR_STATE,
     payload: null,
   });
 };

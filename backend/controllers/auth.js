@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
 const User = require('../models/Users');
+const Timetable = require('../models/Timetables');
 const { createJWT } = require('../utils/auth');
 
 const { secretToken } = require('../server/config');
@@ -11,7 +12,7 @@ const emailRegexp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-
 const DEFAULT_LOGIN_DURATION = 7200;
 
 signup = (req, res, next) => {
-    let { name, email, password, passwordConfirmation } = req.body;
+    let { name, email, password, passwordConfirmation, schoolName, numPeriods } = req.body;
     let errors = [];
     if (!name) {
         errors.push('Name is Required.');
@@ -50,6 +51,7 @@ signup = (req, res, next) => {
                     name: name,
                     email: email,
                     password: password,
+                    schoolName,
                 });
                 bcrypt.genSalt(10, function(err, salt) { bcrypt.hash(password, salt, function(err, hash) {
                     if (err) throw err;
@@ -66,12 +68,19 @@ signup = (req, res, next) => {
                                     res.status(200).json({ success: false, message: 'Verification Failed. Please Try Again.' });
                                 }
                                 if (decoded) {
-                                    return res.status(200).json({
+                                  const timetable = new Timetable({
+                                    userEmail: email,
+                                    numPeriods,
+                                  });
+                                  timetable.save()
+                                    .then(() => {
+                                      return res.status(200).json({
                                         success: true,
                                         token: accessToken,
                                         userName: user.name,
                                         message: 'User Created Succesfully',
-                                    });
+                                      });
+                                    })
                                 }
                             });
                         })

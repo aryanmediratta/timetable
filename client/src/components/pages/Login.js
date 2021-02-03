@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Button, TextField } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -50,13 +49,6 @@ class Login extends React.Component {
       let { auth: { loginInfo } } = this.props;
       return (
         <div>
-          <br />
-          <Link to="/"> Main </Link>
-          <br />
-          <Link to="/home"> Home </Link>
-          <br />
-          <Link to="/teachers"> Add Teachers </Link>
-          <br />
           <form onSubmit={this.handleSubmit}>
             <div className="box">
               <div className="outline">

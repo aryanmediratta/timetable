@@ -11,11 +11,11 @@ const schema = mongoose.Schema({
   },
   timetable: {
     type: Array,
-    required: true
+    required: false,
   }}
   ,{
   timestamps: true,
   collection: 'Timetables'
 });
 
-module.exports = mongoose.model('Timetables', schema);
+module.exports = mongoose.model('Timetable', schema);

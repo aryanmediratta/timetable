@@ -9,7 +9,8 @@ import FullWidthGrid from '../common/TwoComponentGridSystem';
 import ModifyTeacherModal from '../partials/ModifyTeacherModal';
 import SimpleSnackbar from '../utils/Popup';
 
-import { getAllTeachers, getAllClasses } from '../../actions/teacherActions';
+import { getAllTeachers } from '../../actions/teacherActions';
+import { getAllClasses } from '../../actions/classesActions';
 import store from '../../store';
 import { TEACHER_TYPES } from '../../actions/teacher.actions';
 
@@ -18,12 +19,10 @@ require('../../styles/Login.css');
 class Teachers extends React.Component {
   constructor(props) {
     super(props);
-    const { email, teachers: { teachersList } } = this.props;
-    // If user refreshes page, the store is empty thus these values are false. so we fetch them again.
-    if ((teachersList.length === 0) || (this.props.classesList === false)) {
-      this.props.getAllTeachers(email);
-      this.props.getAllClasses(email);
-    }
+    const { email } = this.props;
+    // Always load latest data on page load.
+    this.props.getAllTeachers(email);
+    this.props.getAllClasses(email);
   }
 
   onClose = () => {
@@ -76,9 +75,10 @@ class Teachers extends React.Component {
   }
 
   render() {
+    console.log('props', this.props);
     const {
       teachers: {
-        showModal, newTeacher, teachersList, errorMessage, showPopup,
+        showModal, newTeacher, errorMessage, showPopup,
       },
     } = this.props;
     const data = this.updateDataForTable();
@@ -109,27 +109,22 @@ class Teachers extends React.Component {
         <Link to="/classes"> Add Classes </Link>
         <br />
         <br />
-        {
-          teachersList && teachersList.length > 0
-              && (
-                <FullWidthGrid
-                  componentOneSize={9}
-                  componentTwoSize={3}
-                  spacing={2}
-                  componentOne={(
-                    <Table
-                      data={data}
-                      columns={columns}
-                      defaultPageSize={6}
-                      title="Teachers"
-                    />
-                  )}
-                  componentTwo={(
-                    <div />
-                  )}
-                />
-              )
-        }
+        <FullWidthGrid
+          componentOneSize={9}
+          componentTwoSize={3}
+          spacing={2}
+          componentOne={(
+            <Table
+              data={data}
+              columns={columns}
+              defaultPageSize={6}
+              title="Teachers"
+            />
+          )}
+          componentTwo={(
+            <div />
+          )}
+        />
         <ModifyTeacherModal
           showModal={showModal}
           toggleModal={this.toggleModal}
@@ -162,8 +157,6 @@ Teachers.propTypes = {
 const mapStateToProps = (state) => ({
   email: state.auth && state.auth.user && state.auth.user.email,
   teachers: state.teachers,
-  teachersList: state.teachers && state.teachers.teachersList && state.teachers.teachersList.length > 0 && state.teachers.teachersList,
-  classesList: state.teachers && state.teachers.classesList && state.teachers.classesList.length > 0 && state.teachers.classesList,
 });
 
 const mapDispatchToProps = {

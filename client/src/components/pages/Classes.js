@@ -5,7 +5,9 @@ import { connect } from 'react-redux';
 import Dropdown from '../common/Dropdown';
 
 import FullWidthGrid from '../common/TwoComponentGridSystem';
-import { addNewClasses, getAllClasses } from '../../actions/teacherActions';
+import { addNewClasses, getAllClasses, updateClasses } from '../../actions/classesActions';
+import { CLASSES_TYPE } from '../../actions/classes.actions';
+import store from '../../store';
 
 import { showAllSections } from '../utils';
 
@@ -29,35 +31,27 @@ const options = [
 class Classes extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      classList: [],
-      saveButtonDisabled: false,
-    };
-  }
-
-  componentDidMount() {
-    console.log('Classes', this.props.classesList);
     const { email } = this.props;
-    // If user refreshes page, the store is empty thus these values are false. so we fetch them again.
-    if (this.props.classesList === false) {
-      this.props.getAllClasses(email);
-    }
-    // Update Data to a form that the dropdown understands.
-    if (this.props.classesList && this.props.classesList.length > 0) {
-      this.updateData();
-    }
+    // If user refreshes page, the store is empty so we fetch them again.
+    this.props.getAllClasses(email);
+    this.updateData();
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.classesList === false && (this.props.classesList && this.props.classesList.length > 0)) {
+    if (prevProps.classes.classesList.length === 0 && this.props.classes.classesList.length > 0) {
+      this.updateData();
+    }
+    if (prevProps.classes.classesList.length !== this.props.classes.classesList.length) {
       this.updateData();
     }
   }
 
+  // Update Data to a form that the dropdown understands. Only for this page.
   updateData = () => {
     const classes = [];
     const classFrequency = {};
-    this.props.classesList && this.props.classesList.length > 0 && this.props.classesList.forEach((myClass) => {
+    const { classes: { classesList } } = this.props;
+    classesList && classesList.length > 0 && classesList.forEach((myClass) => {
       classFrequency[myClass.class] ? classFrequency[myClass.class]++ : classFrequency[myClass.class] = 1;
     });
     Object.keys(classFrequency).map((value) => {
@@ -65,39 +59,56 @@ class Classes extends React.Component {
       obj.value = value;
       obj.label = value;
       obj.numberOfSections = classFrequency[value];
+      obj.disabled = true;
       classes.push(obj);
       return null;
     });
-    this.setState({
-      classList: classes,
-      saveButtonDisabled: true,
+    store.dispatch({
+      type: CLASSES_TYPE.SET_FIELD_DATA,
+      payload: classes,
     });
   }
 
-  submitHandler = (e) => {
+  updateClasses = (e) => {
     e.preventDefault();
-    const { classList } = this.state;
-    const { email } = this.props;
+    const { classes: { classesForDropdown }, email } = this.props;
     const data = {
-      classesList: classList,
+      classesList: classesForDropdown,
       email,
     };
-    console.log('This Guy', data);
+    this.props.updateClasses(data);
+  }
+
+  createNewClasses = (e) => {
+    e.preventDefault();
+    const { classes: { classesForDropdown }, email } = this.props;
+    const data = {
+      classesList: classesForDropdown,
+      email,
+    };
     this.props.addNewClasses(data);
   }
 
   updateOptions = (_, action) => {
-    let { classList } = this.state;
+    let { classes: { classesForDropdown } } = this.props;
+    const { classes: { classesList } } = this.props;
     if (action.action === 'select-option') {
-      classList.push(action.option);
+      classesForDropdown.push(action.option);
     } else if (action.action === 'remove-value') {
-      classList = classList.filter((item) => item.value !== action.removedValue.value);
+      // Not deleting classes present in classesList.
+      const found = classesList.filter((obj) => obj.class === parseInt(action.removedValue.value, 10));
+      if (found && found.length === 0) {
+        classesForDropdown = classesForDropdown.filter((item) => item.value !== action.removedValue.value);
+      }
     }
-    this.setState({ classList });
+    store.dispatch({
+      type: CLASSES_TYPE.SET_FIELD_DATA,
+      payload: classesForDropdown,
+    });
   }
 
   render() {
-    const { classList } = this.state;
+    const { classes: { classesForDropdown, updateData } } = this.props;
     return (
       <div>
         <br />
@@ -108,6 +119,7 @@ class Classes extends React.Component {
         <Link to="/teachers"> Add Teachers </Link>
         <br />
         <div>
+          <h2> Number of section cannot be changed after creation. </h2>
           <FullWidthGrid
             componentOneSize={3}
             componentTwoSize={9}
@@ -118,14 +130,14 @@ class Classes extends React.Component {
                 isMulti
                 options={options}
                 onChange={(option, action) => this.updateOptions(option, action)}
-                value={classList}
+                value={classesForDropdown}
                 isSearchable
                 showAnimations
               />
             )}
           />
-          { classList.map((e) => (
-            <div>
+          { classesForDropdown.map((e, id) => (
+            <div key={`section - ${id}`}>
               <br />
               <TextField
                 className="text-field"
@@ -133,11 +145,13 @@ class Classes extends React.Component {
                 variant="outlined"
                 type="number"
                 size="small"
+                disabled={e.disabled}
                 value={e.numberOfSections}
                 onChange={(element) => {
                   e.numberOfSections = element.target.value;
-                  this.setState({
-                    classList,
+                  store.dispatch({
+                    type: CLASSES_TYPE.SET_FIELD_DATA,
+                    payload: classesForDropdown,
                   });
                 }}
               />
@@ -145,8 +159,8 @@ class Classes extends React.Component {
               <br />
               <div className="heading-text">{`List Of Sections for ${e.label}: `}</div>
               {
-                showAllSections(e.numberOfSections).map((section) => (
-                  <span className="sub-heading">
+                showAllSections(e.numberOfSections).map((section, index) => (
+                  <span className="sub-heading" key={`section - ${index}`}>
                     {e.label}
                     -
                     {section}
@@ -156,15 +170,29 @@ class Classes extends React.Component {
             </div>
           ))}
           <br />
-          <Button
-            color="primary"
-            variant="contained"
-            type="submit"
-            disabled={this.state.saveButtonDisabled}
-            onClick={this.submitHandler}
-          >
-            Save
-          </Button>
+          {
+            updateData
+              ? (
+                <Button
+                  color="primary"
+                  variant="contained"
+                  type="submit"
+                  onClick={this.updateClasses}
+                >
+                  Save
+                </Button>
+              )
+              : (
+                <Button
+                  color="primary"
+                  variant="contained"
+                  type="submit"
+                  onClick={this.createNewClasses}
+                >
+                  Save
+                </Button>
+              )
+          }
         </div>
       </div>
     );
@@ -173,14 +201,14 @@ class Classes extends React.Component {
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  errors: state.errors,
   email: state.auth.user.email,
-  classesList: state.teachers && state.teachers.classesList && state.teachers.classesList.length > 0 && state.teachers.classesList,
+  classes: state.classes,
 });
 
 const mapDispatchToProps = {
   addNewClasses,
   getAllClasses,
+  updateClasses,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Classes);

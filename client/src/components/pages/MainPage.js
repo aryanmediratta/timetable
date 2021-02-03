@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+
 import Timetable from './Timetable';
 
 class MainPage extends React.Component {

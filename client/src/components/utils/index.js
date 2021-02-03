@@ -1,15 +1,14 @@
 const DAYS_OF_WEEK = [' ', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 const PERIOD_NUMBER = ['1st Period', '2nd Period', '3rd Period', '4th Period', '5th Period', '6th Period'];
 
-function getTimetableForEntity(timetable, entityType, entityId) {
+function getTimetableForEntity(timetable, entityId) {
   const myTable = [];
   let index = 1;
-  // entityId = parseInt(entityId, 10);
   timetable.forEach((period) => {
     let flag = false;
     period.forEach((tuple) => {
       const {
-        classId, teacherId, label, className, teacherName, subject,
+        classId, teacherId, className, teacherName, subject,
       } = tuple;
       let tempEntity = null;
       let otherTempEntity = null;
@@ -24,7 +23,6 @@ function getTimetableForEntity(timetable, entityType, entityId) {
         myTable.push({
           teacherName: otherTempEntity,
           entityId: tempEntity,
-          label,
           periodNo: index,
         });
         flag = true;
@@ -34,7 +32,6 @@ function getTimetableForEntity(timetable, entityType, entityId) {
     if (flag === false) {
       myTable.push({
         entityId: ' ',
-        label: ' ',
         periodNo: index,
       });
       index < 6 ? index++ : index = 1;
@@ -52,6 +49,7 @@ function showAllSections(numberOfSections) {
 }
 
 function createTimetableForRendering(timetable, numPeriods) {
+  numPeriods /= 5;
   const result = [];
   for (let i = 0; i < numPeriods; i++) {
     const periodRow = [];
@@ -65,6 +63,12 @@ function createTimetableForRendering(timetable, numPeriods) {
   }
   result.unshift(DAYS_OF_WEEK);
   return result;
+}
+
+function getSpecificTimetable(schoolTimetable, entityId, numPeriods) {
+  const tempTimetable = getTimetableForEntity(schoolTimetable, entityId);
+  const timetable = createTimetableForRendering(tempTimetable, numPeriods);
+  return timetable;
 }
 
 module.exports = {
@@ -88,7 +92,6 @@ module.exports = {
     headers: { 'Content-Type': 'application/json' },
     method: 'POST',
   }),
-  getTimetableForEntity,
-  createTimetableForRendering,
   showAllSections,
+  getSpecificTimetable,
 };

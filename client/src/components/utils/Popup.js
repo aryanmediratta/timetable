@@ -25,7 +25,7 @@ export default function Popup(props) {
           horizontal: 'center',
         }}
         open={open}
-        autoHideDuration={props.duration || 5000}
+        autoHideDuration={props.duration || 3000}
         onClose={handleClose}
         message={props.message || 'Action Completed.'}
         action={(

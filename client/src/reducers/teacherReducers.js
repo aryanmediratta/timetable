@@ -1,7 +1,3 @@
-import {
-  SET_ALL_CLASSES,
-} from '../actions/types';
-
 import { TEACHER_TYPES } from '../actions/teacher.actions';
 
 const initialState = {
@@ -14,8 +10,6 @@ const initialState = {
     subject: '',
     classesList: [],
   },
-  classesList: [],
-  timetable: [],
 };
 
 export default function teacherReducer(state = initialState, action) {
@@ -58,21 +52,6 @@ export default function teacherReducer(state = initialState, action) {
       showPopup: true,
       errorMessage: action.payload,
     };
-  // case SET_TIMETABLE:
-  //   return {
-  //     ...state,
-  //     timetable: action.payload,
-  //   };
-  // case ADD_NEW_CLASSES:
-  //   return {
-  //     ...state,
-  //     classesList: [...state.classesList, action.payload],
-  //   };
-  case SET_ALL_CLASSES:
-    return {
-      ...state,
-      classesList: [...action.payload],
-    };
   case TEACHER_TYPES.UPDATE_EXISTING_TEACHER:
     const { teachersList } = state;
     const updatedTeachersList = [];
@@ -87,6 +66,8 @@ export default function teacherReducer(state = initialState, action) {
       ...state,
       teachersList: [...updatedTeachersList],
     };
+  case TEACHER_TYPES.CLEAR_STATE:
+    return initialState;
   default:
     return state;
   }

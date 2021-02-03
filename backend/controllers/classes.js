@@ -50,7 +50,48 @@ getAllClasses = (req, res, next) => {
     });
 }
 
+updateClasses = (req, res, next) => {
+  let { classesList, email } = req.body;
+  const updatedClasses = []
+  classesList.forEach((myClass) => {
+    const allSections = showAllSections(myClass.numberOfSections);
+    allSections.forEach((section) => {
+      // Dont save disabled classes.
+      if (myClass.disabled !== true) {
+        const label = `${myClass.label} - ${section}`;
+        const classToBeSaved = new Classes({
+          label,
+          userEmail: email,
+          class: myClass.value,
+        });
+        updatedClasses.push(classToBeSaved);
+        classToBeSaved.save()
+          .then(response => {
+            console.log('wow')
+          })
+          .catch(err => {
+            res.status(200).json({
+              success: false,
+              message: 'Classes not saved. Please try again.',
+              errors: err,
+            });
+          })
+        }
+      });
+  });
+  Classes.find({ userEmail: email })
+    .then(data => {
+      data = [...data, ...updatedClasses];
+      res.status(200).json({
+        success: true,
+        message: 'Saved successfully',
+        classes: data,
+      });
+    });
+}
+
 module.exports = {
   addClasses,
   getAllClasses,
+  updateClasses,
 };
