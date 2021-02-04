@@ -4,6 +4,16 @@ import {
   post, get, constructURL, put,
 } from '../utils';
 
+export const setClassesData = (classesForDropdown) => ({
+  type: CLASSES_TYPE.SET_FIELD_DATA,
+  payload: classesForDropdown,
+});
+
+export const toggleErrorPopup = (message) => ({
+  type: TIMETABLE_TYPES.TOGGLE_POPUP,
+  payload: message,
+});
+
 export const addNewClasses = (classesData) => (dispatch) => {
   post('/api/add_new_class', classesData)
     .then((res) => res.json())

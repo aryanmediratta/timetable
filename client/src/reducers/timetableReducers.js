@@ -3,7 +3,7 @@ import { TIMETABLE_TYPES } from '../actions/timetable.actions';
 const initialState = {
   schoolTimetable: [],
   timetable: [],
-  numPeriods: 30,
+  numPeriods: '',
   entityId: '',
   entityType: '',
   loading: false,

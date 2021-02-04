@@ -64,17 +64,12 @@ generateNewTimetable = (req, res, next) => {
 
 saveTimetable = (req, res, next) => {
   const { schoolTimetable, email } = req.body;
-  const newTimeable = {
-    userEmail: email,
-    timetable: schoolTimetable,
-  };
-  Timetable.findOneAndReplace({ userEmail: email }, newTimeable, { returnNewDocument: true })
-    .then(_resp => {
-          res.status(200).json({
-            success: true,
-            schoolTimetable: newTimeable.timetable,
-            message: 'Save Successful',
-        });
+  Timetable.findOneAndUpdate({ userEmail: email }, {$set:  {timetable: schoolTimetable }}, { new: true })
+    .then((resp) => {
+      res.status(200).json({
+      success: true,
+      message: 'Timetable saved successfully',
+    });
     })
     .catch(err => {
       console.log('Errorrr', err);
@@ -93,6 +88,7 @@ fetchTimetable = (req, res, next) => {
     .then((data) => {
       res.status(200).json({
         success: true,
+        numPeriods: data.numPeriods,
         schoolTimetable: data.timetable,
       });
     })

@@ -9,10 +9,8 @@ import FullWidthGrid from '../common/TwoComponentGridSystem';
 import ModifyTeacherModal from '../partials/ModifyTeacherModal';
 import SimpleSnackbar from '../utils/Popup';
 
-import { getAllTeachers } from '../../actions/teacherActions';
+import { getAllTeachers, toggleErrorPopup, toggleTeacherModal } from '../../actions/teacherActions';
 import { getAllClasses } from '../../actions/classesActions';
-import store from '../../store';
-import { TEACHER_TYPES } from '../../actions/teacher.actions';
 
 require('../../styles/Login.css');
 
@@ -26,18 +24,15 @@ class Teachers extends React.Component {
   }
 
   onClose = () => {
-    store.dispatch({
-      type: TEACHER_TYPES.TOGGLE_POPUP,
-      payload: null,
-    });
+    this.props.toggleErrorPopup(null);
   };
 
   toggleModal = () => {
-    store.dispatch({ type: TEACHER_TYPES.TOGGLE_TEACHER_MODAL, payload: {} });
+    this.props.toggleTeacherModal({});
   }
 
   addTeacher = () => {
-    store.dispatch({ type: TEACHER_TYPES.TOGGLE_TEACHER_MODAL, payload: { name: '', subject: '', classesList: [] } });
+    this.props.toggleTeacherModal({ name: '', subject: '', classesList: [] });
   }
 
   updateDataForTable = () => {
@@ -70,7 +65,7 @@ class Teachers extends React.Component {
   editTeacherInfo = (id) => {
     const selectedTeacher = this.updateDataForTable().filter((teacher) => teacher._id === id);
     if (selectedTeacher && selectedTeacher.length > 0) {
-      store.dispatch({ type: TEACHER_TYPES.TOGGLE_TEACHER_MODAL, payload: selectedTeacher[0] });
+      this.props.toggleTeacherModal(selectedTeacher[0]);
     }
   }
 
@@ -79,7 +74,9 @@ class Teachers extends React.Component {
       teachers: {
         showModal, newTeacher, errorMessage, showPopup,
       },
+      classes: { classesList },
     } = this.props;
+
     const data = this.updateDataForTable();
 
     const columns = [{
@@ -128,7 +125,7 @@ class Teachers extends React.Component {
           showModal={showModal}
           toggleModal={this.toggleModal}
           teacherData={newTeacher}
-          classesList={this.props.classesList}
+          classesList={classesList}
         />
         <br />
         <br />
@@ -156,11 +153,14 @@ Teachers.propTypes = {
 const mapStateToProps = (state) => ({
   email: state.auth && state.auth.user && state.auth.user.email,
   teachers: state.teachers,
+  classes: state.classes,
 });
 
 const mapDispatchToProps = {
   getAllTeachers,
   getAllClasses,
+  toggleErrorPopup,
+  toggleTeacherModal,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Teachers);

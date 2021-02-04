@@ -2,6 +2,36 @@ import { get, constructURL, post } from '../utils';
 import { TIMETABLE_TYPES } from './timetable.actions';
 import { getSpecificTimetable } from '../components/utils';
 
+// Set School Name
+export const setNumPeriods = (num) => ({
+  type: TIMETABLE_TYPES.SET_NUM_PERIODS,
+  payload: num,
+});
+
+// Set Local Timetable
+export const setTimetable = (timetable) => ({
+  type: TIMETABLE_TYPES.SET_TIMETABLE,
+  payload: timetable,
+});
+
+// Set Entity Type
+export const setEntityType = (option) => ({
+  type: TIMETABLE_TYPES.SET_ENTITY_TYPE,
+  payload: option,
+});
+
+// Set Entity ID
+export const setEntityId = (option) => ({
+  type: TIMETABLE_TYPES.SET_ENTITY_ID,
+  payload: option,
+});
+
+// Set/Unset Errors
+export const toggleErrorPopup = (message) => ({
+  type: TIMETABLE_TYPES.TOGGLE_POPUP,
+  payload: message,
+});
+
 export const generateNewTimetable = (timetableData) => (dispatch) => {
   const {
     email, teachersList, classesList, numPeriods, entityId,
@@ -72,6 +102,10 @@ export const getTimetable = (email) => (dispatch) => {
         dispatch({
           type: TIMETABLE_TYPES.SET_SCHOOL_TIMETABLE,
           payload: res.schoolTimetable,
+        });
+        dispatch({
+          type: TIMETABLE_TYPES.SET_NUM_PERIODS,
+          payload: res.numPeriods,
         });
       }
     });

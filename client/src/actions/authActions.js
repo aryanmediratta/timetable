@@ -8,6 +8,36 @@ import { CLASSES_TYPE } from './classes.actions';
 import { TIMETABLE_TYPES } from './timetable.actions';
 import { post } from '../utils';
 
+// Toggle Error Popup
+export const toggleErrorPopup = (message) => ({
+  type: AUTH_TYPES.TOGGLE_POPUP,
+  payload: message,
+});
+
+// Setting Login Fields
+export const setLoginField = (data) => ({
+  type: AUTH_TYPES.SET_LOGIN_FIELD,
+  payload: data,
+});
+
+// Setting Register Fields
+export const setRegisterField = (data) => ({
+  type: AUTH_TYPES.SET_REGISTER_FIELD,
+  payload: data,
+});
+
+// Set School Name
+export const setSchoolName = (name) => ({
+  type: AUTH_TYPES.SET_SCHOOL_NAME,
+  payload: name,
+});
+
+// Toggle between different pages of register form
+export const toggleRegisterForm = () => ({
+  type: AUTH_TYPES.TOGGLE_REGISTER_FORM,
+  payload: null,
+});
+
 // Set logged in user
 export const setCurrentUser = (decoded) => ({
   type: AUTH_TYPES.SET_CURRENT_USER,

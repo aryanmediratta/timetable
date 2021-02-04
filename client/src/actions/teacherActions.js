@@ -1,6 +1,18 @@
 import { post, get, constructURL } from '../utils';
 import { TEACHER_TYPES } from './teacher.actions';
 
+// Toggle Error Popup
+export const toggleErrorPopup = (message) => ({
+  type: TEACHER_TYPES.TOGGLE_POPUP,
+  payload: message,
+});
+
+// Toggle Error Popup
+export const toggleTeacherModal = (payload) => ({
+  type: TEACHER_TYPES.TOGGLE_TEACHER_MODAL,
+  payload,
+});
+
 export const addNewTeacher = (userData) => (dispatch) => {
   post('/api/add_teacher', userData)
     .then((res) => res.json())

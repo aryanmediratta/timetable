@@ -15,7 +15,7 @@ const RegisterForm = (props) => {
       {
         updatedRegisterView
           ? <RegisterPartTwo />
-          : <RegisterPartOne />
+          : <RegisterPartOne auth={auth} />
       }
     </div>
   );

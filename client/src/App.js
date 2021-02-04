@@ -31,6 +31,8 @@ if (localStorage.jwtToken) {
   }
 }
 
+require('./styles/App.scss');
+
 class App extends React.Component {
   render() {
     return (

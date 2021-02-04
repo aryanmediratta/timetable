@@ -2,12 +2,14 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button, TextField } from '@material-ui/core';
 import { connect } from 'react-redux';
-import Dropdown from '../common/Dropdown';
 
+import Dropdown from '../common/Dropdown';
 import FullWidthGrid from '../common/TwoComponentGridSystem';
-import { addNewClasses, getAllClasses, updateClasses } from '../../actions/classesActions';
-import { CLASSES_TYPE } from '../../actions/classes.actions';
-import store from '../../store';
+import SimpleSnackbar from '../utils/Popup';
+
+import {
+  addNewClasses, getAllClasses, updateClasses, setClassesData, toggleErrorPopup,
+} from '../../actions/classesActions';
 
 import { showAllSections } from '../utils';
 
@@ -63,10 +65,7 @@ class Classes extends React.Component {
       classes.push(obj);
       return null;
     });
-    store.dispatch({
-      type: CLASSES_TYPE.SET_FIELD_DATA,
-      payload: classes,
-    });
+    this.props.setClassesData(classes);
   }
 
   updateClasses = (e) => {
@@ -101,14 +100,19 @@ class Classes extends React.Component {
         classesForDropdown = classesForDropdown.filter((item) => item.value !== action.removedValue.value);
       }
     }
-    store.dispatch({
-      type: CLASSES_TYPE.SET_FIELD_DATA,
-      payload: classesForDropdown,
-    });
+    this.props.setClassesData(classesForDropdown);
+  }
+
+  onClose = () => {
+    this.props.toggleErrorPopup(null);
   }
 
   render() {
-    const { classes: { classesForDropdown, updateData } } = this.props;
+    const {
+      classes: {
+        classesForDropdown, updateData, showPopup, errorMessage,
+      },
+    } = this.props;
     return (
       <div>
         <br />
@@ -149,10 +153,7 @@ class Classes extends React.Component {
                 value={e.numberOfSections}
                 onChange={(element) => {
                   e.numberOfSections = element.target.value;
-                  store.dispatch({
-                    type: CLASSES_TYPE.SET_FIELD_DATA,
-                    payload: classesForDropdown,
-                  });
+                  this.props.setClassesData(classesForDropdown);
                 }}
               />
               <br />
@@ -194,6 +195,9 @@ class Classes extends React.Component {
               )
           }
         </div>
+        {
+          showPopup && <SimpleSnackbar onClose={this.onClose} message={errorMessage} />
+        }
       </div>
     );
   }
@@ -209,6 +213,8 @@ const mapDispatchToProps = {
   addNewClasses,
   getAllClasses,
   updateClasses,
+  setClassesData,
+  toggleErrorPopup,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Classes);

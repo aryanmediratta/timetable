@@ -4,8 +4,9 @@ dotenv.config();
 // This is to fetch value of constants from .env file.
 
 const connectionParams = {
-    useNewUrlParser: true,
-    useUnifiedTopology: true 
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false,
 }
 
 module.exports = {

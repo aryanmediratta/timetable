@@ -5,9 +5,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import SimpleSnackbar from '../utils/Popup';
-import { registerUser } from '../../actions/authActions';
-import store from '../../store';
-import { AUTH_TYPES } from '../../actions/auth.actions';
+import {
+  registerUser, toggleErrorPopup, toggleRegisterForm, setRegisterField,
+} from '../../actions/authActions';
 
 require('../../styles/Login.css');
 
@@ -21,10 +21,7 @@ class RegisterPartTwo extends React.Component {
   }
 
   onClose = () => {
-    store.dispatch({
-      type: AUTH_TYPES.TOGGLE_POPUP,
-      payload: null,
-    });
+    this.props.toggleErrorPopup(null);
   };
 
   handleSubmit = (e) => {
@@ -50,10 +47,7 @@ class RegisterPartTwo extends React.Component {
   };
 
   updateView = () => {
-    store.dispatch({
-      type: AUTH_TYPES.TOGGLE_REGISTER_FORM,
-      payload: null,
-    });
+    this.props.toggleRegisterForm();
   }
 
   render() {
@@ -71,7 +65,7 @@ class RegisterPartTwo extends React.Component {
                 variant="outlined"
                 onChange={(e) => {
                   registerInfo = { ...registerInfo, name: e.target.value };
-                  store.dispatch({ type: AUTH_TYPES.SET_REGISTER_FIELD, payload: registerInfo });
+                  this.props.setRegisterField(registerInfo);
                 }}
                 size="small"
               />
@@ -83,7 +77,7 @@ class RegisterPartTwo extends React.Component {
                 variant="outlined"
                 onChange={(e) => {
                   registerInfo = { ...registerInfo, email: e.target.value };
-                  store.dispatch({ type: AUTH_TYPES.SET_REGISTER_FIELD, payload: registerInfo });
+                  this.props.setRegisterField(registerInfo);
                 }}
                 size="small"
               />
@@ -96,7 +90,7 @@ class RegisterPartTwo extends React.Component {
                 variant="outlined"
                 onChange={(e) => {
                   registerInfo = { ...registerInfo, password: e.target.value };
-                  store.dispatch({ type: AUTH_TYPES.SET_REGISTER_FIELD, payload: registerInfo });
+                  this.props.setRegisterField(registerInfo);
                 }}
                 size="small"
               />
@@ -109,7 +103,7 @@ class RegisterPartTwo extends React.Component {
                 variant="outlined"
                 onChange={(e) => {
                   registerInfo = { ...registerInfo, passwordConfirmation: e.target.value };
-                  store.dispatch({ type: AUTH_TYPES.SET_REGISTER_FIELD, payload: registerInfo });
+                  this.props.setRegisterField(registerInfo);
                 }}
                 size="small"
               />
@@ -156,6 +150,9 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   registerUser,
+  toggleErrorPopup,
+  toggleRegisterForm,
+  setRegisterField,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(RegisterPartTwo));

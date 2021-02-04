@@ -3,15 +3,19 @@ import { Button } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { getSpecificTimetable } from '../utils';
-import store from '../../store';
 import Dropdown from '../common/Dropdown';
 import TimetableRow from '../partials/TimetableRow';
-import { TIMETABLE_TYPES } from '../../actions/timetable.actions';
 import FullWidthGrid from '../common/TwoComponentGridSystem';
-import { generateNewTimetable, saveTimetable, getTimetable } from '../../actions/timetableActions';
+import Loader from '../common/Loader';
+
+import { getSpecificTimetable } from '../utils';
+import {
+  generateNewTimetable, saveTimetable, getTimetable, setTimetable, setEntityType, setEntityId, toggleErrorPopup,
+} from '../../actions/timetableActions';
 import { getAllClasses } from '../../actions/classesActions';
 import { getAllTeachers } from '../../actions/teacherActions';
+
+import SimpleSnackbar from '../utils/Popup';
 
 require('../../styles/Timetable.css');
 
@@ -54,10 +58,7 @@ class Timetable extends React.Component {
       },
     } = this.props;
     const timetable = getSpecificTimetable(schoolTimetable, entityId.value, numPeriods);
-    store.dispatch({
-      type: TIMETABLE_TYPES.SET_TIMETABLE,
-      payload: timetable,
-    });
+    this.props.setTimetable(timetable);
   }
 
   fetchTimetable = () => {
@@ -76,21 +77,19 @@ class Timetable extends React.Component {
 
   updateOptions = (option, action) => {
     if (action.action === 'select-option') {
-      store.dispatch({
-        type: TIMETABLE_TYPES.SET_ENTITY_TYPE,
-        payload: option,
-      });
+      this.props.setEntityType(option);
     }
   }
 
-    updateEntityId = (option, action) => {
-      if (action.action === 'select-option') {
-        store.dispatch({
-          type: TIMETABLE_TYPES.SET_ENTITY_ID,
-          payload: option,
-        });
-      }
+  updateEntityId = (option, action) => {
+    if (action.action === 'select-option') {
+      this.props.setEntityId(option);
     }
+  }
+
+  onClose = () => {
+    this.props.toggleErrorPopup(null);
+  }
 
     // Fix Logic to handle all cases.
     getAllDataForDropdown = () => {
@@ -117,10 +116,11 @@ class Timetable extends React.Component {
     }
 
     saveEntireTimetable = () => {
-      const { timetables: { schoolTimetable }, email } = this.props;
+      const { timetables: { schoolTimetable, numPeriods }, email } = this.props;
       const timetableData = {
         schoolTimetable,
         email,
+        numPeriods,
       };
       this.props.saveTimetable(timetableData);
     }
@@ -129,7 +129,7 @@ class Timetable extends React.Component {
       const data = this.getAllDataForDropdown();
       const {
         timetables: {
-          entityType, entityId, timetable, loading, schoolTimetable,
+          entityType, entityId, timetable, loading, schoolTimetable, showPopup, errorMessage,
         },
       } = this.props;
       return (
@@ -214,10 +214,11 @@ class Timetable extends React.Component {
                     )
           }
 
+          { loading === true && <Loader /> }
           {
-            loading === true
-                    && <h3>Loading, Please wait</h3>
+            showPopup && <SimpleSnackbar onClose={this.onClose} message={errorMessage} />
           }
+
         </div>
       );
     }
@@ -240,6 +241,10 @@ const mapDispatchToProps = {
   getAllClasses,
   saveTimetable,
   getTimetable,
+  setTimetable,
+  setEntityType,
+  setEntityId,
+  toggleErrorPopup,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Timetable);

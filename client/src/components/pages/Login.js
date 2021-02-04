@@ -3,11 +3,8 @@ import { Button, TextField } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { loginUser } from '../../actions/authActions';
+import { loginUser, toggleErrorPopup, setLoginField } from '../../actions/authActions';
 import SimpleSnackbar from '../utils/Popup';
-
-import { AUTH_TYPES } from '../../actions/auth.actions';
-import store from '../../store';
 
 require('../../styles/Login.css');
 
@@ -28,10 +25,7 @@ class Login extends React.Component {
   }
 
     onClose = () => {
-      store.dispatch({
-        type: AUTH_TYPES.TOGGLE_POPUP,
-        payload: null,
-      });
+      this.props.toggleErrorPopup(null);
     };
 
     handleSubmit = async (e) => {
@@ -61,7 +55,7 @@ class Login extends React.Component {
                   value={loginInfo.email}
                   onChange={(e) => {
                     loginInfo = { ...loginInfo, email: e.target.value };
-                    store.dispatch({ type: AUTH_TYPES.SET_LOGIN_FIELD, payload: loginInfo });
+                    this.props.setLoginField(loginInfo);
                   }}
                   size="small"
                 />
@@ -76,7 +70,7 @@ class Login extends React.Component {
                   value={loginInfo.password}
                   onChange={(e) => {
                     loginInfo = { ...loginInfo, password: e.target.value };
-                    store.dispatch({ type: AUTH_TYPES.SET_LOGIN_FIELD, payload: loginInfo });
+                    this.props.setLoginField(loginInfo);
                   }}
                   size="small"
                 />
@@ -112,6 +106,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   loginUser,
+  toggleErrorPopup,
+  setLoginField,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

@@ -1,0 +1,45 @@
+@keyframes bouncer {
+  0%,
+  50% { transform: scale(1); }
+ 100% { transform: scale(0); }
+}
+
+@keyframes bouncer {
+  0%,
+  50% {
+    transform: scale(1);
+    transform: scale(1);
+  }
+ 100% {
+    transform: scale(0);
+    transform: scale(0);
+  }
+}
+
+.loader {
+  height: 40px;
+  margin: 100px auto;
+
+  position: relative;
+  width: 40px;
+}
+
+.bounce-1,
+ .bounce-2 {
+
+  animation: bouncer 2s infinite ease-in-out;
+  animation: bouncer 2s infinite ease-in-out;
+  background-color: lightblue;
+  border-radius: 50%;
+  height: 100%;
+  left: 0;
+  opacity: 0.6;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.bounce-2 {
+  animation-delay: -1s;
+  animation-delay: -1s;
+}
