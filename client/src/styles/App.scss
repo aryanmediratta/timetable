@@ -19,14 +19,11 @@
 .loader {
   height: 40px;
   margin: 100px auto;
-
   position: relative;
   width: 40px;
 }
 
-.bounce-1,
- .bounce-2 {
-
+.bounce-1, .bounce-2 {
   animation: bouncer 2s infinite ease-in-out;
   animation: bouncer 2s infinite ease-in-out;
   background-color: lightblue;
@@ -50,4 +47,8 @@
 
 .red {
   background-color: red;
+}
+
+.container {
+  padding: 10px 40px;
 }

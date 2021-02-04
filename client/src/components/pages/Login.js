@@ -42,7 +42,7 @@ class Login extends React.Component {
       const { auth: { errorMessage, showPopup, success } } = this.props;
       let { auth: { loginInfo } } = this.props;
       return (
-        <div>
+        <div className="container">
           <form onSubmit={this.handleSubmit}>
             <div className="box">
               <div className="outline">

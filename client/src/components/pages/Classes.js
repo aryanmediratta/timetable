@@ -114,7 +114,7 @@ class Classes extends React.Component {
       },
     } = this.props;
     return (
-      <div>
+      <div className="container">
         <br />
         <Link to="/"> Main </Link>
         <br />

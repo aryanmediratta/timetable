@@ -56,9 +56,10 @@ class RegisterPartTwo extends React.Component {
         registerInfo: {
           name, email, password, passwordConfirmation,
         },
+        errorMessage, showPopup, success,
       },
     } = this.props;
-    const { auth: { errorMessage, showPopup, success } } = this.props;
+    let { auth: { registerInfo } } = this.props;
     return (
       <div>
         <form onSubmit={this.handleSubmit}>

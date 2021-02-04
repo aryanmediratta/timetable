@@ -11,7 +11,7 @@ const RegisterForm = (props) => {
     props.history.push('/home');
   }
   return (
-    <div>
+    <div className="container">
       {
         updatedRegisterView
           ? <RegisterPartTwo />

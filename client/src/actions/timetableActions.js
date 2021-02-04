@@ -2,7 +2,7 @@ import { get, constructURL, post } from '../utils';
 import { TIMETABLE_TYPES } from './timetable.actions';
 import { getSpecificTimetable } from '../components/utils';
 
-// Set School Name
+// Set Num Periods
 export const setNumPeriods = (num) => ({
   type: TIMETABLE_TYPES.SET_NUM_PERIODS,
   payload: num,

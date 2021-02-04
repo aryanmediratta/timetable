@@ -9,7 +9,7 @@ import { setCurrentUser, logoutUser } from './actions/authActions';
 import PrivateRoute from './utils/privateRoutes';
 
 import MainPage from './components/pages/MainPage';
-import OtherPage from './components/pages/OtherPage';
+import HomePage from './components/pages/HomePage';
 import Login from './components/pages/Login';
 import RegisterForm from './components/pages/RegisterForm';
 import Header from './components/common/Header';
@@ -42,7 +42,7 @@ class App extends React.Component {
             <Header />
             <Switch>
               <PrivateRoute exact path="/" component={MainPage} />
-              <PrivateRoute exact path="/home" component={OtherPage} />
+              <PrivateRoute exact path="/home" component={HomePage} />
               <Route exact path="/login" component={Login} />
               <Route exact path="/signup" component={RegisterForm} />
               <PrivateRoute exact path="/classes" component={Classes} />

@@ -45,6 +45,12 @@ export const setCurrentUser = (decoded) => ({
   payload: decoded,
 });
 
+// Set user name
+export const setUserName = (name) => ({
+  type: AUTH_TYPES.SET_USER_NAME,
+  payload: name,
+});
+
 // Log user out
 export const logoutUser = () => (dispatch) => {
   // setAuthToken(false);
@@ -112,6 +118,8 @@ export const loginUser = (userData) => async (dispatch) => {
       // Set current user
       // eslint-disable-next-line no-use-before-define
       dispatch(setCurrentUser(decoded));
+      dispatch(setSchoolName(res.user.schoolName));
+      dispatch(setUserName(res.userName));
     } else {
       dispatch({
         type: AUTH_TYPES.TOGGLE_POPUP,

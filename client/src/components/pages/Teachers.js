@@ -96,7 +96,7 @@ class Teachers extends React.Component {
     }];
 
     return (
-      <div>
+      <div className="container">
         <br />
         <Link to="/"> Main </Link>
         <br />

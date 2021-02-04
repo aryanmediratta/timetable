@@ -70,7 +70,7 @@ signup = (req, res, next) => {
                                 if (decoded) {
                                   const timetable = new Timetable({
                                     userEmail: email,
-                                    numPeriods,
+                                    numPeriods: numPeriods * 5,
                                   });
                                   timetable.save()
                                     .then(() => {

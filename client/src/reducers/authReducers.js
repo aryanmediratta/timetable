@@ -69,6 +69,7 @@ export default function authReducer(state = initialState, action) {
   // Successful Login
   case AUTH_TYPES.SET_CURRENT_USER:
     return {
+      ...state,
       isAuthenticated: true,
       user: action.payload,
       loginInfo: { ...initialLoginInfo },
@@ -80,6 +81,12 @@ export default function authReducer(state = initialState, action) {
     return {
       ...state,
       schoolName: action.payload,
+    };
+
+  case AUTH_TYPES.SET_USER_NAME:
+    return {
+      ...state,
+      userName: action.payload,
     };
 
   // Toggle View

@@ -6,15 +6,13 @@ import Timetable from './Timetable';
 class MainPage extends React.Component {
   render() {
     return (
-      <div>
+      <div className="container">
         <h2>Main Page??</h2>
-        <Link to="/home"> Home </Link>
+        <Link to="/home" className="link"> Home </Link>
         <br />
-        <Link to="/login"> Login </Link>
+        <Link to="/classes" className="link"> Manage Classes </Link>
         <br />
-        <Link to="/classes"> Add Classes </Link>
-        <br />
-        <Link to="/teachers"> Add Teachers </Link>
+        <Link to="/teachers" className="link"> Manage Teachers </Link>
         <br />
         <br />
         <Timetable />
