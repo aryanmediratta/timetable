@@ -61,6 +61,7 @@ export const generateNewTimetable = (timetableData) => (dispatch) => {
         dispatch({
           type: TIMETABLE_TYPES.TOGGLE_POPUP,
           payload: res.message,
+          success: res.success,
         });
       }
     })
@@ -78,6 +79,7 @@ export const saveTimetable = (timetableData) => (dispatch) => {
         dispatch({
           type: TIMETABLE_TYPES.TOGGLE_POPUP,
           payload: res.message,
+          success: res.success,
         });
       } else {
         dispatch({
@@ -86,12 +88,7 @@ export const saveTimetable = (timetableData) => (dispatch) => {
         });
       }
     })
-    .catch((res) => {
-      dispatch({
-        type: TIMETABLE_TYPES.TOGGLE_POPUP,
-        payload: res.message,
-      });
-    });
+    .catch(() => null);
 };
 
 export const getTimetable = (email) => (dispatch) => {

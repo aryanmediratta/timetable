@@ -110,7 +110,7 @@ class Classes extends React.Component {
   render() {
     const {
       classes: {
-        classesForDropdown, updateData, showPopup, errorMessage,
+        classesForDropdown, updateData, showPopup, errorMessage, success,
       },
     } = this.props;
     return (
@@ -196,7 +196,7 @@ class Classes extends React.Component {
           }
         </div>
         {
-          showPopup && <SimpleSnackbar onClose={this.onClose} message={errorMessage} />
+          showPopup && <SimpleSnackbar onClose={this.onClose} message={errorMessage} success={success} />
         }
       </div>
     );

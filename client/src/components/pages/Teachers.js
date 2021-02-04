@@ -72,7 +72,7 @@ class Teachers extends React.Component {
   render() {
     const {
       teachers: {
-        showModal, newTeacher, errorMessage, showPopup,
+        showModal, newTeacher, errorMessage, showPopup, success,
       },
       classes: { classesList },
     } = this.props;
@@ -139,7 +139,7 @@ class Teachers extends React.Component {
         </Button>
         <br />
         {
-          showPopup && <SimpleSnackbar onClose={this.onClose} message={errorMessage} />
+          showPopup && <SimpleSnackbar onClose={this.onClose} message={errorMessage} success={success} />
         }
       </div>
     );

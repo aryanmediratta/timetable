@@ -11,7 +11,7 @@ generateNewTimetable = (req, res, next) => {
   const email = url.searchParams.get('email');
   const numClasses = url.searchParams.get('numClasses');
   const numTeachers = url.searchParams.get('numTeachers');
-  const numPeriods = url.searchParams.get('numPeriods') || NUM_PERIODS;
+  const numPeriods = url.searchParams.get('numPeriods');
   const classesList = [];
   Classes.find({ userEmail: email })
     .then(classData => {
@@ -20,7 +20,7 @@ generateNewTimetable = (req, res, next) => {
       });
     })
   Teacher.find({ userEmail: email })
-  .then(teacherData => {
+  .then((teacherData) => {
     let flag = false;
     classesList.forEach((parentClass) => {
       let total = 0;

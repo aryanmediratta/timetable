@@ -20,6 +20,7 @@ const initialState = {
     ...initialRegisterInfo,
   },
   showPopup: false,
+  success: false,
   errorMessage: '',
   isAuthenticated: false,
   user: {},
@@ -50,10 +51,19 @@ export default function authReducer(state = initialState, action) {
 
   // Handling Errors
   case AUTH_TYPES.TOGGLE_POPUP:
+    if (action.payload === null) {
+      return {
+        ...state,
+        showPopup: false,
+        errorMessage: '',
+        success: action.success,
+      };
+    }
     return {
       ...state,
+      showPopup: true,
       errorMessage: action.payload,
-      showPopup: !state.showPopup,
+      success: action.success,
     };
 
   // Successful Login

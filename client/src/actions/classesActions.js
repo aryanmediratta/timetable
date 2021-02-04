@@ -27,15 +27,11 @@ export const addNewClasses = (classesData) => (dispatch) => {
         dispatch({
           type: CLASSES_TYPE.TOGGLE_POPUP,
           payload: res.message,
+          success: false,
         });
       }
     })
-    .catch((res) => {
-      dispatch({
-        type: CLASSES_TYPE.TOGGLE_POPUP,
-        payload: res.errors,
-      });
-    });
+    .catch(() => null);
 };
 
 export const getAllClasses = (email) => (dispatch) => {
@@ -62,13 +58,9 @@ export const updateClasses = (classesData) => (dispatch) => {
         dispatch({
           type: CLASSES_TYPE.TOGGLE_POPUP,
           payload: res.message,
+          success: false,
         });
       }
     })
-    .catch((res) => {
-      dispatch({
-        type: CLASSES_TYPE.TOGGLE_POPUP,
-        payload: res.errors,
-      });
-    });
+    .catch(() => null);
 };

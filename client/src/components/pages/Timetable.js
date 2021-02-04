@@ -129,7 +129,7 @@ class Timetable extends React.Component {
       const data = this.getAllDataForDropdown();
       const {
         timetables: {
-          entityType, entityId, timetable, loading, schoolTimetable, showPopup, errorMessage,
+          entityType, entityId, timetable, loading, schoolTimetable, showPopup, errorMessage, success,
         },
       } = this.props;
       return (
@@ -216,7 +216,7 @@ class Timetable extends React.Component {
 
           { loading === true && <Loader /> }
           {
-            showPopup && <SimpleSnackbar onClose={this.onClose} message={errorMessage} />
+            showPopup && <SimpleSnackbar onClose={this.onClose} message={errorMessage} success={success} />
           }
 
         </div>

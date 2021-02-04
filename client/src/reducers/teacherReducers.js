@@ -4,6 +4,7 @@ const initialState = {
   teachersList: [],
   showModal: false,
   showPopup: false,
+  success: false,
   errorMessage: '',
   newTeacher: {
     name: '',
@@ -45,12 +46,14 @@ export default function teacherReducer(state = initialState, action) {
         ...state,
         showPopup: false,
         errorMessage: '',
+        success: false,
       };
     }
     return {
       ...state,
       showPopup: true,
       errorMessage: action.payload,
+      success: action.success,
     };
   case TEACHER_TYPES.UPDATE_EXISTING_TEACHER:
     const { teachersList } = state;

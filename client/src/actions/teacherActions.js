@@ -5,6 +5,7 @@ import { TEACHER_TYPES } from './teacher.actions';
 export const toggleErrorPopup = (message) => ({
   type: TEACHER_TYPES.TOGGLE_POPUP,
   payload: message,
+  success: false,
 });
 
 // Toggle Error Popup
@@ -36,20 +37,17 @@ export const addNewTeacher = (userData) => (dispatch) => {
         dispatch({
           type: TEACHER_TYPES.TOGGLE_POPUP,
           payload: res.message,
+          success: res.success,
         });
       } else {
         dispatch({
           type: TEACHER_TYPES.TOGGLE_POPUP,
           payload: res.message,
+          success: res.success,
         });
       }
     })
-    .catch((err) => {
-      dispatch({
-        type: TEACHER_TYPES.TOGGLE_POPUP,
-        payload: err,
-      });
-    });
+    .catch(() => null);
 };
 
 export const getAllTeachers = (email) => (dispatch) => {
@@ -61,10 +59,5 @@ export const getAllTeachers = (email) => (dispatch) => {
         payload: res.teachers,
       });
     })
-    .catch(() => {
-      dispatch({
-        type: TEACHER_TYPES.TOGGLE_POPUP,
-        payload: null,
-      });
-    });
+    .catch(() => null);
 };

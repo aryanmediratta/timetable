@@ -51,8 +51,14 @@ class RegisterPartTwo extends React.Component {
   }
 
   render() {
-    let { auth: { registerInfo } } = this.props;
-    const { auth: { errorMessage, showPopup } } = this.props;
+    const {
+      auth: {
+        registerInfo: {
+          name, email, password, passwordConfirmation,
+        },
+      },
+    } = this.props;
+    const { auth: { errorMessage, showPopup, success } } = this.props;
     return (
       <div>
         <form onSubmit={this.handleSubmit}>
@@ -63,6 +69,7 @@ class RegisterPartTwo extends React.Component {
                 className="text-field"
                 label="Enter Name"
                 variant="outlined"
+                value={name}
                 onChange={(e) => {
                   registerInfo = { ...registerInfo, name: e.target.value };
                   this.props.setRegisterField(registerInfo);
@@ -75,6 +82,7 @@ class RegisterPartTwo extends React.Component {
                 className="text-field"
                 label="Enter Email"
                 variant="outlined"
+                value={email}
                 onChange={(e) => {
                   registerInfo = { ...registerInfo, email: e.target.value };
                   this.props.setRegisterField(registerInfo);
@@ -88,6 +96,7 @@ class RegisterPartTwo extends React.Component {
                 label="Enter Password"
                 type="password"
                 variant="outlined"
+                value={password}
                 onChange={(e) => {
                   registerInfo = { ...registerInfo, password: e.target.value };
                   this.props.setRegisterField(registerInfo);
@@ -101,6 +110,7 @@ class RegisterPartTwo extends React.Component {
                 label="Confirm Password"
                 type="password"
                 variant="outlined"
+                value={passwordConfirmation}
                 onChange={(e) => {
                   registerInfo = { ...registerInfo, passwordConfirmation: e.target.value };
                   this.props.setRegisterField(registerInfo);
@@ -131,7 +141,7 @@ class RegisterPartTwo extends React.Component {
         </form>
         {
           showPopup
-                  && <SimpleSnackbar onClose={this.onClose} message={errorMessage} />
+                  && <SimpleSnackbar onClose={this.onClose} message={errorMessage} success={success} />
         }
       </div>
     );

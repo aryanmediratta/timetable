@@ -8,6 +8,7 @@ const initialState = {
   entityType: '',
   loading: false,
   showPopup: false,
+  success: false,
   errorMessage: '',
 };
 
@@ -57,12 +58,14 @@ export default function timetableReducer(state = initialState, action) {
         ...state,
         showPopup: false,
         errorMessage: '',
+        success: false,
       };
     }
     return {
       ...state,
       showPopup: true,
       errorMessage: action.payload,
+      success: action.success,
     };
   case TIMETABLE_TYPES.CLEAR_STATE:
     return initialState;

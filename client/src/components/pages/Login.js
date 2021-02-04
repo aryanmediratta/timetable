@@ -39,7 +39,7 @@ class Login extends React.Component {
     };
 
     render() {
-      const { auth: { errorMessage, showPopup } } = this.props;
+      const { auth: { errorMessage, showPopup, success } } = this.props;
       let { auth: { loginInfo } } = this.props;
       return (
         <div>
@@ -88,7 +88,7 @@ class Login extends React.Component {
             </div>
           </form>
           {
-            showPopup && <SimpleSnackbar onClose={this.onClose} message={errorMessage} />
+            showPopup && <SimpleSnackbar onClose={this.onClose} message={errorMessage} success={success} />
           }
         </div>
       );

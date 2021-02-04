@@ -12,6 +12,7 @@ import { post } from '../utils';
 export const toggleErrorPopup = (message) => ({
   type: AUTH_TYPES.TOGGLE_POPUP,
   payload: message,
+  success: false,
 });
 
 // Setting Login Fields
@@ -67,7 +68,7 @@ export const logoutUser = () => (dispatch) => {
 };
 
 // Register User
-export const registerUser = (userData, history) => (dispatch) => {
+export const registerUser = (userData) => (dispatch) => {
   post('/api/signup', userData)
     .then((res) => res.json())
     .then((res) => {
@@ -80,18 +81,14 @@ export const registerUser = (userData, history) => (dispatch) => {
         const decoded = jwt_decode(token);
         // Set current user
         dispatch(setCurrentUser(decoded));
-        history.push('/classes');
       } else {
         dispatch({
           type: AUTH_TYPES.TOGGLE_POPUP,
           payload: res.message,
+          success: false,
         });
       }
-    })
-    .catch((err) => dispatch({
-      type: AUTH_TYPES.TOGGLE_POPUP,
-      payload: err,
-    }));
+    });
 };
 
 // Login - get user token
@@ -119,6 +116,7 @@ export const loginUser = (userData) => async (dispatch) => {
       dispatch({
         type: AUTH_TYPES.TOGGLE_POPUP,
         payload: res.message,
+        success: false,
       });
     }
   }

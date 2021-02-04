@@ -4,6 +4,7 @@ const initialState = {
   classesList: [],
   classesForDropdown: [],
   showPopup: false,
+  success: false,
   errorMessage: '',
   updateData: false,
 };
@@ -27,12 +28,14 @@ export default function classesReducer(state = initialState, action) {
         ...state,
         showPopup: false,
         errorMessage: '',
+        success: false,
       };
     }
     return {
       ...state,
       showPopup: true,
       errorMessage: action.payload,
+      success: action.success,
     };
 
   case CLASSES_TYPE.SET_ALL_CLASSES:
