@@ -8,21 +8,16 @@ import TimetableRow from '../partials/TimetableRow';
 import FullWidthGrid from '../common/TwoComponentGridSystem';
 import Loader from '../common/Loader';
 
-import { getSpecificTimetable } from '../utils';
+import { getSpecificTimetable, allEntityTypes } from '../utils';
 import {
-  generateNewTimetable, saveTimetable, getTimetable, setTimetable, setEntityType, setEntityId, toggleErrorPopup,
+  generateNewTimetable, saveTimetable, getTimetable, setTimetable, setEntityType, setEntityId, toggleErrorPopup, populateEntityIdDropdown,
 } from '../../actions/timetableActions';
 import { getAllClasses } from '../../actions/classesActions';
 import { getAllTeachers } from '../../actions/teacherActions';
 
 import SimpleSnackbar from '../utils/Popup';
 
-require('../../styles/Timetable.css');
-
-const options = [
-  { value: 'teacher', label: 'Teacher' },
-  { value: 'class', label: 'Class' },
-];
+require('../../styles/Timetable.scss');
 
 class Timetable extends React.Component {
   constructor(props) {
@@ -41,13 +36,23 @@ class Timetable extends React.Component {
     }
   }
 
+  componentDidMount() {
+    this.getAllDataForDropdown();
+  }
+
   componentDidUpdate(prevProps) {
     const { timetables: { entityId, entityType } } = this.props;
     if (prevProps.timetables.entityId.value !== entityId.value) {
+      this.getAllDataForDropdown();
+      this.updateTimetable();
+    } else if (prevProps.timetables.entityType.value !== entityType.value) {
+      this.getAllDataForDropdown();
       this.updateTimetable();
     }
-    if (prevProps.timetables.entityType.value !== entityType.value) {
-      this.updateTimetable();
+    if (prevProps.teachers.teachersList !== this.props.teachers.teachersList) {
+      this.getAllDataForDropdown();
+    } else if (prevProps.classes.classesList !== this.props.classes.classesList) {
+      this.getAllDataForDropdown();
     }
   }
 
@@ -104,7 +109,7 @@ class Timetable extends React.Component {
           obj.label = myClass.label;
           data.push(obj);
         });
-      } else {
+      } else if (entityType.value === 'teacher') {
         teachersList && teachersList.length > 0 && teachersList.forEach((teacher) => {
           const obj = {};
           obj.value = teacher._id;
@@ -112,7 +117,7 @@ class Timetable extends React.Component {
           data.push(obj);
         });
       }
-      return data;
+      this.props.populateEntityIdDropdown(data);
     }
 
     saveEntireTimetable = () => {
@@ -126,12 +131,12 @@ class Timetable extends React.Component {
     }
 
     render() {
-      const data = this.getAllDataForDropdown();
       const {
         timetables: {
-          entityType, entityId, timetable, loading, schoolTimetable, showPopup, errorMessage, success,
+          entityType, entityId, timetable, loading, schoolTimetable, showPopup, errorMessage, success, filteredEntityIds,
         },
       } = this.props;
+      console.log('ooof', this.props);
       return (
         <div>
           <h2>TimeTable :)</h2>
@@ -143,7 +148,7 @@ class Timetable extends React.Component {
             componentOne={(
               <Dropdown
                 isMulti={false}
-                options={options}
+                options={allEntityTypes}
                 onChange={(option, action) => this.updateOptions(option, action)}
                 value={entityType}
                 isSearchable
@@ -153,7 +158,7 @@ class Timetable extends React.Component {
             componentTwo={(
               <Dropdown
                 isMulti={false}
-                options={data}
+                options={filteredEntityIds}
                 onChange={(option, action) => this.updateEntityId(option, action)}
                 value={entityId}
                 isSearchable
@@ -245,6 +250,7 @@ const mapDispatchToProps = {
   setEntityType,
   setEntityId,
   toggleErrorPopup,
+  populateEntityIdDropdown,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Timetable);

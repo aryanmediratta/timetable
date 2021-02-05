@@ -1,5 +1,6 @@
 const Classes = require('../models/Classes');
 const { showAllSections } = require('../utils/teachers');
+const { modifyClassesData } = require('../utils/classes');
 
 addClasses = (req, res, next) => {
   let { classesList, email } = req.body;
@@ -35,10 +36,12 @@ getAllClasses = (req, res, next) => {
   const url = new URL(`https://anyrandomwebsite.com/${req.originalUrl}`);
   const email = url.searchParams.get('email');
   Classes.find({ userEmail: email })
-    .then(data => {
+    .then((data) => {
+      const classes = modifyClassesData(data);
       res.status(200).json({
         success: true,
-        classes: data,
+        allClasses: data,
+        numSectionsPerClass: classes,
       });
     })
     .catch(err => {
@@ -80,12 +83,14 @@ updateClasses = (req, res, next) => {
       });
   });
   Classes.find({ userEmail: email })
-    .then(data => {
+    .then((data) => {
       data = [...data, ...updatedClasses];
+      const classes = modifyClassesData(data);
       res.status(200).json({
         success: true,
         message: 'Saved successfully',
-        classes: data,
+        allClasses: data,
+        numSectionsPerClass: classes,
       });
     });
 }

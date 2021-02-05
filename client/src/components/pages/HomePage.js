@@ -7,28 +7,16 @@ import { logoutUser } from '../../actions/authActions';
 
 class HomePage extends React.Component {
   render() {
-    const { auth: { user: { email }, schoolName, userName } } = this.props;
+    const { auth: { user: { email } } } = this.props;
     return (
       <div className="container">
         <h2>Home Page</h2>
         <br />
         <h2>
-          Name
-          - -
-          {'  '}
-          {userName}
-        </h2>
-        <h2>
           Email
           - -
           {'  '}
           {email}
-        </h2>
-        <h2>
-          School Name
-          - -
-          {'  '}
-          {schoolName}
         </h2>
         <Link to="/" className="link"> Manage Timetable </Link>
         <br />

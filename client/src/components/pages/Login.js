@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { loginUser, toggleErrorPopup, setLoginField } from '../../actions/authActions';
 import SimpleSnackbar from '../utils/Popup';
 
-require('../../styles/Login.css');
+require('../../styles/Login.scss');
 
 class Login extends React.Component {
   constructor(props) {

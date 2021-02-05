@@ -1,6 +1,6 @@
 import React from 'react';
 
-require('../../styles/Modal.css');
+require('../../styles/Modal.scss');
 
 const Modal = (props) => {
   const divStyle = {

@@ -1,0 +1,24 @@
+.box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 600px;
+}
+.outline {
+  border: 2px solid black;
+  padding: 20px;
+}
+.text-field {
+  width: 300px;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.link {
+  color:#0E79C0;
+  font-size: 20px;
+  text-decoration: none !important;
+}

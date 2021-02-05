@@ -9,7 +9,7 @@ import makeAnimated from 'react-select/animated';
 
 const animatedComponents = makeAnimated();
 
-require('../../styles/Dropdown.css');
+require('../../styles/Dropdown.scss');
 
 const hardcodedOptions = [
   { value: 'chocolate', label: 'Chocolate' },

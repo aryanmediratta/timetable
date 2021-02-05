@@ -1,11 +1,13 @@
 import { TIMETABLE_TYPES } from '../actions/timetable.actions';
+import { allEntityTypes } from '../components/utils';
 
 const initialState = {
   schoolTimetable: [],
+  filteredEntityIds: [],
   timetable: [],
   numPeriods: '',
   entityId: '',
-  entityType: '',
+  entityType: allEntityTypes[0],
   loading: false,
   showPopup: false,
   success: false,
@@ -33,6 +35,11 @@ export default function timetableReducer(state = initialState, action) {
     return {
       ...state,
       entityType: action.payload,
+    };
+  case TIMETABLE_TYPES.POPULATE_ENTITY_IDS:
+    return {
+      ...state,
+      filteredEntityIds: action.payload,
     };
   case TIMETABLE_TYPES.SET_ENTITY_ID:
     return {

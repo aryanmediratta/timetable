@@ -36,36 +36,6 @@ class Classes extends React.Component {
     const { email } = this.props;
     // If user refreshes page, the store is empty so we fetch them again.
     this.props.getAllClasses(email);
-    this.updateData();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.classes.classesList.length === 0 && this.props.classes.classesList.length > 0) {
-      this.updateData();
-    }
-    if (prevProps.classes.classesList.length !== this.props.classes.classesList.length) {
-      this.updateData();
-    }
-  }
-
-  // Update Data to a form that the dropdown understands. Only for this page.
-  updateData = () => {
-    const classes = [];
-    const classFrequency = {};
-    const { classes: { classesList } } = this.props;
-    classesList && classesList.length > 0 && classesList.forEach((myClass) => {
-      classFrequency[myClass.class] ? classFrequency[myClass.class]++ : classFrequency[myClass.class] = 1;
-    });
-    Object.keys(classFrequency).map((value) => {
-      const obj = {};
-      obj.value = value;
-      obj.label = value;
-      obj.numberOfSections = classFrequency[value];
-      obj.disabled = true;
-      classes.push(obj);
-      return null;
-    });
-    this.props.setClassesData(classes);
   }
 
   updateClasses = (e) => {
@@ -115,12 +85,13 @@ class Classes extends React.Component {
     } = this.props;
     return (
       <div className="container">
+        <h2> Manage Classes </h2>
         <br />
-        <Link to="/"> Main </Link>
+        <Link to="/" className="link"> Main </Link>
         <br />
-        <Link to="/home"> Home </Link>
+        <Link to="/home" className="link"> Home </Link>
         <br />
-        <Link to="/teachers"> Add Teachers </Link>
+        <Link to="/teachers" className="link"> Manage Teachers </Link>
         <br />
         <div>
           <h2> Number of section cannot be changed after creation. </h2>
@@ -140,7 +111,7 @@ class Classes extends React.Component {
               />
             )}
           />
-          { classesForDropdown.map((e, id) => (
+          { classesForDropdown && classesForDropdown.length > 0 && classesForDropdown.map((e, id) => (
             <div key={`section - ${id}`}>
               <br />
               <TextField

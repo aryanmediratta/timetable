@@ -12,7 +12,7 @@ import SimpleSnackbar from '../utils/Popup';
 import { getAllTeachers, toggleErrorPopup, toggleTeacherModal } from '../../actions/teacherActions';
 import { getAllClasses } from '../../actions/classesActions';
 
-require('../../styles/Login.css');
+require('../../styles/Login.scss');
 
 class Teachers extends React.Component {
   constructor(props) {
@@ -97,12 +97,13 @@ class Teachers extends React.Component {
 
     return (
       <div className="container">
+        <h2> Manage Teachers </h2>
         <br />
-        <Link to="/"> Main </Link>
+        <Link to="/" className="link"> Main </Link>
         <br />
-        <Link to="/home"> Home </Link>
+        <Link to="/home" className="link"> Home </Link>
         <br />
-        <Link to="/classes"> Add Classes </Link>
+        <Link to="/classes" className="link"> Manage Classes </Link>
         <br />
         <br />
         <FullWidthGrid

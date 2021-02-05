@@ -4,14 +4,14 @@ import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import { IconButton } from '@material-ui/core';
 
-require('../../styles/CollapsibleSections.css');
+require('../../styles/CollapsibleSections.scss');
 
 class CollapsibleSections extends React.Component {
   constructor() {
     super();
 
     this.state = {
-      showing: false,
+      showing: this.props.show,
     };
   }
 
@@ -22,8 +22,6 @@ class CollapsibleSections extends React.Component {
       });
     }
   }
-
-  UNSAFE_componentWillMount = () => this.setState({ showing: this.props.show });
 
   toggle = () => this.setState((previousState) => ({ showing: !previousState.showing }));
 

@@ -286,8 +286,8 @@ module.exports = {
     NUM_GENERATIONS: 2199,
     POPULATION_RATIO: 0.90,
     HARD_CLASH_WEIGHT: 7,
-    MAX_HARD_CLASHES: 500, // Threshold for number of hard clashes to perform targeted mutation.
-    MAX_SOFT_CLASHES: 500, // Threshold for number of soft clashes to perform targeted mutation.
+    MAX_HARD_CLASHES: 5000, // Threshold for number of hard clashes to perform targeted mutation.
+    MAX_SOFT_CLASHES: 5000, // Threshold for number of soft clashes to perform targeted mutation.
 
     // Hardcoded for constants.
     NUM_CLASSES: 7,

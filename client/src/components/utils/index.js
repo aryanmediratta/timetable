@@ -1,5 +1,5 @@
 const DAYS_OF_WEEK = [' ', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-const PERIOD_NUMBER = ['1st Period', '2nd Period', '3rd Period', '4th Period', '5th Period', '6th Period'];
+const PERIOD_NUMBER = ['1st Period', '2nd Period', '3rd Period', '4th Period', '5th Period', '6th Period', '7th Period', '8th Period'];
 
 function getTimetableForEntity(timetable, entityId) {
   const myTable = [];
@@ -67,6 +67,11 @@ function getSpecificTimetable(schoolTimetable, entityId, numPeriods) {
   return timetable;
 }
 
+const allEntityTypes = [
+  { value: 'teacher', label: 'Teacher' },
+  { value: 'class', label: 'Class' },
+];
+
 module.exports = {
   get: (url) => fetch(url, {
     headers: { 'Content-Type': 'application/json' },
@@ -90,4 +95,5 @@ module.exports = {
   }),
   showAllSections,
   getSpecificTimetable,
+  allEntityTypes,
 };

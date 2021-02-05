@@ -9,7 +9,7 @@ import {
   registerUser, toggleErrorPopup, toggleRegisterForm, setRegisterField,
 } from '../../actions/authActions';
 
-require('../../styles/Login.css');
+require('../../styles/Login.scss');
 
 class RegisterPartTwo extends React.Component {
   constructor(props) {
@@ -142,7 +142,7 @@ class RegisterPartTwo extends React.Component {
         </form>
         {
           showPopup
-                  && <SimpleSnackbar onClose={this.onClose} message={errorMessage} success={success} />
+          && <SimpleSnackbar onClose={this.onClose} message={errorMessage} success={success} />
         }
       </div>
     );

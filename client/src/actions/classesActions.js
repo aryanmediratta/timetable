@@ -10,7 +10,7 @@ export const setClassesData = (classesForDropdown) => ({
 });
 
 export const toggleErrorPopup = (message) => ({
-  type: TIMETABLE_TYPES.TOGGLE_POPUP,
+  type: CLASSES_TYPE.TOGGLE_POPUP,
   payload: message,
 });
 
@@ -40,7 +40,11 @@ export const getAllClasses = (email) => (dispatch) => {
     .then((res) => {
       dispatch({
         type: CLASSES_TYPE.SET_ALL_CLASSES,
-        payload: res.classes,
+        payload: res.allClasses,
+      });
+      dispatch({
+        type: CLASSES_TYPE.SET_FIELD_DATA,
+        payload: res.numSectionsPerClass,
       });
     });
 };
@@ -52,7 +56,11 @@ export const updateClasses = (classesData) => (dispatch) => {
       if (res.success === true) {
         dispatch({
           type: CLASSES_TYPE.ADD_NEW_CLASSES,
-          payload: res.classes,
+          payload: res.allClasses,
+        });
+        dispatch({
+          type: CLASSES_TYPE.SET_FIELD_DATA,
+          payload: res.numSectionsPerClass,
         });
       } else {
         dispatch({

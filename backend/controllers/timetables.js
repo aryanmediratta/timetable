@@ -3,7 +3,6 @@ const Teacher = require('../models/Teachers');
 const Classes = require('../models/Classes');
 
 const { generateTimetable } = require('../geneticAlgorithm/performCrossover');
-const { NUM_PERIODS } = require('../geneticAlgorithm/constants');
 
 // Generates a new timetable 
 generateNewTimetable = (req, res, next) => {
@@ -11,8 +10,9 @@ generateNewTimetable = (req, res, next) => {
   const email = url.searchParams.get('email');
   const numClasses = url.searchParams.get('numClasses');
   const numTeachers = url.searchParams.get('numTeachers');
-  const numPeriods = url.searchParams.get('numPeriods');
+  let numPeriods = url.searchParams.get('numPeriods');
   const classesList = [];
+  numPeriods = parseInt(numPeriods, 10);
   Classes.find({ userEmail: email })
     .then(classData => {
       classData && classData.forEach((obj) => {
@@ -31,7 +31,8 @@ generateNewTimetable = (req, res, next) => {
           }
         });
       });
-      if (total !== 30 && flag !== true) {
+      console.log('NumPeriods', total, ' For Class', parentClass.label);
+      if (total !== numPeriods && flag !== true) {
         flag = true;
         res.send({
           success: false,
@@ -44,20 +45,28 @@ generateNewTimetable = (req, res, next) => {
         teachersList: teacherData,
         numClasses: parseInt(numClasses, 10),
         numTeachers: parseInt(numTeachers, 10),
-        numPeriods: parseInt(numPeriods, 10),
+        numPeriods,
       };
       const tt = generateTimetable(allData);
+      Timetable.findOneAndUpdate({ userEmail: email }, {$set:  {timetable: tt }}, { new: true })
+        .then((resp) => {
+          console.log('Did You Try?', resp);
+          res.status(200).json({
+          success: true,
+          message: 'Timetable saved successfully',
+        });
+      })
       res.send({
         success: true,
         timetable: tt,
-        numPeriods: parseInt(numPeriods, 10),
+        numPeriods,
       });
     }
   })
   .catch(err => {
     res.send({
       success: false,
-      message: err,
+      message: 'Unable To create Timetable. Please try again later.',
     })
   })
 }

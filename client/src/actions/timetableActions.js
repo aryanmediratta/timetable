@@ -32,6 +32,20 @@ export const toggleErrorPopup = (message) => ({
   payload: message,
 });
 
+// Populate Entity ID Dropdown & setting entity ID
+export const populateEntityIdDropdown = (allEntities) => (dispatch) => {
+  dispatch({
+    type: TIMETABLE_TYPES.POPULATE_ENTITY_IDS,
+    payload: allEntities,
+  });
+  // if (allEntities && allEntities.length > 0) {
+  //   dispatch({
+  //     type: TIMETABLE_TYPES.SET_ENTITY_ID,
+  //     payload: allEntities[0],
+  //   });
+  // }
+};
+
 export const generateNewTimetable = (timetableData) => (dispatch) => {
   const {
     email, teachersList, classesList, numPeriods, entityId,
