@@ -114,6 +114,8 @@ class Teachers extends React.Component {
             <Table
               data={data}
               columns={columns}
+              searchable
+              showPageCounter
               defaultPageSize={6}
               title="Teachers"
             />

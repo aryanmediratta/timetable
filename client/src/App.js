@@ -27,7 +27,7 @@ if (localStorage.jwtToken) {
   if (decoded.exp < currentTime) {
     localStorage.removeItem('jwtToken');
     store.dispatch(logoutUser());
-    window.location.href = '/login';
+    // window.location.href = '/login';
   }
 }
 

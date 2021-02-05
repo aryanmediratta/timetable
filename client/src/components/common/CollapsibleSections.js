@@ -11,7 +11,7 @@ class CollapsibleSections extends React.Component {
     super();
 
     this.state = {
-      showing: this.props.show,
+      showing: false,
     };
   }
 
@@ -22,6 +22,8 @@ class CollapsibleSections extends React.Component {
       });
     }
   }
+
+  UNSAFE_componentWillMount = () => this.setState({ showing: this.props.show });
 
   toggle = () => this.setState((previousState) => ({ showing: !previousState.showing }));
 
