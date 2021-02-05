@@ -1,0 +1,99 @@
+.table-container {
+  .card {
+    border: thin solid rgba(34,34,34,0.12);
+    box-shadow: 0 1px 8px 0 rgba(0,0,0,0.08);
+    background: white;
+    height: fit-content;
+    border-radius: 4px;
+    margin-bottom: 24px;
+    
+    .table {
+      border: none;
+
+      .rt-table {
+        background-color: #FFFFFF;
+        border-radius: 0px 0px 4px 4px;
+
+        .rt-thead {
+          .rt-tr {
+            text-align: left;
+            font-weight: 600;
+
+            .rt-th {
+              border: none;
+              padding: 16px;
+              white-space: pre-line;
+              outline: 0;
+              background-color: #FFFFFF;
+            }
+          }
+        }
+
+        .rt-tbody {
+          overflow: initial;
+          .rt-tr-group {
+            border: none;
+            .rt-tr {
+              &.-odd {
+                .rt-td {
+                  background-color: #F1F9FF;
+                }
+              }
+              &.-even {
+                .rt-td {
+                  background-color: #FFFFFF;
+                }
+              }  
+              .rt-td {
+                border: none;
+                padding: 16px;
+                white-space: unset;
+
+                &:first-child {
+                  padding-left: 24px;
+                }
+
+                &.border-left {
+                  border-left: thin solid #E8E8E8;
+                }
+
+                &.border-right {
+                  border-right: thin solid #E8E8E8;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  .page-counter {
+    font-size: 16px;
+    color: #7B7B7B;
+
+    .active-page {
+      background: #4B90DE;
+      border-radius: 4px;
+      color: #FFF;
+      padding: 2px 8px;
+    }
+  }
+}
+  
+.page-counter {
+  float: right;
+
+  .page-counters {
+    cursor: pointer;
+  }
+
+  .pull-right {
+    float: right;
+  }
+
+  .hover {
+    cursor: pointer;
+  }
+}
+  
