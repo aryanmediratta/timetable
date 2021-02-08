@@ -1,7 +1,8 @@
 const { HARD_CLASH_WEIGHT } = require("./constants");
 
 // Returns the number of clashes in a given timetable.
-function costFunction (timetable) {
+// teacherClashes is a list of teacherIds showing availability of teachers. Only required when breaking timetable into different groups.
+function costFunction (timetable, teacherClashes) {
   let costForClasses = 0;
   let costForTeachers = 0;
   let costForLabels = 0;
@@ -10,7 +11,13 @@ function costFunction (timetable) {
   let clashPerWeek = [];
   timetable.forEach((period, periodNumber) => {
     const allClasses = [];
-    const allTeachers = [];
+    let allTeachers;
+    if (!teacherClashes || teacherClashes.length === 0) {
+      allTeachers = [];
+    } else {
+      allTeachers = [...teacherClashes[periodNumber]];
+    }
+    // Resetting Soft Clashes.
     if ((periodNumber) % (6) === 0) {
       clashPerWeek = [];
     }
@@ -18,7 +25,7 @@ function costFunction (timetable) {
       const { teacherId, classId, label, uniqueIndex } = tuple;
       allTeachers.indexOf(teacherId) > -1 ? costForTeachers += HARD_CLASH_WEIGHT : allTeachers.push(teacherId);
       allClasses.indexOf(classId) > -1 ? costForClasses += HARD_CLASH_WEIGHT : allClasses.push(classId);
-      allLabels.indexOf(label) > -1 ? costForLabels += HARD_CLASH_WEIGHT * 1000 : allLabels.push(label);
+      allLabels.indexOf(label) > -1 ? costForLabels += HARD_CLASH_WEIGHT * 3000 : allLabels.push(label);
       clashPerWeek.indexOf(uniqueIndex) > -1 ? uniqueClashesPerWeek++ : clashPerWeek.push(uniqueIndex);
     });
   });
@@ -38,12 +45,12 @@ function findClashes (timetable, allClassIds) {
       allTeachers.indexOf(teacherId) > -1 ? clashes.push({ period: periodNumber, ...tuple, type: 'teacher' }) : allTeachers.push(teacherId);
       allClasses.indexOf(classId) > -1 ? clashes.push({ period: periodNumber, ...tuple, type: 'class' }) : allClasses.push(classId);
     });
-    const missingClasses = allClassIds.filter((o) => allClasses.indexOf(o) === -1);
-    if (missingClasses.length > 0) {
-      for (let i = 0; i < missingClasses.length; i++) {
-        clashes[clashes.length - 1 - i] = { ...clashes[clashes.length - 1 - i], missingClassId: missingClasses };
-      }
-    }
+    // const missingClasses = allClassIds.filter((o) => allClasses.indexOf(o) === -1);
+    // if (missingClasses.length > 0) {
+    //   for (let i = 0; i < missingClasses.length; i++) {
+    //     clashes[clashes.length - 1 - i] = { ...clashes[clashes.length - 1 - i], missingClassId: missingClasses };
+    //   }
+    // }
   });
   return clashes;
 }

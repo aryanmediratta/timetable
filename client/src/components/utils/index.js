@@ -8,7 +8,7 @@ function getTimetableForEntity(timetable, entityId) {
     let flag = false;
     period.forEach((tuple) => {
       const {
-        classId, teacherId, className, teacherName, subject,
+        classId, teacherId, className, teacherName, subject, color,
       } = tuple;
       let tempEntity = null; let otherTempEntity; let objId;
       let teacherClassCombo;
@@ -23,13 +23,13 @@ function getTimetableForEntity(timetable, entityId) {
       // If we find it, then we push it. otherwise we dont :)
       if (tempEntity !== null) {
         teacherClassCombo = `${otherTempEntity ? `${otherTempEntity} -- ` : ''} ${tempEntity}`;
-        myTable.push({ cell: teacherClassCombo, id: `${objId}` });
+        myTable.push({ cell: teacherClassCombo, id: `${objId}`, color });
         flag = true;
         index < 6 ? index++ : index = 1;
       }
     });
     if (flag === false) {
-      myTable.push({ cell: ' ' });
+      myTable.push({ cell: ' ', color: 'white' });
       index < 6 ? index++ : index = 1;
     }
   });

@@ -1,7 +1,6 @@
-const { NUM_GENERATIONS, POPULATION_RATIO, MAX_HARD_CLASHES, MAX_SOFT_CLASHES } = require('./constants');
-const { NUM_PERIODS, NUM_CLASSES, NUM_TEACHERS } = require('./constants');
+const { NUM_GENERATIONS, POPULATION_RATIO } = require('./constants');
 const { costFunction, findAllClashingPeriods, findSoftClashingPeriods } = require('./calculateFitness');
-const { createTimeTables } = require('./generateRandomTimetables');
+const { createRandomTimeTables } = require('./createRandomTimeTables');
 
 // Receives two parents with the crossover point and mutation rate, returns the entire family.
 function crossTwoParents (parent1, parent2, crossoverPoint, numClasses, numPeriods, hardClashingPeriods, softClashingPeriods) {
@@ -76,11 +75,11 @@ function crossTwoParents (parent1, parent2, crossoverPoint, numClasses, numPerio
 
 
 // Receives all children + parents, return the average of new gen AND fittest members from the old generation.
-function speciesPropogation (generation) {
+function speciesPropogation (generation, teacherClashes) {
   const tempGeneration = [];
   let bestFamilyMember;
   generation.forEach(parent => {
-    const [cost, hardClashes, softClashes] = costFunction(parent);
+    const [cost, hardClashes, softClashes] = costFunction(parent, teacherClashes);
     tempGeneration.push({
       cost,
       parent,
@@ -162,17 +161,16 @@ function addCostAndProbabilityOfSelectionToPopulation (population) {
 }
 
 function generateTimetable (data) {
-  let population = createTimeTables(data);
+  console.log('-------------------------------------------------------------------------------');
+  let population = createRandomTimeTables(data);
   let leastSoftClashes = 10, bestFamilyMember, avg, maxHardClashes = 10, index = 2, crossoverPoint = null, costOfBestMemberInFamily = 10;
-  while ((costOfBestMemberInFamily > 0) && (index <= NUM_GENERATIONS) && ((leastSoftClashes > 0) || (maxHardClashes > 0))) {
+  while ((costOfBestMemberInFamily > 0) && (index <= NUM_GENERATIONS) && ((leastSoftClashes > 20) || (maxHardClashes > 0))) {
     const tempGeneration = [];
     let hardClashingPeriods, softClashingPeriods;
-    const targetedMutationForHardClashes = maxHardClashes !== 0 && maxHardClashes < MAX_HARD_CLASHES ? true : false;
-    const targetedMutationForSoftClashes = maxHardClashes === 0 && leastSoftClashes < MAX_SOFT_CLASHES ? true : false;
+    const targetedMutationForHardClashes = maxHardClashes !== 0 ? true : false;
     if (targetedMutationForHardClashes) {
       hardClashingPeriods = findAllClashingPeriods(population[0]);
-    }
-    if (targetedMutationForSoftClashes) {
+    } else {
       softClashingPeriods = findSoftClashingPeriods(population[0]);
     }
     for (k = 0; k < population.length/2; k++) {
@@ -182,38 +180,23 @@ function generateTimetable (data) {
       const family = crossTwoParents(randomMember1, population[k], crossoverPoint, data.numClasses, data.numPeriods, hardClashingPeriods, softClashingPeriods);
       tempGeneration.push(...family);
     }
-    const newGen = speciesPropogation(tempGeneration);
+    // teacherClashes is an array of which teacher is not available during which period based on other timetables.
+    const newGen = speciesPropogation(tempGeneration, data.teacherClashes);
     avg = newGen.averageCostOfGeneration;
     population = newGen.newGeneration;
     costOfBestMemberInFamily = newGen.costOfBestMemberInFamily;
     bestFamilyMember = newGen.bestFamilyMember;
     leastSoftClashes = newGen.leastSoftClashes;
     maxHardClashes = newGen.leastHardClashes;
-    console.log(`Average of ${population.length} parents in ${index} Generation is -> ${avg} with BEST as ${costOfBestMemberInFamily} having ${maxHardClashes} hard and ${leastSoftClashes} soft clashes.`);
+    // console.log(`Average of ${population.length} parents in ${index} Generation is -> ${avg} with BEST as ${costOfBestMemberInFamily} having ${maxHardClashes} hard and ${leastSoftClashes} soft clashes.`);
     index++;
   }
   // console.log('bestFamilyMember',bestFamilyMember);
-  console.log('-------------------------------------------------------------------------------');
   console.log(`Average of ${population.length} parents in ${index} Generation is -> ${avg} with BEST as ${costOfBestMemberInFamily}`);
   console.log('HARD CLASHES', maxHardClashes, ' SOFT CLASHES', leastSoftClashes);
+  console.log('-------------------------------------------------------------------------------');
   return bestFamilyMember;
 }
-
-function createHardcodedTimetable () {
-  const numClasses = NUM_CLASSES;
-  const numTeachers = NUM_TEACHERS;
-  const numPeriods = NUM_PERIODS;
-  const allData = {
-    teachersList: [],
-    numClasses,
-    numTeachers,
-    numPeriods,
-  };
-  const tt = generateTimetable(allData);
-  console.log('tt', tt.length);
-}
-
-// createHardcodedTimetable();
 
 module.exports = {
   generateTimetable,

@@ -2,73 +2,78 @@ const Timetable = require('../models/Timetables');
 const Teacher = require('../models/Teachers');
 const Classes = require('../models/Classes');
 
-const { generateTimetable } = require('../geneticAlgorithm/performCrossover');
+const { createStepwiseTimetables } = require('../geneticAlgorithm/performStepwiseGA');
 
 // Generates a new timetable 
 generateNewTimetable = (req, res, next) => {
   const url = new URL(`https://anyrandomwebsite.com/${req.originalUrl}`);
   const email = url.searchParams.get('email');
-  const numClasses = url.searchParams.get('numClasses');
-  const numTeachers = url.searchParams.get('numTeachers');
   let numPeriods = url.searchParams.get('numPeriods');
   const classesList = [];
   numPeriods = parseInt(numPeriods, 10);
   Classes.find({ userEmail: email })
     .then(classData => {
       classData && classData.forEach((obj) => {
-        classesList.push({_id: obj._id.toString(), label: obj.label, periodsPerWeek: 0});
+        classesList.push({_id: obj._id.toString(), label: obj.label, periodsPerWeek: 0, class: obj.class, teachersList: []});
       });
     })
   Teacher.find({ userEmail: email })
-  .then((teacherData) => {
-    let flag = false;
-    classesList.forEach((parentClass) => {
-      let total = 0;
-      teacherData && teacherData.forEach((teacher) => {
-        teacher.classesTaught.forEach((classObject) => {
-          if (parentClass._id === classObject._id.toString()) {
-            total = total + classObject.periodsPerWeek;
-          }
+    .then((teacherData) => {
+      classesList.forEach((parentClass) => {
+        teacherData && teacherData.forEach((teacher) => {
+          teacher.classesTaught.forEach((classObject) => {
+            if (parentClass._id === classObject._id.toString()) {
+              parentClass.periodsPerWeek = parentClass.periodsPerWeek + classObject.periodsPerWeek;
+              parentClass.teachersList = [
+                ...parentClass.teachersList,
+                {
+                  teacherId: teacher._id,
+                  teacherName: teacher.teacherName,
+                  subject: teacher.teacherSubject,
+                  periodsPerWeek: classObject.periodsPerWeek,
+                }
+              ];
+            }
+          });
         });
       });
-      console.log('NumPeriods', total, ' For Class', parentClass.label);
-      if (total !== numPeriods && flag !== true) {
-        flag = true;
-        res.send({
-          success: false,
-          message: `Number of classes for ${parentClass.label} are ${total} while it should be ${numPeriods}.`,
-        })
-      }
-    });
-    if (flag === false) {
+      classesList.forEach((cl) => {
+        if (cl.periodsPerWeek !== numPeriods) {
+          return res.status(200).json({
+            success: false,
+            message: `Number of Periods for Class ${cl.label} is ${cl.periodsPerWeek} while it should be ${numPeriods}`,
+          });
+        }
+      });
       const allData = {
-        teachersList: teacherData,
-        numClasses: parseInt(numClasses, 10),
-        numTeachers: parseInt(numTeachers, 10),
+        classesList,
         numPeriods,
       };
-      const tt = generateTimetable(allData);
-      Timetable.findOneAndUpdate({ userEmail: email }, {$set:  {timetable: tt }}, { new: true })
-        .then((resp) => {
-          console.log('Did You Try?', resp);
-          res.status(200).json({
-          success: true,
-          message: 'Timetable saved successfully',
-        });
-      })
+      const myData = createStepwiseTimetables(allData);
+      // Functionality To AutoSave newly generated timetable.
+
+      // const tt = generateTimetable(allData);
+      // Timetable.findOneAndUpdate({ userEmail: email }, {$set:  {timetable: tt }}, { new: true })
+      //   .then((resp) => {
+      //     // console.log('Did You Try?', resp);
+      //     res.status(200).json({
+      //     success: true,
+      //     message: 'Timetable saved successfully',
+      //   });
+      // })
       res.send({
         success: true,
-        timetable: tt,
-        numPeriods,
+        timetable: myData,
+        message: 'Timetable Generated successfully',
       });
-    }
-  })
-  .catch(err => {
-    res.send({
-      success: false,
-      message: 'Unable To create Timetable. Please try again later.',
     })
-  })
+    .catch((err) => {
+      console.log('err', err);
+      res.send({
+        success: false,
+        message: 'Unable To create Timetable. Please try again later.',
+      })
+    })
 }
 
 saveTimetable = (req, res, next) => {

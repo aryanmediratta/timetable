@@ -136,7 +136,6 @@ class Timetable extends React.Component {
           entityType, entityId, timetable, loading, schoolTimetable, showPopup, errorMessage, success, filteredEntityIds,
         },
       } = this.props;
-      console.log('ooof', this.props);
       return (
         <div>
           <h2>TimeTable :)</h2>
@@ -202,6 +201,7 @@ class Timetable extends React.Component {
             {entityType.label}
             {' '}
             -
+            {' '}
             {entityId.label}
           </h2>
           {

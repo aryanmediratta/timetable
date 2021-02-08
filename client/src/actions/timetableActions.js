@@ -48,12 +48,10 @@ export const populateEntityIdDropdown = (allEntities) => (dispatch) => {
 
 export const generateNewTimetable = (timetableData) => (dispatch) => {
   const {
-    email, teachersList, classesList, numPeriods, entityId,
+    email, numPeriods, entityId,
   } = timetableData;
-  const numClasses = classesList.length;
-  const numTeachers = teachersList.length;
   const URL = constructURL('/api/generate_timetable', {
-    email, numClasses, numTeachers, numPeriods,
+    email, numPeriods,
   });
   dispatch({
     type: TIMETABLE_TYPES.TOGGLE_LOADING,

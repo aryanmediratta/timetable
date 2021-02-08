@@ -7,7 +7,11 @@ class TimetableRow extends React.Component {
       <div>
         {
           Object.keys(this.props.row).map((period) => (
-            <div onClick={() => console.log('index', this.props.row[period])} className={`${this.props.row[period] ? 'pointer' : ''}`}>
+            <div
+              onClick={() => console.log('index', this.props.row[period])}
+              className={`${this.props.row[period] ? 'pointer' : ''}`}
+              style={{ backgroundColor: this.props.row[period] && this.props.row[period].color }}
+            >
               <span>
                 {this.props.row[period] && this.props.row[period].cell ? this.props.row[period].cell : this.props.row[period]}
               </span>
