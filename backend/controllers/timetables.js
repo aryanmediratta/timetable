@@ -61,7 +61,7 @@ generateNewTimetable = (req, res, next) => {
       //     message: 'Timetable saved successfully',
       //   });
       // })
-      res.send({
+      return res.send({
         success: true,
         timetable: myData,
         message: 'Timetable Generated successfully',
@@ -80,7 +80,7 @@ saveTimetable = (req, res, next) => {
   const { schoolTimetable, email } = req.body;
   Timetable.findOneAndUpdate({ userEmail: email }, {$set:  {timetable: schoolTimetable }}, { new: true })
     .then((resp) => {
-      res.status(200).json({
+      return res.status(200).json({
       success: true,
       message: 'Timetable saved successfully',
     });
@@ -100,7 +100,7 @@ fetchTimetable = (req, res, next) => {
   const email = url.searchParams.get('email');
   Timetable.findOne({ userEmail: email })
     .then((data) => {
-      res.status(200).json({
+      return res.status(200).json({
         success: true,
         numPeriods: data.numPeriods,
         schoolTimetable: data.timetable,

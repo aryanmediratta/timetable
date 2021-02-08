@@ -4,9 +4,9 @@ const { modifyClassesData } = require('../utils/classes');
 
 addClasses = (req, res, next) => {
   let { classesList, email } = req.body;
-  classesList.forEach(myClass => {
+  classesList.forEach((myClass) => {
     const allSections = showAllSections(myClass.numberOfSections);
-    allSections.forEach(section => {
+    allSections.forEach((section) => {
       const label = `${myClass.label} - ${section}`;
       const classToBeSaved = new Classes({
         label,
@@ -70,7 +70,7 @@ updateClasses = (req, res, next) => {
         updatedClasses.push(classToBeSaved);
         classToBeSaved.save()
           .then(response => {
-            console.log('wow')
+            console.log('Saved', response);
           })
           .catch(err => {
             res.status(200).json({
@@ -82,17 +82,14 @@ updateClasses = (req, res, next) => {
         }
       });
   });
-  Classes.find({ userEmail: email })
-    .then((data) => {
-      data = [...data, ...updatedClasses];
-      const classes = modifyClassesData(data);
-      res.status(200).json({
-        success: true,
-        message: 'Saved successfully',
-        allClasses: data,
-        numSectionsPerClass: classes,
-      });
-    });
+  classesList = [...classesList, ...updatedClasses];
+  const classes = modifyClassesData(classesList);
+  res.status(200).json({
+    success: true,
+    message: 'Saved successfully',
+    allClasses: classesList,
+    numSectionsPerClass: classes,
+  });
 }
 
 module.exports = {
