@@ -21,7 +21,7 @@ function costFunction (timetable, teacherClashes) {
     if ((periodNumber) % (6) === 0) {
       clashPerWeek = [];
     }
-    period.forEach((tuple) => {
+    period.forEach(tuple => {
       const { teacherId, classId, label, uniqueIndex } = tuple;
       allTeachers.indexOf(teacherId) > -1 ? costForTeachers += HARD_CLASH_WEIGHT : allTeachers.push(teacherId);
       allClasses.indexOf(classId) > -1 ? costForClasses += HARD_CLASH_WEIGHT : allClasses.push(classId);
@@ -40,7 +40,7 @@ function findClashes (timetable, allClassIds) {
   timetable.forEach((period, periodNumber) => {
     const allClasses = [];
     const allTeachers = [];
-    period.forEach((tuple) => {
+    period.forEach(tuple => {
       const { teacherId, classId } = tuple;
       allTeachers.indexOf(teacherId) > -1 ? clashes.push({ period: periodNumber, ...tuple, type: 'teacher' }) : allTeachers.push(teacherId);
       allClasses.indexOf(classId) > -1 ? clashes.push({ period: periodNumber, ...tuple, type: 'class' }) : allClasses.push(classId);

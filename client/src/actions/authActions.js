@@ -116,6 +116,7 @@ export const loginUser = (userData) => async (dispatch) => {
       // Decode token to get user data
       const decoded = jwt_decode(token);
       // Set current user
+      // eslint-disable-next-line no-use-before-define
       dispatch(setCurrentUser(decoded));
       dispatch(setSchoolName(res.user.schoolName));
       dispatch(setUserName(res.userName));

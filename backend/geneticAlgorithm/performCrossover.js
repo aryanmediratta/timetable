@@ -1,4 +1,4 @@
-const { NUM_GENERATIONS, POPULATION_RATIO, NUM_CHROMOSOMES } = require('./constants');
+const { NUM_GENERATIONS, POPULATION_RATIO } = require('./constants');
 const { costFunction, findAllClashingPeriods, findSoftClashingPeriods } = require('./calculateFitness');
 const { createRandomTimeTables } = require('./createRandomTimeTables');
 
@@ -33,6 +33,14 @@ function crossTwoParents (parent1, parent2, crossoverPoint, numClasses, numPerio
     const temp = child1[el1][el2];
     child1[el1][el2] = child1[x1][x2];
     child1[x1][x2] = temp;
+  } else {
+    const i1 = Math.floor(Math.random() * numPeriods);
+    const i2 = Math.floor(Math.random() * numPeriods);
+    const j1 = Math.floor(Math.random() * numClasses);
+    const j2 = Math.floor(Math.random() * numClasses);
+    const temp = child1[i1][j1];
+    child1[i1][j1] = child1[i2][j2];
+    child1[i2][j2] = temp;
   }
   // Mutating Child Two.
   if (hardClashingPeriods && hardClashingPeriods.length > 0) {
@@ -49,6 +57,14 @@ function crossTwoParents (parent1, parent2, crossoverPoint, numClasses, numPerio
     const temp = child2[el1][el2];
     child2[el1][el2] = child2[x1][x2];
     child2[x1][x2] = temp;
+  } else {
+    const k1 = Math.floor(Math.random() * numPeriods);
+    const k2 = Math.floor(Math.random() * numPeriods);
+    const l1 = Math.floor(Math.random() * numClasses);
+    const l2 = Math.floor(Math.random() * numClasses);
+    const temp = child2[k1][l1];
+    child2[k1][l1] = child2[k2][l2];
+    child2[k2][l2] = temp;
   }
   family.push(parent1);
   family.push(parent2);
@@ -62,7 +78,7 @@ function crossTwoParents (parent1, parent2, crossoverPoint, numClasses, numPerio
 function speciesPropogation (generation, teacherClashes) {
   const tempGeneration = [];
   let bestFamilyMember;
-  generation.forEach((parent) => {
+  generation.forEach(parent => {
     const [cost, hardClashes, softClashes] = costFunction(parent, teacherClashes);
     tempGeneration.push({
       cost,
@@ -77,16 +93,21 @@ function speciesPropogation (generation, teacherClashes) {
   const leastSoftClashes = tempGeneration[0].softClashes;
   const fittestMembers = [];
   let total = 0;
-  const sizeOfGoodPopulation = NUM_CHROMOSOMES * POPULATION_RATIO;
-  const sizeOfBadPopulation = NUM_CHROMOSOMES;
+  const sizeOfGoodPopulation = (tempGeneration.length/2) * POPULATION_RATIO;
+  const sizeOfBadPopulation = tempGeneration.length/2;
   for (i = 0; i < tempGeneration.length-1; i++) {
     if (i < sizeOfGoodPopulation) {
       total = total + tempGeneration[i].cost;
       fittestMembers.push(tempGeneration[i].parent);
     } else if (i < sizeOfBadPopulation) {
+      // Random member ->
       const randomMember1 = tempGeneration[Math.floor(Math.random() * tempGeneration.length)];
       total = total + randomMember1.cost;
       fittestMembers.push(randomMember1.parent);
+
+      // One of Worst Members.
+      // total = total + tempGeneration[tempGeneration.length-1-i].cost;
+      // fittestMembers.push(tempGeneration[tempGeneration.length-1-i].parent);
     } else break;
   }
   if (costOfBestMemberInFamily < 2000) {
@@ -120,7 +141,7 @@ function pickAWinningItem (population) {
 function addCostAndProbabilityOfSelectionToPopulation (population) {
   const populationWithCost = [];
   let sum = 0;
-  population.forEach((parent) => {
+  population.forEach(parent => {
     const cost = costFunction(parent)[0];
     sum = sum + cost;
     populationWithCost.push({
@@ -129,7 +150,7 @@ function addCostAndProbabilityOfSelectionToPopulation (population) {
     });
   });
   const populationWithProbability = [];
-  populationWithCost.forEach((member) => {
+  populationWithCost.forEach(member => {
     populationWithProbability.push({
       cost: member.cost,
       data: member.data,
