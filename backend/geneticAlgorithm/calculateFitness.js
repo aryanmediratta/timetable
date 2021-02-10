@@ -2,7 +2,7 @@ const { HARD_CLASH_WEIGHT } = require("./constants");
 
 // Returns the number of clashes in a given timetable.
 // teacherClashes is a list of teacherIds showing availability of teachers. Only required when breaking timetable into different groups.
-function costFunction (timetable, teacherClashes) {
+function costFunction (timetable, numPeriods, teacherClashes) {
   let costForClasses = 0;
   let costForTeachers = 0;
   let costForLabels = 0;
@@ -18,7 +18,9 @@ function costFunction (timetable, teacherClashes) {
       allTeachers = [...teacherClashes[periodNumber]];
     }
     // Resetting Soft Clashes.
-    if ((periodNumber) % (6) === 0) {
+    // console.log('Period Number', periodNumber, 'HOLY', numPeriods);
+    if (((periodNumber+1) % (numPeriods/5) === 0) && periodNumber !== 0) {
+      // console.log('Resetting Day.', periodNumber);
       clashPerWeek = [];
     }
     period.forEach(tuple => {
@@ -56,11 +58,16 @@ function findClashes (timetable, allClassIds) {
 }
 
 // Returns a list of periods having clashed entities.
-function findAllClashingPeriods(timetable) {
+function findHardClashingPeriods(timetable, teacherClashes) {
   let clashes = [];
   timetable.forEach((period, periodNumber) => {
     const allClasses = [];
-    const allTeachers = [];
+    let allTeachers;
+    if (!teacherClashes || teacherClashes.length === 0) {
+      allTeachers = [];
+    } else {
+      allTeachers = [...teacherClashes[periodNumber]];
+    }
     period.forEach((tuple, elementID) => {
       const { teacherId, classId } = tuple;
       allTeachers.indexOf(teacherId) > -1 ? clashes.push({ el1: periodNumber, el2: elementID }) : allTeachers.push(teacherId);
@@ -87,6 +94,6 @@ function findSoftClashingPeriods (timetable) {
 module.exports = {
     costFunction,
     findClashes,
-    findAllClashingPeriods,
+    findHardClashingPeriods,
     findSoftClashingPeriods,
 };

@@ -12,6 +12,7 @@ function createStepwiseTimetables(allData) {
   classData.sort((a,b) => a.value - b.value);
   const allTimetables = [];
   let teacherClashes = [];
+  let count = 1;
   while (classData.length > 0) {
     const tempSelectedClasses = [];
     for (let i = 0; i < NUM_CLASSES_CLUBBED_TOGETHER; i++) {
@@ -42,16 +43,17 @@ function createStepwiseTimetables(allData) {
       teacherClashes,
       population: allSelectedClasses,
     };
-    const tt = generateTimetable(finalDataForTimetable);
+    const tt = generateTimetable(finalDataForTimetable, NUM_CLASSES_CLUBBED_TOGETHER > 1 ? count : tempSelectedClasses[0].value);
     const tempClashes = findTeachersInPeriods(tt, allSelectedTeachers);
     teacherClashes = mergeTwoTimetables(teacherClashes, tempClashes, allData.numPeriods);
     allTimetables.push(tt);
+    count++;
   }
   // End of While Loop.
   let finalTimetable = [];
   for (let i = 0; i < allTimetables.length; i++) {
     finalTimetable = mergeTwoTimetables(finalTimetable, allTimetables[i], allData.numPeriods)
-    const things = costFunction(finalTimetable);
+    const things = costFunction(finalTimetable, allData.numPeriods, null);
     console.log('COST for ', i, 'is', things[0],' Hard Clashes', things[1], ' Soft Clashes', things[2]);
   }
   const clashes = findClashes(finalTimetable);

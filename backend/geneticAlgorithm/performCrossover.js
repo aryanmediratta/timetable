@@ -1,5 +1,5 @@
 const { NUM_GENERATIONS, POPULATION_RATIO } = require('./constants');
-const { costFunction, findAllClashingPeriods, findSoftClashingPeriods } = require('./calculateFitness');
+const { costFunction, findHardClashingPeriods, findSoftClashingPeriods } = require('./calculateFitness');
 const { createRandomTimeTables } = require('./createRandomTimeTables');
 
 // Receives two parents with the crossover point and mutation rate, returns the entire family.
@@ -20,6 +20,7 @@ function crossTwoParents (parent1, parent2, crossoverPoint, numClasses, numPerio
   }
   // Mutating Child One.
   if (hardClashingPeriods && hardClashingPeriods.length > 0) {
+    // console.log('HARD TARGETTING');
     const { el1, el2 } = hardClashingPeriods[Math.floor(Math.random() * hardClashingPeriods.length)];
     const x1 = Math.floor(Math.random() * numPeriods);
     const x2 = Math.floor(Math.random() * numClasses);
@@ -27,6 +28,7 @@ function crossTwoParents (parent1, parent2, crossoverPoint, numClasses, numPerio
     child1[el1][el2] = child1[x1][x2];
     child1[x1][x2] = temp;
   } else if (softClashingPeriods && softClashingPeriods.length > 0) {
+    // console.log('SOFT TARGETTING');
     const { el1, el2 } = softClashingPeriods[Math.floor(Math.random() * softClashingPeriods.length)];
     const x1 = Math.floor(Math.random() * numPeriods);
     const x2 = Math.floor(Math.random() * numClasses);
@@ -34,6 +36,7 @@ function crossTwoParents (parent1, parent2, crossoverPoint, numClasses, numPerio
     child1[el1][el2] = child1[x1][x2];
     child1[x1][x2] = temp;
   } else {
+    // console.log('NEVER hard ->', hardClashingPeriods.length, 'soft ->', softClashingPeriods.length);
     const i1 = Math.floor(Math.random() * numPeriods);
     const i2 = Math.floor(Math.random() * numPeriods);
     const j1 = Math.floor(Math.random() * numClasses);
@@ -75,11 +78,11 @@ function crossTwoParents (parent1, parent2, crossoverPoint, numClasses, numPerio
 
 
 // Receives all children + parents, return the average of new gen AND fittest members from the old generation.
-function speciesPropogation (generation, teacherClashes) {
+function speciesPropogation (generation, teacherClashes, numPeriods) {
   const tempGeneration = [];
   let bestFamilyMember;
   generation.forEach(parent => {
-    const [cost, hardClashes, softClashes] = costFunction(parent, teacherClashes);
+    const [cost, hardClashes, softClashes] = costFunction(parent, numPeriods, teacherClashes);
     tempGeneration.push({
       cost,
       parent,
@@ -160,16 +163,16 @@ function addCostAndProbabilityOfSelectionToPopulation (population) {
   return populationWithProbability;
 }
 
-function generateTimetable (data) {
+function generateTimetable (data, count) {
   console.log('-------------------------------------------------------------------------------');
   let population = createRandomTimeTables(data);
   let leastSoftClashes = 10, bestFamilyMember, avg, maxHardClashes = 10, index = 2, crossoverPoint = null, costOfBestMemberInFamily = 10;
-  while ((costOfBestMemberInFamily > 0) && (index <= NUM_GENERATIONS) && ((leastSoftClashes > 20) || (maxHardClashes > 0))) {
+  while ((costOfBestMemberInFamily > 0) && (index <= NUM_GENERATIONS) && ((leastSoftClashes > 1000) || (maxHardClashes > 0))) {
     const tempGeneration = [];
     let hardClashingPeriods, softClashingPeriods;
     const targetedMutationForHardClashes = maxHardClashes !== 0 ? true : false;
     if (targetedMutationForHardClashes) {
-      hardClashingPeriods = findAllClashingPeriods(population[0]);
+      hardClashingPeriods = findHardClashingPeriods(population[0], data.teacherClashes);
     } else {
       softClashingPeriods = findSoftClashingPeriods(population[0]);
     }
@@ -181,7 +184,7 @@ function generateTimetable (data) {
       tempGeneration.push(...family);
     }
     // teacherClashes is an array of which teacher is not available during which period based on other timetables.
-    const newGen = speciesPropogation(tempGeneration, data.teacherClashes);
+    const newGen = speciesPropogation(tempGeneration, data.teacherClashes, data.numPeriods);
     avg = newGen.averageCostOfGeneration;
     population = newGen.newGeneration;
     costOfBestMemberInFamily = newGen.costOfBestMemberInFamily;
@@ -191,8 +194,7 @@ function generateTimetable (data) {
     // console.log(`Average of ${population.length} parents in ${index} Generation is -> ${avg} with BEST as ${costOfBestMemberInFamily} having ${maxHardClashes} hard and ${leastSoftClashes} soft clashes.`);
     index++;
   }
-  // console.log('bestFamilyMember',bestFamilyMember);
-  console.log(`Average of ${population.length} parents in ${index} Generation is -> ${avg} with BEST as ${costOfBestMemberInFamily}`);
+  console.log(`Average of ${population.length} parents in ${index} Generation is -> ${avg} with BEST as ${costOfBestMemberInFamily} for class- ${count}.`);
   console.log('HARD CLASHES', maxHardClashes, ' SOFT CLASHES', leastSoftClashes);
   console.log('-------------------------------------------------------------------------------');
   return bestFamilyMember;
