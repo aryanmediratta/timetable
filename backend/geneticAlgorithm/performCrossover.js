@@ -167,7 +167,8 @@ function generateTimetable (data, count) {
   console.log('-------------------------------------------------------------------------------');
   let population = createRandomTimeTables(data);
   let leastSoftClashes = 10, bestFamilyMember, avg, maxHardClashes = 10, index = 2, crossoverPoint = null, costOfBestMemberInFamily = 10;
-  while ((costOfBestMemberInFamily > 0) && (index <= NUM_GENERATIONS) && ((leastSoftClashes > 1000) || (maxHardClashes > 0))) {
+  while ((costOfBestMemberInFamily > 0) && (index <= NUM_GENERATIONS) && (( maxHardClashes > 0))) {
+    //(leastSoftClashes > 20) ||
     const tempGeneration = [];
     let hardClashingPeriods, softClashingPeriods;
     const targetedMutationForHardClashes = maxHardClashes !== 0 ? true : false;
@@ -191,7 +192,7 @@ function generateTimetable (data, count) {
     bestFamilyMember = newGen.bestFamilyMember;
     leastSoftClashes = newGen.leastSoftClashes;
     maxHardClashes = newGen.leastHardClashes;
-    // console.log(`Average of ${population.length} parents in ${index} Generation is -> ${avg} with BEST as ${costOfBestMemberInFamily} having ${maxHardClashes} hard and ${leastSoftClashes} soft clashes.`);
+    // console.log(`Avg of ${population.length} parents in ${index} Gen is -> ${avg} with BEST as ${costOfBestMemberInFamily} having ${maxHardClashes} hard and ${leastSoftClashes} soft clashes for class-${count}`);
     index++;
   }
   console.log(`Average of ${population.length} parents in ${index} Generation is -> ${avg} with BEST as ${costOfBestMemberInFamily} for class- ${count}.`);

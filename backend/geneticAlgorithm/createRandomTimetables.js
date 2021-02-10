@@ -36,18 +36,36 @@ function createTuplesForClass (classData, population, index, uniqueIndex) {
   const { _id, label, teachersList } = classData;
   teachersList.forEach((teacher) => {
     uniqueIndex++;
-    for (i = 0; i < teacher.periodsPerWeek ; i++) {
-      index++;
-      population.push({
-        label: index,
-        classId: _id,
-        teacherId: teacher.teacherId,
-        uniqueIndex,
-        className: label,
-        teacherName: teacher.teacherName,
-        subject: teacher.subject,
-        color: myColors[uniqueIndex],
-      });
+    if (teacher.periodsPerWeek <= 5) {
+      for (i = 0; i < teacher.periodsPerWeek ; i++) {
+        index++;
+        population.push({
+          label: index,
+          classId: _id,
+          teacherId: teacher.teacherId,
+          uniqueIndex,
+          className: label,
+          teacherName: teacher.teacherName,
+          subject: teacher.subject,
+          color: myColors[uniqueIndex],
+          allowDoublePeriods: false,
+        });
+      }
+    } else {
+      for (i = 0; i < teacher.periodsPerWeek ; i++) {
+        index++;
+        population.push({
+          label: index,
+          classId: _id,
+          teacherId: teacher.teacherId,
+          uniqueIndex,
+          className: label,
+          teacherName: teacher.teacherName,
+          subject: teacher.subject,
+          color: myColors[uniqueIndex],
+          allowDoublePeriods: true,
+        });
+      }
     }
   });
   return [

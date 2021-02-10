@@ -18,12 +18,10 @@ function costFunction (timetable, numPeriods, teacherClashes) {
       allTeachers = [...teacherClashes[periodNumber]];
     }
     // Resetting Soft Clashes.
-    // console.log('Period Number', periodNumber, 'HOLY', numPeriods);
     if (((periodNumber+1) % (numPeriods/5) === 0) && periodNumber !== 0) {
-      // console.log('Resetting Day.', periodNumber);
       clashPerWeek = [];
     }
-    period.forEach(tuple => {
+    period.forEach((tuple) => {
       const { teacherId, classId, label, uniqueIndex } = tuple;
       allTeachers.indexOf(teacherId) > -1 ? costForTeachers += HARD_CLASH_WEIGHT : allTeachers.push(teacherId);
       allClasses.indexOf(classId) > -1 ? costForClasses += HARD_CLASH_WEIGHT : allClasses.push(classId);
@@ -57,7 +55,7 @@ function findClashes (timetable, allClassIds) {
   return clashes;
 }
 
-// Returns a list of periods having clashed entities.
+// Returns a list of periods having hard clashed entities.
 function findHardClashingPeriods(timetable, teacherClashes) {
   let clashes = [];
   timetable.forEach((period, periodNumber) => {
@@ -77,6 +75,7 @@ function findHardClashingPeriods(timetable, teacherClashes) {
   return clashes;
 }
 
+// Returns a list of periods having soft clashed entities.
 function findSoftClashingPeriods (timetable) {
   let clashes = [];
   timetable.forEach((period, periodNumber) => {
@@ -84,16 +83,28 @@ function findSoftClashingPeriods (timetable) {
       clashPerWeek = [];
     }
     period.forEach((tuple, elementID) => {
-      const { uniqueIndex } = tuple;
-      clashPerWeek.indexOf(uniqueIndex) > -1 ? clashes.push({ el1: periodNumber, el2: elementID }) : clashPerWeek.push(uniqueIndex);
+      const { uniqueIndex, allowDoublePeriods } = tuple;
+      findSoftClashes(clashPerWeek, uniqueIndex, allowDoublePeriods) ?
+        clashes.push({ el1: periodNumber, el2: elementID }) && clashPerWeek.push(uniqueIndex)
+      :
+        clashPerWeek.push(uniqueIndex);
     });
   });
   return clashes;
 }
 
+// Helper function which returns true for CLASHING Entities.
+function findSoftClashes(array, element, allowDoublePeriods) {
+  if (array.length === 0) return false;
+  if (array[array.length-1] === element) {
+    return !allowDoublePeriods;
+  }
+  if (array.indexOf(element) > -1) return true;
+}
+
 module.exports = {
-    costFunction,
-    findClashes,
-    findHardClashingPeriods,
-    findSoftClashingPeriods,
+  costFunction,
+  findClashes,
+  findHardClashingPeriods,
+  findSoftClashingPeriods,
 };
