@@ -4,10 +4,23 @@ import { Button } from '@material-ui/core';
 import { connect } from 'react-redux';
 
 import { logoutUser } from '../../actions/authActions';
+import ShowCard from '../utils/Cards';
+
+import { getAllClasses } from '../../actions/classesActions';
 
 class HomePage extends React.Component {
+  constructor(props) {
+    super(props);
+    const { auth: { user: { email } } } = this.props;
+    // this.props.getAllTeachers(email);
+    this.props.getAllClasses(email);
+  }
+
   render() {
     const { auth: { user: { email } } } = this.props;
+    const { classes: { classesForDropdown } } = this.props;
+    console.log(classesForDropdown);
+
     return (
       <div className="container">
         <h2>Home Page</h2>
@@ -18,6 +31,21 @@ class HomePage extends React.Component {
           {'  '}
           {email}
         </h2>
+        <div>
+          {
+            classesForDropdown && classesForDropdown.forEach((classObj) => {
+              <ShowCard
+                label={classObj.label}
+                sections={classObj.numberOfSections}
+              />
+              console.log(classObj);
+            })
+          }
+          {/* <ShowCard
+            label={classesForDropdown[1].label}
+            sections={classesForDropdown[1].numberOfSections}
+          /> */}
+        </div>
         <Link to="/" className="link"> Manage Timetable </Link>
         <br />
         <Link to="/classes" className="link"> Manage Classes </Link>
@@ -41,10 +69,12 @@ class HomePage extends React.Component {
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
+  classes: state.classes,
 });
 
 const mapDispatchToProps = {
   logoutUser,
+  getAllClasses,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomePage);
