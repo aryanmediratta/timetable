@@ -17,10 +17,13 @@ require('../../styles/Login.scss');
 class Teachers extends React.Component {
   constructor(props) {
     super(props);
-    const { email } = this.props;
-    // Always load latest data on page load.
-    this.props.getAllTeachers(email);
-    this.props.getAllClasses(email);
+    const { email, classes: { classesForDropdown }, teachers: { teachersList } } = this.props;
+    if (classesForDropdown.length === 0) {
+      this.props.getAllClasses(email);
+    }
+    if (teachersList.length === 0) {
+      this.props.getAllTeachers(email);
+    }
   }
 
   onClose = () => {

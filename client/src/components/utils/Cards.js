@@ -4,12 +4,10 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
   root: {
-    minWidth: 275,
-  },
-  bullet: {
-    display: 'inline-block',
-    margin: '0 2px',
-    transform: 'scale(0.8)',
+    maxWidth: 275,
+    cursor: 'pointer',
+    marginRight: '10px',
+    marginBottom: '20px',
   },
   title: {
     fontSize: 14,
@@ -26,12 +24,10 @@ export default function ShowCard(props) {
     <div>
       <Card className={classes.root} variant="outlined">
         <CardContent>
-          <Typography variant="h2">
-            Class:
+          <Typography className={classes.title} color="textPrimary">
             {props.label}
           </Typography>
           <Typography className={classes.pos} color="textSecondary">
-            Number of Sections:
             {props.sections}
           </Typography>
         </CardContent>
