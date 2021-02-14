@@ -50,7 +50,7 @@ export default function authReducer(state = initialState, action) {
     };
 
   // Handling Errors
-  case AUTH_TYPES.TOGGLE_POPUP:
+  case AUTH_TYPES.TOGGLE_AUTH_POPUP:
     if (action.payload === null) {
       return {
         ...state,

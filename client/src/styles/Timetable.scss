@@ -2,12 +2,16 @@
     border: 2px solid red;
 }
 
-#timetable-row div { 
-    height: 80px; 
-    width: 130px; 
-    border: 1px solid red; 
-    margin-left: 0px; 
-    float: left;
-    font-size: 18px;
+.timetable-cell {
+  min-height: 100px;
+  min-width: 140px;
+  max-width: 140px;
+  border: 1px solid black;
+  flex-shrink: 2;
+
+  .timetable-cell-text {
+    font-size: 22px;
+    font-weight: 400;
     text-align: center;
+  }
 }

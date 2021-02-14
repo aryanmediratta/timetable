@@ -1,0 +1,20 @@
+.card-root {
+  max-width: 260px;
+  margin-right: 10px;
+  margin-bottom: 20px;
+  
+  .menu-icon {
+    position: relative;
+    right: 5px;
+    top: -15px;
+  }
+
+  .card-title {
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .card-content {
+    margin-bottom: 12px;
+  }
+}

@@ -9,7 +9,9 @@ import FullWidthGrid from '../common/TwoComponentGridSystem';
 import ModifyTeacherModal from '../partials/ModifyTeacherModal';
 import SimpleSnackbar from '../utils/Popup';
 
-import { getAllTeachers, toggleErrorPopup, toggleTeacherModal } from '../../actions/teacherActions';
+import {
+  getAllTeachers, toggleErrorPopup, toggleTeacherModal,
+} from '../../actions/teacherActions';
 import { getAllClasses } from '../../actions/classesActions';
 
 require('../../styles/Login.scss');
@@ -38,35 +40,9 @@ class Teachers extends React.Component {
     this.props.toggleTeacherModal({ name: '', subject: '', classesList: [] });
   }
 
-  updateDataForTable = () => {
-    const data = [];
-    const { teachers: { teachersList } } = this.props;
-    teachersList && teachersList.length > 0 && teachersList.forEach((teacher) => {
-      const obj = {};
-      obj.name = teacher.teacherName;
-      obj.subject = teacher.teacherSubject;
-      obj._id = teacher._id;
-      obj.classesList = teacher.classesTaught;
-      const classesForTeacher = [];
-      let totalClasses = 0;
-      teacher.classesTaught.forEach((classObject, index) => {
-        classesForTeacher.push(classObject.label);
-        // classesForTeacher.push(': ');
-        // classesForTeacher.push(classObject.periodsPerWeek);
-        if (teacher.classesTaught.length > index + 1) {
-          classesForTeacher.push(', ');
-        }
-        totalClasses += classObject.periodsPerWeek && parseInt(classObject.periodsPerWeek, 10);
-      });
-      obj.allClassesTaught = classesForTeacher;
-      obj.classesPerWeek = totalClasses;
-      data.push(obj);
-    });
-    return data;
-  }
-
   editTeacherInfo = (id) => {
-    const selectedTeacher = this.updateDataForTable().filter((teacher) => teacher._id === id);
+    const { teachers: { allTeachersForTable } } = this.props;
+    const selectedTeacher = allTeachersForTable.filter((teacher) => teacher._id === id);
     if (selectedTeacher && selectedTeacher.length > 0) {
       this.props.toggleTeacherModal(selectedTeacher[0]);
     }
@@ -75,12 +51,9 @@ class Teachers extends React.Component {
   render() {
     const {
       teachers: {
-        showModal, newTeacher, errorMessage, showPopup, success,
+        showModal, newTeacher, errorMessage, showPopup, success, allTeachersForTable,
       },
-      classes: { classesList },
     } = this.props;
-
-    const data = this.updateDataForTable();
 
     const columns = [{
       Header: 'Name',
@@ -115,7 +88,7 @@ class Teachers extends React.Component {
           spacing={2}
           componentOne={(
             <Table
-              data={data}
+              data={allTeachersForTable}
               columns={columns}
               searchable
               showPageCounter
@@ -131,7 +104,6 @@ class Teachers extends React.Component {
           showModal={showModal}
           toggleModal={this.toggleModal}
           teacherData={newTeacher}
-          classesList={classesList}
         />
         <br />
         <br />

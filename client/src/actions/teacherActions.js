@@ -3,7 +3,7 @@ import { TEACHER_TYPES } from './teacher.actions';
 
 // Toggle Error Popup
 export const toggleErrorPopup = (message) => ({
-  type: TEACHER_TYPES.TOGGLE_POPUP,
+  type: TEACHER_TYPES.TOGGLE_TEACHER_POPUP,
   payload: message,
   success: false,
 });
@@ -14,20 +14,58 @@ export const toggleTeacherModal = (payload) => ({
   payload,
 });
 
-export const addNewTeacher = (userData) => (dispatch) => {
+// Sets table data.
+export const setTableData = (teachersList) => (dispatch) => {
+  const data = [];
+  teachersList && teachersList.length > 0 && teachersList.forEach((teacher) => {
+    const obj = {};
+    obj.name = teacher.teacherName;
+    obj.subject = teacher.teacherSubject;
+    obj._id = teacher._id;
+    obj.classesList = teacher.classesTaught;
+    const classesForTeacher = [];
+    let totalClasses = 0;
+    teacher.classesTaught.forEach((classObject) => {
+      classesForTeacher.push(classObject.label);
+      totalClasses += classObject.periodsPerWeek && parseInt(classObject.periodsPerWeek, 10);
+    });
+    obj.allClassesTaught = classesForTeacher.join(', ');
+    obj.classesPerWeek = totalClasses;
+    data.push(obj);
+  });
+  dispatch({
+    type: TEACHER_TYPES.SET_TEACHERS_FOR_TABLE,
+    payload: data,
+  });
+};
+
+export const addNewTeacher = (userData, teachersList) => (dispatch) => {
   post('/api/add_teacher', userData)
     .then((res) => res.json())
     .then((res) => {
       if (res.success === true) {
+        // Successfully updated teacher.
         if (res.updated === true) {
-          dispatch({
-            type: TEACHER_TYPES.UPDATE_EXISTING_TEACHER,
-            payload: res.newTeacher,
+          const updatedTeachersList = [];
+          teachersList.forEach((teacher) => {
+            if (teacher._id !== res.newTeacher._id) {
+              updatedTeachersList.push(teacher);
+            } else {
+              updatedTeachersList.push(res.newTeacher);
+            }
           });
-        } else {
+          dispatch(setTableData(updatedTeachersList));
           dispatch({
-            type: TEACHER_TYPES.ADD_NEW_TEACHER,
-            payload: res.newTeacher,
+            type: TEACHER_TYPES.SET_ALL_TEACHERS,
+            payload: updatedTeachersList,
+          });
+        // Successfully Created teacher.
+        } else {
+          teachersList = [...teachersList, res.newTeacher];
+          dispatch(setTableData(teachersList));
+          dispatch({
+            type: TEACHER_TYPES.SET_ALL_TEACHERS,
+            payload: teachersList,
           });
         }
         dispatch({
@@ -35,13 +73,14 @@ export const addNewTeacher = (userData) => (dispatch) => {
           payload: {},
         });
         dispatch({
-          type: TEACHER_TYPES.TOGGLE_POPUP,
+          type: TEACHER_TYPES.TOGGLE_TEACHER_POPUP,
           payload: res.message,
           success: res.success,
         });
+      // Failed to perform Action
       } else {
         dispatch({
-          type: TEACHER_TYPES.TOGGLE_POPUP,
+          type: TEACHER_TYPES.TOGGLE_TEACHER_POPUP,
           payload: res.message,
           success: res.success,
         });
@@ -58,6 +97,7 @@ export const getAllTeachers = (email) => (dispatch) => {
         type: TEACHER_TYPES.SET_ALL_TEACHERS,
         payload: res.teachers,
       });
+      dispatch(setTableData(res.teachers));
     })
     .catch(() => null);
 };

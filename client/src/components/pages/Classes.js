@@ -88,6 +88,7 @@ class Classes extends React.Component {
         classesForDropdown, updateData, showPopup, errorMessage, success,
       },
     } = this.props;
+
     return (
       <div className="container">
         <h2> Manage Classes </h2>

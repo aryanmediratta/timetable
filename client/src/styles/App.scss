@@ -51,4 +51,13 @@
 
 .container {
   padding: 10px 40px;
+
+  .class-container {
+    max-height: 280px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border: 1px solid black;
+    padding: 40px 40px 20px 60px;
+  }
+
 }

@@ -10,7 +10,7 @@ import { post } from '../utils';
 
 // Toggle Error Popup
 export const toggleErrorPopup = (message) => ({
-  type: AUTH_TYPES.TOGGLE_POPUP,
+  type: AUTH_TYPES.TOGGLE_AUTH_POPUP,
   payload: message,
   success: false,
 });
@@ -89,7 +89,7 @@ export const registerUser = (userData) => (dispatch) => {
         dispatch(setCurrentUser(decoded));
       } else {
         dispatch({
-          type: AUTH_TYPES.TOGGLE_POPUP,
+          type: AUTH_TYPES.TOGGLE_AUTH_POPUP,
           payload: res.message,
           success: false,
         });
@@ -104,7 +104,7 @@ export const loginUser = (userData) => async (dispatch) => {
   const res = await req.json();
   if (statusCode !== 200) {
     dispatch({
-      type: AUTH_TYPES.TOGGLE_POPUP,
+      type: AUTH_TYPES.TOGGLE_AUTH_POPUP,
       payload: res.errors,
     });
   } else if (statusCode === 200) {
@@ -122,7 +122,7 @@ export const loginUser = (userData) => async (dispatch) => {
       dispatch(setUserName(res.userName));
     } else {
       dispatch({
-        type: AUTH_TYPES.TOGGLE_POPUP,
+        type: AUTH_TYPES.TOGGLE_AUTH_POPUP,
         payload: res.message,
         success: false,
       });
