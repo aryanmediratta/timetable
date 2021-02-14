@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Button } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -74,13 +73,6 @@ class Teachers extends React.Component {
     return (
       <div className="container">
         <h2> Manage Teachers </h2>
-        <br />
-        <Link to="/" className="link"> Main </Link>
-        <br />
-        <Link to="/home" className="link"> Home </Link>
-        <br />
-        <Link to="/classes" className="link"> Manage Classes </Link>
-        <br />
         <br />
         <FullWidthGrid
           componentOneSize={9}

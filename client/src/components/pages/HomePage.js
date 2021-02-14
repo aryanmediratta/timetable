@@ -1,25 +1,28 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Grid } from '@material-ui/core';
 import { connect } from 'react-redux';
 
-import MyCard from '../common/Card';
-
 import { getAllClasses } from '../../actions/classesActions';
 import { getAllTeachers, toggleTeacherModal } from '../../actions/teacherActions';
+import { setEntityId, setEntityType, getTimetable } from '../../actions/timetableActions';
 
 import ModifyTeacherModal from '../partials/ModifyTeacherModal';
-import { setEntityId, setEntityType } from '../../actions/timetableActions';
+import MyCard from '../common/Card';
 
 class HomePage extends React.Component {
   constructor(props) {
     super(props);
-    const { auth: { user: { email } }, classes: { classesForDropdown }, teachers: { teachersList } } = this.props;
+    const {
+      auth: { user: { email } }, classes: { classesForDropdown }, teachers: { teachersList }, timetables: { schoolTimetable },
+    } = this.props;
     if (classesForDropdown.length === 0) {
       this.props.getAllClasses(email);
     }
     if (teachersList.length === 0) {
       this.props.getAllTeachers(email);
+    }
+    if (schoolTimetable.length === 0) {
+      this.props.getTimetable(email);
     }
   }
 
@@ -35,10 +38,10 @@ class HomePage extends React.Component {
     const { teachers: { allTeachersForTable } } = this.props;
     const selectedTeacher = allTeachersForTable.filter((teacher) => teacher._id === id);
     const { name } = selectedTeacher[0];
-    const option = { label: name, value: id };
-    this.props.setEntityId(option);
-    const otherOption = { label: type, value: type };
-    this.props.setEntityType(otherOption);
+    const entityId = { label: name, value: id };
+    this.props.setEntityId(entityId);
+    const entityType = { label: type, value: type };
+    this.props.setEntityType(entityType);
     this.props.history.push('/');
   }
 
@@ -59,12 +62,6 @@ class HomePage extends React.Component {
           {'  '}
           {email}
         </h2>
-        <Link to="/" className="link"> Manage Timetable </Link>
-        <br />
-        <Link to="/classes" className="link"> Manage Classes </Link>
-        <br />
-        <Link to="/teachers" className="link"> Manage Teachers </Link>
-        <br />
         <br />
         <h2> Classes </h2>
         <div className="class-container">
@@ -83,7 +80,7 @@ class HomePage extends React.Component {
         <br />
         <h2> Teachers </h2>
         <div className="class-container">
-          <Grid container style={{ flexGrow: 1 }} spacing={2}>
+          <Grid container style={{ flexGrow: 1 }} spacing={6}>
             {
               allTeachersForTable && allTeachersForTable.length > 0 && allTeachersForTable.map((teacher) => (
                 <MyCard
@@ -130,6 +127,7 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
   classes: state.classes,
   teachers: state.teachers,
+  timetables: state.timetables,
 });
 
 const mapDispatchToProps = {
@@ -138,6 +136,7 @@ const mapDispatchToProps = {
   toggleTeacherModal,
   setEntityId,
   setEntityType,
+  getTimetable,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomePage);

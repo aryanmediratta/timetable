@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Button, TextField } from '@material-ui/core';
 import { connect } from 'react-redux';
 
@@ -92,13 +91,6 @@ class Classes extends React.Component {
     return (
       <div className="container">
         <h2> Manage Classes </h2>
-        <br />
-        <Link to="/" className="link"> Main </Link>
-        <br />
-        <Link to="/home" className="link"> Home </Link>
-        <br />
-        <Link to="/teachers" className="link"> Manage Teachers </Link>
-        <br />
         <div>
           <h2> Number of section cannot be changed after creation. </h2>
           <FullWidthGrid

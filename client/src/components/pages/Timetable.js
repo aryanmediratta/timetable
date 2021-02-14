@@ -144,6 +144,16 @@ class Timetable extends React.Component {
         <div>
           <h2>TimeTable :)</h2>
           <br />
+          <Button
+            color="primary"
+            variant="contained"
+            type="submit"
+            onClick={() => this.fetchTimetable()}
+          >
+            Generate New TimeTable
+          </Button>
+          <br />
+          <br />
           <FullWidthGrid
             componentOneSize={6}
             componentTwoSize={6}
@@ -168,33 +178,6 @@ class Timetable extends React.Component {
                 showAnimations
               />
             )}
-          />
-          <br />
-          <FullWidthGrid
-            componentOneSize={6}
-            componentTwoSize={6}
-            spacing={4}
-            componentOne={(
-              <Button
-                color="primary"
-                variant="contained"
-                type="submit"
-                onClick={() => this.fetchTimetable()}
-              >
-                Generate New TimeTable
-              </Button>
-            )}
-            componentTwo={schoolTimetable && schoolTimetable.length > 0
-              && (
-                <Button
-                  color="primary"
-                  variant="contained"
-                  type="submit"
-                  onClick={() => this.saveEntireTimetable()}
-                >
-                  Save timetable
-                </Button>
-              )}
           />
           <br />
           {' '}
@@ -222,6 +205,18 @@ class Timetable extends React.Component {
                       </div>
                     )
           }
+          <br />
+          {schoolTimetable && schoolTimetable.length > 0
+              && (
+                <Button
+                  color="primary"
+                  variant="contained"
+                  type="submit"
+                  onClick={() => this.saveEntireTimetable()}
+                >
+                  Save timetable
+                </Button>
+              )}
 
           { loading === true && <Loader /> }
           {

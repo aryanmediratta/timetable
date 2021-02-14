@@ -46,7 +46,7 @@ class Login extends React.Component {
           <form onSubmit={this.handleSubmit}>
             <div className="box">
               <div className="outline">
-                <h2>Enter Login</h2>
+                <h2>Login</h2>
                 <TextField
                   className="text-field"
                   id="email"
