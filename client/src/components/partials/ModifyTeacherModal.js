@@ -80,7 +80,7 @@ const modalBody = (teacherData) => {
           )}
         />
         {teacherData.classesList && teacherData.classesList.length > 0 && teacherData.classesList.map((teacher, index) => (
-          <div>
+          <div key={index}>
             <br />
             <TextField
               className="text-field"

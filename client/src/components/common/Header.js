@@ -136,7 +136,7 @@ export default function ButtonAppBar() {
               </Menu>
               <SwipeableDrawer
                 anchor="left"
-                open={drawerStatus.drawerStatus}
+                open={drawerStatus.drawerStatus || false}
                 onClose={toggleDrawer(false)}
                 onOpen={toggleDrawer(true)}
               >

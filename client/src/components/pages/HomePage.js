@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid } from '@material-ui/core';
+import { Grid, Button } from '@material-ui/core';
 import { connect } from 'react-redux';
 
 import { getAllClasses } from '../../actions/classesActions';
@@ -49,6 +49,10 @@ class HomePage extends React.Component {
     this.props.toggleTeacherModal({});
   }
 
+  redirectPage = (link) => {
+    this.props.history.push(link);
+  };
+
   render() {
     const {
       auth: { user: { email } }, classes: { classesForDropdown },
@@ -65,14 +69,24 @@ class HomePage extends React.Component {
         <br />
         <h2> Classes </h2>
         <div className="class-container">
-          <Grid container style={{ flexGrow: 1 }} spacing={2}>
+          <Grid container style={{ flexGrow: 1 }} spacing={6}>
             {
-              classesForDropdown && classesForDropdown.map((classObj) => (
+              classesForDropdown && allTeachersForTable.length > 0 ? classesForDropdown.map((classObj) => (
                 <MyCard
                   heading={`Class: ${classObj.label}`}
                   content={`Number of Sections: ${classObj.numberOfSections}`}
                 />
               ))
+                : (
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    type="submit"
+                    onClick={() => this.redirectPage('/classes')}
+                  >
+                    Add Classes
+                  </Button>
+                )
             }
           </Grid>
         </div>
@@ -82,7 +96,7 @@ class HomePage extends React.Component {
         <div className="class-container">
           <Grid container style={{ flexGrow: 1 }} spacing={6}>
             {
-              allTeachersForTable && allTeachersForTable.length > 0 && allTeachersForTable.map((teacher) => (
+              allTeachersForTable && allTeachersForTable.length > 0 ? allTeachersForTable.map((teacher) => (
                 <MyCard
                   type="Teacher"
                   id={teacher._id}
@@ -109,6 +123,16 @@ class HomePage extends React.Component {
                   ]}
                 />
               ))
+                : (
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    type="submit"
+                    onClick={() => this.redirectPage('/teachers')}
+                  >
+                    Add Teachers
+                  </Button>
+                )
             }
           </Grid>
         </div>

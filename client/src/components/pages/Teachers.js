@@ -89,7 +89,7 @@ class Teachers extends React.Component {
             />
           )}
           componentTwo={(
-            <div />
+            <div id="clean" />
           )}
         />
         <ModifyTeacherModal

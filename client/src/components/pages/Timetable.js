@@ -142,7 +142,7 @@ class Timetable extends React.Component {
       } = this.props;
       return (
         <div>
-          <h2>TimeTable :)</h2>
+          <h2>Timetable </h2>
           <br />
           <Button
             color="primary"
