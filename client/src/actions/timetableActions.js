@@ -28,7 +28,7 @@ export const setEntityId = (option) => ({
 
 // Set/Unset Errors
 export const toggleErrorPopup = (message) => ({
-  type: TIMETABLE_TYPES.TOGGLE_POPUP,
+  type: TIMETABLE_TYPES.TOGGLE_TIMETABLE_POPUP,
   payload: message,
 });
 
@@ -71,7 +71,7 @@ export const generateNewTimetable = (timetableData) => (dispatch) => {
         });
       } else {
         dispatch({
-          type: TIMETABLE_TYPES.TOGGLE_POPUP,
+          type: TIMETABLE_TYPES.TOGGLE_TIMETABLE_POPUP,
           payload: res.message,
           success: res.success,
         });
@@ -89,13 +89,13 @@ export const saveTimetable = (timetableData) => (dispatch) => {
     .then((res) => {
       if (res.success === true) {
         dispatch({
-          type: TIMETABLE_TYPES.TOGGLE_POPUP,
+          type: TIMETABLE_TYPES.TOGGLE_TIMETABLE_POPUP,
           payload: res.message,
           success: res.success,
         });
       } else {
         dispatch({
-          type: TIMETABLE_TYPES.TOGGLE_POPUP,
+          type: TIMETABLE_TYPES.TOGGLE_TIMETABLE_POPUP,
           payload: res.message,
         });
       }

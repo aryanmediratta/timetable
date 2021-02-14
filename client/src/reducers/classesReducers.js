@@ -11,7 +11,7 @@ const initialState = {
 
 export default function classesReducer(state = initialState, action) {
   switch (action.type) {
-  case CLASSES_TYPE.SET_FIELD_DATA:
+  case CLASSES_TYPE.SET_FIELD_DATA_FOR_CLASS:
     return {
       ...state,
       classesForDropdown: action.payload,
@@ -22,7 +22,7 @@ export default function classesReducer(state = initialState, action) {
       classesList: action.payload,
       updateData: true,
     };
-  case CLASSES_TYPE.TOGGLE_POPUP:
+  case CLASSES_TYPE.TOGGLE_CLASS_POPUP:
     if (action.payload === null) {
       return {
         ...state,

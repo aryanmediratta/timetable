@@ -59,7 +59,7 @@ export default function timetableReducer(state = initialState, action) {
       schoolTimetable: [],
       timetable: [],
     };
-  case TIMETABLE_TYPES.TOGGLE_POPUP:
+  case TIMETABLE_TYPES.TOGGLE_TIMETABLE_POPUP:
     if (action.payload === null) {
       return {
         ...state,

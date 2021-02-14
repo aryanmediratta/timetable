@@ -1,20 +1,18 @@
-const DAYS_OF_WEEK = [' ', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-const PERIOD_NUMBER = ['1st Period', '2nd Period', '3rd Period', '4th Period', '5th Period', '6th Period', '7th Period', '8th Period'];
+const DAYS_OF_WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+const PERIOD_NUMBER = [' ', '1st Period', '2nd Period', '3rd Period', '4th Period', '5th Period', '6th Period', '7th Period', '8th Period'];
 
 function getTimetableForEntity(timetable, entityId) {
   const myTable = [];
-  let index = 1;
   timetable.forEach((period) => {
     let flag = false;
     period.forEach((tuple) => {
       const {
-        classId, teacherId, className, teacherName, subject, color,
+        classId, teacherId, className, teacherName, color,
       } = tuple;
-      let tempEntity = null; let otherTempEntity; let objId;
+      let tempEntity = null; let objId;
       let teacherClassCombo;
       if (entityId === classId) {
-        otherTempEntity = teacherName;
-        tempEntity = subject;
+        tempEntity = teacherName;
         objId = teacherId;
       } else if (entityId === teacherId) {
         tempEntity = className;
@@ -22,15 +20,13 @@ function getTimetableForEntity(timetable, entityId) {
       }
       // If we find it, then we push it. otherwise we dont :)
       if (tempEntity !== null) {
-        teacherClassCombo = `${otherTempEntity ? `${otherTempEntity} -- ` : ''} ${tempEntity}`;
+        teacherClassCombo = `${tempEntity}`;
         myTable.push({ cell: teacherClassCombo, id: `${objId}`, color });
         flag = true;
-        index < 6 ? index++ : index = 1;
       }
     });
     if (flag === false) {
       myTable.push({ cell: ' ', color: 'white' });
-      index < 6 ? index++ : index = 1;
     }
   });
   return myTable;
@@ -47,17 +43,22 @@ function showAllSections(numberOfSections) {
 function createTimetableForRendering(timetable, numPeriods) {
   numPeriods /= 5;
   const result = [];
-  for (let i = 0; i < numPeriods; i++) {
-    const periodRow = [];
-    for (let j = i; j < timetable.length; j += numPeriods) {
-      if (j === i) {
-        periodRow.push(PERIOD_NUMBER[i]);
-      }
-      periodRow.push(timetable[j]);
-    }
-    result.push(periodRow);
+  const days = [];
+  for (let k = 0; k < numPeriods + 1; k++) {
+    days.push({ cell: PERIOD_NUMBER[k] });
   }
-  result.unshift(DAYS_OF_WEEK);
+  result.push(days);
+  let temp = [];
+  let j = 0;
+  for (let i = 0; i < timetable.length; i++) {
+    temp.push(timetable[i]);
+    if ((i + 1) % numPeriods === 0) {
+      temp.unshift({ cell: DAYS_OF_WEEK[j] });
+      j++;
+      result.push(temp);
+      temp = [];
+    }
+  }
   return result;
 }
 
@@ -68,8 +69,8 @@ function getSpecificTimetable(schoolTimetable, entityId, numPeriods) {
 }
 
 const allEntityTypes = [
-  { value: 'teacher', label: 'Teacher' },
-  { value: 'class', label: 'Class' },
+  { value: 'Teacher', label: 'Teacher' },
+  { value: 'Class', label: 'Class' },
 ];
 
 module.exports = {

@@ -10,6 +10,7 @@ import SimpleSnackbar from '../utils/Popup';
 import {
   addNewClasses, getAllClasses, updateClasses, setClassesData, toggleErrorPopup,
 } from '../../actions/classesActions';
+import { getAllTeachers } from '../../actions/teacherActions';
 
 import { showAllSections } from '../utils';
 
@@ -33,9 +34,13 @@ const options = [
 class Classes extends React.Component {
   constructor(props) {
     super(props);
-    const { email } = this.props;
-    // If user refreshes page, the store is empty so we fetch them again.
-    this.props.getAllClasses(email);
+    const { email, classes: { classesForDropdown }, teachers: { teachersList } } = this.props;
+    if (classesForDropdown.length === 0) {
+      this.props.getAllClasses(email);
+    }
+    if (teachersList.length === 0) {
+      this.props.getAllTeachers(email);
+    }
   }
 
   updateClasses = (e) => {
@@ -83,6 +88,7 @@ class Classes extends React.Component {
         classesForDropdown, updateData, showPopup, errorMessage, success,
       },
     } = this.props;
+
     return (
       <div className="container">
         <h2> Manage Classes </h2>
@@ -178,6 +184,7 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
   email: state.auth.user.email,
   classes: state.classes,
+  teachers: state.teachers,
 });
 
 const mapDispatchToProps = {
@@ -186,6 +193,7 @@ const mapDispatchToProps = {
   updateClasses,
   setClassesData,
   toggleErrorPopup,
+  getAllTeachers,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Classes);

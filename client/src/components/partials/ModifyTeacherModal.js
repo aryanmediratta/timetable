@@ -9,8 +9,11 @@ import FullWidthGrid from '../common/TwoComponentGridSystem';
 import { TEACHER_TYPES } from '../../actions/teacher.actions';
 import { addNewTeacher } from '../../actions/teacherActions';
 
-const modalBody = (teacherData, allClassesList) => {
+const modalBody = (teacherData) => {
   const auth = useSelector((state) => state.auth);
+  const teachers = useSelector((state) => state.teachers);
+  const classes = useSelector((state) => state.classes);
+  const { classesList: myClassesList } = classes;
   const { user: { email } } = auth;
   const dispatch = useDispatch();
   return (
@@ -24,7 +27,7 @@ const modalBody = (teacherData, allClassesList) => {
             value={teacherData.name || ''}
             onChange={(element) => {
               teacherData = { ...teacherData, name: element.target.value };
-              dispatch({ type: TEACHER_TYPES.SET_FIELD_DATA, payload: teacherData });
+              dispatch({ type: TEACHER_TYPES.SET_FIELD_DATA_FOR_TEACHER, payload: teacherData });
             }}
             size="small"
           />
@@ -38,7 +41,7 @@ const modalBody = (teacherData, allClassesList) => {
             value={teacherData.subject || ''}
             onChange={(element) => {
               teacherData = { ...teacherData, subject: element.target.value };
-              dispatch({ type: TEACHER_TYPES.SET_FIELD_DATA, payload: teacherData });
+              dispatch({ type: TEACHER_TYPES.SET_FIELD_DATA_FOR_TEACHER, payload: teacherData });
             }}
             size="small"
           />
@@ -55,8 +58,8 @@ const modalBody = (teacherData, allClassesList) => {
               isMulti
               isSearchable
               showAnimations
-              options={allClassesList && allClassesList.length > 0
-                && allClassesList.map((myClass) => ({ value: myClass._id, label: myClass.label }))}
+              options={myClassesList && myClassesList.length > 0
+                && myClassesList.map((myClass) => ({ value: myClass._id, label: myClass.label }))}
               value={teacherData.classesList && teacherData.classesList.length > 0
                 && teacherData.classesList.map((myClass) => ({ value: myClass._id, label: myClass.label }))}
               onChange={(_option, action) => {
@@ -71,7 +74,7 @@ const modalBody = (teacherData, allClassesList) => {
                 } else if (action.action === 'remove-value') {
                   teacherData.classesList = teacherData.classesList.filter((item) => item._id !== action.removedValue.value);
                 }
-                dispatch({ type: TEACHER_TYPES.SET_FIELD_DATA, payload: teacherData });
+                dispatch({ type: TEACHER_TYPES.SET_FIELD_DATA_FOR_TEACHER, payload: teacherData });
               }}
             />
           )}
@@ -88,7 +91,7 @@ const modalBody = (teacherData, allClassesList) => {
               onChange={(element) => {
                 const { classesList } = teacherData;
                 classesList[index] = { ...classesList[index], periodsPerWeek: element.target.value };
-                dispatch({ type: TEACHER_TYPES.SET_FIELD_DATA, payload: teacherData });
+                dispatch({ type: TEACHER_TYPES.SET_FIELD_DATA_FOR_TEACHER, payload: teacherData });
               }}
               size="small"
             />
@@ -106,7 +109,7 @@ const modalBody = (teacherData, allClassesList) => {
               newTeacher: teacherData,
               email,
             };
-            dispatch(addNewTeacher(data));
+            dispatch(addNewTeacher(data, teachers.teachersList));
           }}
         >
           Save
@@ -116,13 +119,11 @@ const modalBody = (teacherData, allClassesList) => {
   );
 };
 
-const ModifyTeacherModal = ({
-  showModal, toggleModal, teacherData, classesList,
-}) => (
+const ModifyTeacherModal = ({ showModal, toggleModal, teacherData }) => (
   <Modal
     displayModal={showModal}
     closeModal={toggleModal}
-    body={modalBody(teacherData, classesList)}
+    body={modalBody(teacherData)}
   />
 );
 

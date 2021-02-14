@@ -2,6 +2,7 @@ import { TEACHER_TYPES } from '../actions/teacher.actions';
 
 const initialState = {
   teachersList: [],
+  allTeachersForTable: [],
   showModal: false,
   showPopup: false,
   success: false,
@@ -20,13 +21,18 @@ export default function teacherReducer(state = initialState, action) {
       ...state,
       teachersList: action.payload,
     };
+  case TEACHER_TYPES.SET_TEACHERS_FOR_TABLE:
+    return {
+      ...state,
+      allTeachersForTable: action.payload,
+    };
   case TEACHER_TYPES.TOGGLE_TEACHER_MODAL:
     return {
       ...state,
       showModal: !state.showModal,
       newTeacher: action.payload,
     };
-  case TEACHER_TYPES.SET_FIELD_DATA:
+  case TEACHER_TYPES.SET_FIELD_DATA_FOR_TEACHER:
     return {
       ...state,
       teachersList: state.teachersList,
@@ -40,7 +46,7 @@ export default function teacherReducer(state = initialState, action) {
       ...state,
       teachersList: [...state.teachersList, action.payload],
     };
-  case TEACHER_TYPES.TOGGLE_POPUP:
+  case TEACHER_TYPES.TOGGLE_TEACHER_POPUP:
     if (action.payload === null) {
       return {
         ...state,

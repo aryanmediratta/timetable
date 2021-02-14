@@ -5,12 +5,12 @@ import {
 } from '../utils';
 
 export const setClassesData = (classesForDropdown) => ({
-  type: CLASSES_TYPE.SET_FIELD_DATA,
+  type: CLASSES_TYPE.SET_FIELD_DATA_FOR_CLASS,
   payload: classesForDropdown,
 });
 
 export const toggleErrorPopup = (message) => ({
-  type: CLASSES_TYPE.TOGGLE_POPUP,
+  type: CLASSES_TYPE.TOGGLE_CLASS_POPUP,
   payload: message,
 });
 
@@ -25,7 +25,7 @@ export const addNewClasses = (classesData) => (dispatch) => {
         });
       } else {
         dispatch({
-          type: CLASSES_TYPE.TOGGLE_POPUP,
+          type: CLASSES_TYPE.TOGGLE_CLASS_POPUP,
           payload: res.message,
           success: false,
         });
@@ -43,7 +43,7 @@ export const getAllClasses = (email) => (dispatch) => {
         payload: res.allClasses,
       });
       dispatch({
-        type: CLASSES_TYPE.SET_FIELD_DATA,
+        type: CLASSES_TYPE.SET_FIELD_DATA_FOR_CLASS,
         payload: res.numSectionsPerClass,
       });
     });
@@ -59,12 +59,12 @@ export const updateClasses = (classesData) => (dispatch) => {
           payload: res.allClasses,
         });
         dispatch({
-          type: CLASSES_TYPE.SET_FIELD_DATA,
+          type: CLASSES_TYPE.SET_FIELD_DATA_FOR_CLASS,
           payload: res.numSectionsPerClass,
         });
       } else {
         dispatch({
-          type: CLASSES_TYPE.TOGGLE_POPUP,
+          type: CLASSES_TYPE.TOGGLE_CLASS_POPUP,
           payload: res.message,
           success: false,
         });

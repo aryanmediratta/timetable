@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '@material-ui/core';
+import { Button, Grid } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -38,10 +38,11 @@ class Timetable extends React.Component {
 
   componentDidMount() {
     this.getAllDataForDropdown();
+    this.updateTimetable();
   }
 
   componentDidUpdate(prevProps) {
-    const { timetables: { entityId, entityType } } = this.props;
+    const { timetables: { entityId, entityType, schoolTimetable } } = this.props;
     if (prevProps.timetables.entityId.value !== entityId.value) {
       this.getAllDataForDropdown();
       this.updateTimetable();
@@ -53,6 +54,9 @@ class Timetable extends React.Component {
       this.getAllDataForDropdown();
     } else if (prevProps.classes.classesList !== this.props.classes.classesList) {
       this.getAllDataForDropdown();
+    }
+    if (prevProps.timetables.schoolTimetable.length === 0 && schoolTimetable.length !== 0) {
+      this.updateTimetable();
     }
   }
 
@@ -102,14 +106,14 @@ class Timetable extends React.Component {
         classes: { classesList }, teachers: { teachersList }, timetables: { entityType },
       } = this.props;
       const data = [];
-      if (entityType.value === 'class') {
+      if (entityType.value === 'Class') {
         classesList && classesList.length > 0 && classesList.forEach((myClass) => {
           const obj = {};
           obj.value = myClass._id;
           obj.label = myClass.label;
           data.push(obj);
         });
-      } else if (entityType.value === 'teacher') {
+      } else if (entityType.value === 'Teacher') {
         teachersList && teachersList.length > 0 && teachersList.forEach((teacher) => {
           const obj = {};
           obj.value = teacher._id;
@@ -210,9 +214,9 @@ class Timetable extends React.Component {
                       <div>
                         {
                           timetable && timetable.length > 0 && timetable.map((period) => (
-                            <div id="timetable-row">
-                              <TimetableRow row={period} entityType={entityType.label} />
-                            </div>
+                            <Grid container style={{ flexGrow: 1 }} spacing={0}>
+                              <TimetableRow row={period} />
+                            </Grid>
                           ))
                         }
                       </div>
