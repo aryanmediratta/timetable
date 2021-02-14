@@ -167,8 +167,8 @@ function generateTimetable (data, count) {
   console.log('-------------------------------------------------------------------------------');
   let population = createRandomTimeTables(data);
   let leastSoftClashes = 10, bestFamilyMember, avg, maxHardClashes = 10, index = 2, crossoverPoint = null, costOfBestMemberInFamily = 10;
-  while ((costOfBestMemberInFamily > 0) && (index <= NUM_GENERATIONS) && (( maxHardClashes > 0))) {
-    //(leastSoftClashes > 20) ||
+  while ((costOfBestMemberInFamily > 0) && (index <= NUM_GENERATIONS) && (((leastSoftClashes > 0) || maxHardClashes > 0))) {
+    //
     const tempGeneration = [];
     let hardClashingPeriods, softClashingPeriods;
     const targetedMutationForHardClashes = maxHardClashes !== 0 ? true : false;

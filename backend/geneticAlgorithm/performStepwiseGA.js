@@ -1,12 +1,11 @@
 const { NUM_CLASSES_CLUBBED_TOGETHER } = require('./constants');
 const { generateTimetable } = require('./performCrossover');
-const { modifyClassesData } = require('../utils/classes');
-const { costFunction, findClashes, findSoftClashingPeriods } = require('./calculateFitness');
+const { modifyClassesData, addTeachersToClasses } = require('../utils/classes');
+const { costFunction, findClashes, findSoftClashingPeriods, findDoublePeriods } = require('./calculateFitness');
 const { createTuples } = require('./createRandomTimetables');
-const { removeBusinessLogic } = require('./cleanTimetable');
 
 function createStepwiseTimetables(allData) {
-  const { classesList } = allData;
+  const { classesList, numPeriods } = allData;
   const classData = modifyClassesData(classesList);
   const allTuples = createTuples(classesList);
   classData.sort((a,b) => a.value - b.value);
@@ -45,28 +44,25 @@ function createStepwiseTimetables(allData) {
     };
     const tt = generateTimetable(finalDataForTimetable, count);
     const tempClashes = findTeachersInPeriods(tt, allSelectedTeachers);
-    teacherClashes = mergeTwoTimetables(teacherClashes, tempClashes, allData.numPeriods);
+    teacherClashes = mergeTwoTimetables(teacherClashes, tempClashes, numPeriods);
     allTimetables.push(tt);
     count++;
   }
   // End of While Loop.
   let finalTimetable = [];
   for (let i = 0; i < allTimetables.length; i++) {
-    finalTimetable = mergeTwoTimetables(finalTimetable, allTimetables[i], allData.numPeriods)
-    const things = costFunction(finalTimetable, allData.numPeriods, null);
-    let softClashes = findSoftClashingPeriods(finalTimetable);
-    console.log('COST for', i, 'is', things[0],'Hard Clashes', things[1], 'Soft Clashes', things[2], 'including', things[2]-softClashes.length, 'double periods');
+    finalTimetable = mergeTwoTimetables(finalTimetable, allTimetables[i], numPeriods)
+    const things = costFunction(finalTimetable, numPeriods, null);
+    console.log('COST for', i, 'is', things[0],'Hard Clashes', things[1], 'Soft Clashes', things[2]);
   }
   const clashes = findClashes(finalTimetable);
-  softClashes = findSoftClashingPeriods(finalTimetable);
-  console.log('Total Soft Clashes {upgraded}', softClashes.length);
   console.log('Hard Teacher Clashes', clashes.filter((cl) => cl.type === 'teacher').length);
   console.log('Hard Classes Clashes', clashes.filter((cl) => cl.type === 'class').length);
-  return removeBusinessLogic(finalTimetable);
+  findDoublePeriods(finalTimetable);
+  return finalTimetable;
 }
 
 // Given a timetable, returns an array of num periods showing which teacher teaches in which period.
-// Can be upgraded to give only relevant teacher IDs (maybe later)
 function findTeachersInPeriods(timetable, allSelectedTeachers) {
   const numPeriods = timetable.length;
   const allTeachers = new Array(numPeriods);
@@ -96,6 +92,22 @@ function mergeTwoTimetables (finalArray, timetableOne, numPeriods) {
   return finalArray;
 }
 
+// If you have tuples, directly pass it to the function. Otherwise give all classes and teachers and it returns selectedTuples.
+function getAllTuplesForClass(classId, allTuples, allClasses, allTeachers) {
+  if (!allTuples || allTuples.length === 0) {
+    const classesList = addTeachersToClasses(allClasses, allTeachers);
+    allTuples = createTuples(classesList);
+  }
+  const selectedTuples = [];
+  allTuples.forEach((tuple) => {
+    if (tuple.classId === classId) {
+      selectedTuples.push(tuple);
+    }
+  });
+  return selectedTuples;
+}
+
 module.exports = {
   createStepwiseTimetables,
+  getAllTuplesForClass,
 };
