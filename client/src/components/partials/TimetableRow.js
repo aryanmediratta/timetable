@@ -1,18 +1,18 @@
-/* eslint-disable no-nested-ternary */
 import React from 'react';
 
 class TimetableRow extends React.Component {
   render() {
+    const { row, periodNumber } = this.props;
     return (
-      Object.keys(this.props.row).map((period, index) => (
+      Object.keys(row).map((period, index) => (
         <div
           key={index}
-          onClick={() => console.log('index', this.props.row[period])}
-          className={`timetable-cell ${this.props.row[period] ? 'pointer' : ''}`}
-          style={{ backgroundColor: this.props.row[period] && this.props.row[period].color }}
+          onClick={() => this.props.toggleModal(row[period], row[period].cell, periodNumber, index)}
+          className={`timetable-cell ${row[period].id ? 'pointer' : ''}`}
+          style={{ backgroundColor: row[period] && row[period].color }}
         >
           <div className="timetable-cell-text">
-            {this.props.row[period] && this.props.row[period].cell}
+            {row[period] && row[period].cell}
           </div>
         </div>
       ))

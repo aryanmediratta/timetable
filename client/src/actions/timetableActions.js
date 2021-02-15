@@ -32,6 +32,49 @@ export const toggleErrorPopup = (message) => ({
   payload: message,
 });
 
+// Toggle Edit timetable modal
+export const toggleEditTimetableModal = (data) => (dispatch) => {
+  dispatch({
+    type: TIMETABLE_TYPES.TOGGLE_EDIT_TIMETABLE_MODAL,
+    payload: data,
+  });
+};
+
+export const getSuggestionsForTimetable = (data) => (dispatch) => {
+  const {
+    email, entityId, selectedEntityId, entityType, numPeriods,
+  } = data;
+  const {
+    entityId: entityToBeReplaced, periodNumber, entityNumber,
+  } = selectedEntityId;
+  const period = periodNumber === 1 ? (periodNumber * entityNumber) : (((periodNumber - 1) * (numPeriods / 5)) + entityNumber);
+
+  const URL = constructURL('/api/get_suggestions', {
+    email, entityId, entityToBeReplaced, period, entityType,
+  });
+  get(URL)
+    .then((res) => {
+      if (res.success === true) {
+        // console.log('res', res);
+        dispatch({
+          type: TIMETABLE_TYPES.SET_SCHOOL_TIMETABLE,
+          payload: res.timetable,
+        });
+        const timetable = getSpecificTimetable(res.timetable, entityId, numPeriods);
+        dispatch({
+          type: TIMETABLE_TYPES.SET_TIMETABLE,
+          payload: timetable,
+        });
+      } else {
+        dispatch({
+          type: TIMETABLE_TYPES.TOGGLE_TIMETABLE_POPUP,
+          payload: res.message,
+          success: res.success,
+        });
+      }
+    });
+};
+
 // Populate Entity ID Dropdown & setting entity ID
 export const populateEntityIdDropdown = (allEntities) => (dispatch) => {
   dispatch({

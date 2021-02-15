@@ -1,6 +1,13 @@
 import { TIMETABLE_TYPES } from '../actions/timetable.actions';
 import { allEntityTypes } from '../components/utils';
 
+const selectedEntityId = {
+  entityNumber: '',
+  periodNumber: '',
+  entityId: '',
+  label: '',
+};
+
 const initialState = {
   schoolTimetable: [],
   filteredEntityIds: [],
@@ -12,6 +19,8 @@ const initialState = {
   showPopup: false,
   success: false,
   errorMessage: '',
+  showEditTimetableModal: false,
+  ...selectedEntityId,
 };
 
 export default function timetableReducer(state = initialState, action) {
@@ -45,6 +54,12 @@ export default function timetableReducer(state = initialState, action) {
     return {
       ...state,
       entityId: action.payload,
+    };
+  case TIMETABLE_TYPES.TOGGLE_EDIT_TIMETABLE_MODAL:
+    return {
+      ...state,
+      showEditTimetableModal: Boolean(action.payload),
+      selectedEntityId: action.payload,
     };
   case TIMETABLE_TYPES.TOGGLE_LOADING:
     if (action.payload === null) {

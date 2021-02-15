@@ -1,7 +1,7 @@
 const { NUM_CLASSES_CLUBBED_TOGETHER } = require('./constants');
 const { generateTimetable } = require('./performCrossover');
 const { modifyClassesData, addTeachersToClasses } = require('../utils/classes');
-const { costFunction, findClashes, findSoftClashingPeriods, findDoublePeriods } = require('./calculateFitness');
+const { costFunction, findClashes } = require('./calculateFitness');
 const { createTuples } = require('./createRandomTimetables');
 
 function createStepwiseTimetables(allData) {
@@ -58,7 +58,6 @@ function createStepwiseTimetables(allData) {
   const clashes = findClashes(finalTimetable);
   console.log('Hard Teacher Clashes', clashes.filter((cl) => cl.type === 'teacher').length);
   console.log('Hard Classes Clashes', clashes.filter((cl) => cl.type === 'class').length);
-  findDoublePeriods(finalTimetable);
   return finalTimetable;
 }
 

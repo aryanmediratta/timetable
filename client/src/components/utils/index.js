@@ -97,4 +97,6 @@ module.exports = {
   showAllSections,
   getSpecificTimetable,
   allEntityTypes,
+  DAYS_OF_WEEK,
+  PERIOD_NUMBER,
 };
