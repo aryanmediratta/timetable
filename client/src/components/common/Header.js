@@ -128,8 +128,12 @@ export default function ButtonAppBar() {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>
-                  <Link onClick={() => dispatch(logoutUser())} to="/login">
+                <MenuItem onClick={() => {
+                  handleClose();
+                  dispatch(logoutUser());
+                }}
+                >
+                  <Link to="/login">
                     Logout
                   </Link>
                 </MenuItem>

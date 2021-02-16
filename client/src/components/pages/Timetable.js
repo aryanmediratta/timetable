@@ -5,12 +5,14 @@ import { connect } from 'react-redux';
 
 import Dropdown from '../common/Dropdown';
 import TimetableRow from '../partials/TimetableRow';
+import EditTimetableModal from '../partials/EditTimetableModal';
 import FullWidthGrid from '../common/TwoComponentGridSystem';
 import Loader from '../common/Loader';
 
 import { getSpecificTimetable, allEntityTypes } from '../utils';
 import {
-  generateNewTimetable, saveTimetable, getTimetable, setTimetable, setEntityType, setEntityId, toggleErrorPopup, populateEntityIdDropdown,
+  // eslint-disable-next-line max-len
+  generateNewTimetable, saveTimetable, getTimetable, setTimetable, setEntityType, setEntityId, toggleErrorPopup, populateEntityIdDropdown, toggleEditTimetableModal,
 } from '../../actions/timetableActions';
 import { getAllClasses } from '../../actions/classesActions';
 import { getAllTeachers } from '../../actions/teacherActions';
@@ -134,10 +136,25 @@ class Timetable extends React.Component {
       this.props.saveTimetable(timetableData);
     }
 
+    toggleModal = (selectedEntityId, label, periodNumber, entityNumber) => {
+      if (selectedEntityId && selectedEntityId.id) {
+        const data = {
+          entityNumber,
+          periodNumber,
+          entityId: selectedEntityId.id,
+          label,
+        };
+        this.props.toggleEditTimetableModal(data);
+      } else {
+        this.props.toggleEditTimetableModal();
+      }
+    };
+
     render() {
       const {
         timetables: {
-          entityType, entityId, timetable, loading, schoolTimetable, showPopup, errorMessage, success, filteredEntityIds,
+          // eslint-disable-next-line max-len
+          entityType, entityId, timetable, loading, schoolTimetable, showPopup, errorMessage, success, filteredEntityIds, showEditTimetableModal, selectedEntityId,
         },
       } = this.props;
       return (
@@ -196,9 +213,13 @@ class Timetable extends React.Component {
                     && (
                       <div>
                         {
-                          timetable && timetable.length > 0 && timetable.map((period) => (
+                          timetable && timetable.length > 0 && timetable.map((period, periodNumber) => (
                             <Grid container style={{ flexGrow: 1 }} spacing={0}>
-                              <TimetableRow row={period} />
+                              <TimetableRow
+                                row={period}
+                                periodNumber={periodNumber}
+                                toggleModal={this.toggleModal}
+                              />
                             </Grid>
                           ))
                         }
@@ -221,6 +242,15 @@ class Timetable extends React.Component {
           { loading === true && <Loader /> }
           {
             showPopup && <SimpleSnackbar onClose={this.onClose} message={errorMessage} success={success} />
+          }
+          {
+            showEditTimetableModal && (
+              <EditTimetableModal
+                showEditTimetableModal={showEditTimetableModal}
+                toggleModal={this.toggleModal}
+                selectedEntityId={selectedEntityId}
+              />
+            )
           }
 
         </div>
@@ -250,6 +280,7 @@ const mapDispatchToProps = {
   setEntityId,
   toggleErrorPopup,
   populateEntityIdDropdown,
+  toggleEditTimetableModal,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Timetable);

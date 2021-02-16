@@ -3,18 +3,30 @@ const { costFunction, findHardClashingPeriods, findSoftClashingPeriods } = requi
 const { createRandomTimeTables } = require('./createRandomTimeTables');
 
 // Receives two parents with the crossover point and mutation rate, returns the entire family.
-function crossTwoParents (parent1, parent2, crossoverPoint, numClasses, numPeriods, hardClashingPeriods, softClashingPeriods) {
+function crossTwoParents (parent1, parent2, crossoverPoint, numClasses, numPeriods, hardClashingPeriods, softClashingPeriods, stopCrossover) {
   const family = [];
-  const child1 = Array.from(Array(numPeriods), () => new Array(numClasses));
-  const child2 = Array.from(Array(numPeriods), () => new Array(numClasses));
-  for (i = 0; i < numPeriods; i++) {
-    for (j = 0; j < numClasses; j++) {
-      if (j < crossoverPoint || Math.floor(Math.random() * numClasses)) {
-        child1[i][j] = parent1[i][j];
-        child2[i][j] = parent2[i][j];
-      } else {
+  let child1, child2;
+  if (stopCrossover === true) {
+    child1 = Array.from(Array(numPeriods), () => new Array(numClasses));
+    child2 = Array.from(Array(numPeriods), () => new Array(numClasses));
+    for (i = 0; i < numPeriods; i++) {
+      for (j = 0; j < numClasses; j++) {
         child1[i][j] = parent2[i][j];
         child2[i][j] = parent1[i][j];
+      }
+    }
+  } else {
+    child1 = Array.from(Array(numPeriods), () => new Array(numClasses));
+    child2 = Array.from(Array(numPeriods), () => new Array(numClasses));
+    for (i = 0; i < numPeriods; i++) {
+      for (j = 0; j < numClasses; j++) {
+        if (j < crossoverPoint || Math.floor(Math.random() * numClasses)) {
+          child1[i][j] = parent1[i][j];
+          child2[i][j] = parent2[i][j];
+        } else {
+          child1[i][j] = parent2[i][j];
+          child2[i][j] = parent1[i][j];
+        }
       }
     }
   }
@@ -166,7 +178,8 @@ function addCostAndProbabilityOfSelectionToPopulation (population) {
 function generateTimetable (data, count) {
   console.log('-------------------------------------------------------------------------------');
   let population = createRandomTimeTables(data);
-  let leastSoftClashes = 10, bestFamilyMember, avg, maxHardClashes = 10, index = 2, crossoverPoint = null, costOfBestMemberInFamily = 10;
+  let stopCrossover = false;
+  let leastSoftClashes = 1, bestFamilyMember, avg, maxHardClashes = 1, index = 2, crossoverPoint = null, costOfBestMemberInFamily = 10;
   while ((costOfBestMemberInFamily > 0) && (index <= NUM_GENERATIONS) && (((leastSoftClashes > 0) || maxHardClashes > 0))) {
     //
     const tempGeneration = [];
@@ -175,13 +188,14 @@ function generateTimetable (data, count) {
     if (targetedMutationForHardClashes) {
       hardClashingPeriods = findHardClashingPeriods(population[0], data.teacherClashes);
     } else {
+      stopCrossover = true;
       softClashingPeriods = findSoftClashingPeriods(population[0]);
     }
     for (k = 0; k < population.length/2; k++) {
       const randomMember1 = population[Math.floor(Math.random() * population.length)];
       // Fixing crossover point for an entire generation.
       // crossoverPoint = Math.floor(Math.random() * data.numClasses);
-      const family = crossTwoParents(randomMember1, population[k], crossoverPoint, data.numClasses, data.numPeriods, hardClashingPeriods, softClashingPeriods);
+      const family = crossTwoParents(randomMember1, population[k], crossoverPoint, data.numClasses, data.numPeriods, hardClashingPeriods, softClashingPeriods, stopCrossover);
       tempGeneration.push(...family);
     }
     // teacherClashes is an array of which teacher is not available during which period based on other timetables.

@@ -4,7 +4,9 @@ const Classes = require('../models/Classes');
 
 const { addTeachersToClasses } = require('../utils/classes');
 const { createStepwiseTimetables } = require('../geneticAlgorithm/performStepwiseGA');
-const { removeBusinessLogic } = require('../geneticAlgorithm/cleanTimetable');
+// const { removeBusinessLogic } = require('../geneticAlgorithm/cleanTimetable');
+const { getSuggestionsForEntity } = require('../utils/timetable');
+const { main } = require('../targetedSearch');
 
 // Generates a new timetable 
 generateNewTimetable = async (req, res, next) => {
@@ -62,7 +64,7 @@ generateNewTimetable = async (req, res, next) => {
   // })
   res.send({
     success: true,
-    timetable: removeBusinessLogic(myData),
+    timetable: myData,
     message: 'Timetable Generated successfully',
   });
 }
@@ -106,8 +108,38 @@ fetchTimetable = (req, res, next) => {
     });
 }
 
+getSuggestions = async (req, res) => {
+  const url = new URL(`https://anyrandomwebsite.com/${req.originalUrl}`);
+  const email = url.searchParams.get('email');
+  const entityId = url.searchParams.get('entityId');
+  const entityToBeReplaced = url.searchParams.get('entityToBeReplaced');
+  const entityType = url.searchParams.get('entityType');
+  const period = url.searchParams.get('period');
+  
+  let timetable;
+  await Timetable.findOne({ userEmail: email })
+    .then((data) => {
+      timetable = data.timetable;
+    })
+    .catch(err => {
+      res.status(200).json({
+        success: false,
+        response: err,
+        message: 'Could not fetch data, please try again',
+      });
+    });
+  const newTimetable = getSuggestionsForEntity(entityId, entityToBeReplaced, timetable, entityType, period);
+  // const newTimetable = main(timetable);
+  return res.status(200).json({
+    success: true,
+    message: '',
+    timetable: newTimetable,
+  })
+}
+
 module.exports = {
   generateNewTimetable,
   saveTimetable,
   fetchTimetable,
+  getSuggestions,
 };

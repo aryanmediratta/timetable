@@ -9,7 +9,7 @@ const { secretToken } = require('../server/config');
 
 const emailRegexp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 
-const DEFAULT_LOGIN_DURATION = 7200;
+const DEFAULT_LOGIN_DURATION = 86400;
 
 signup = (req, res, next) => {
     let { name, email, password, passwordConfirmation, schoolName, numPeriods } = req.body;

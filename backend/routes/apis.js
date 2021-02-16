@@ -3,7 +3,7 @@ const router = express.Router();
 
 const { signup, signin } = require('../controllers/auth');
 const { addTeacher, fetchTeachers } = require('../controllers/teachers');
-const { generateNewTimetable, saveTimetable, fetchTimetable } = require('../controllers/timetables');
+const { generateNewTimetable, saveTimetable, fetchTimetable, getSuggestions } = require('../controllers/timetables');
 const { addClasses, getAllClasses, updateClasses } = require('../controllers/classes');
 
 // APIs related to Authentication.
@@ -23,5 +23,6 @@ router.put('/update_classes', updateClasses);
 router.get('/generate_timetable', generateNewTimetable);
 router.post('/save_timeable', saveTimetable)
 router.get('/get_saved_timetable', fetchTimetable);
+router.get('/get_suggestions', getSuggestions)
 
 module.exports = router;
