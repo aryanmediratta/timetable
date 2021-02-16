@@ -41,13 +41,13 @@ function costFunction (timetable, numPeriods, teacherClashes) {
           if (twoSimultaneousPeriods === true && found.length > 2) {
             const threeSimultaneousPeriods = found.some((cl) => cl.periodNumber === periodNumber - 2);
             threeSimultaneousPeriods === true ? softClashWeight+=15 : softClashWeight+=9;
-            numSoftClashes+=1;
+            numSoftClashes++;
           }
         }
       }
     });
     if (((periodNumber+1) % (numPeriods/5) === 0) && periodNumber !== 0) {
-      clashPerWeek = [];
+      // clashPerWeek = [];
       softClashList = [];
     }
   });
@@ -105,13 +105,11 @@ function findSoftClashingPeriods (timetable) {
   let clashPerWeek = [];
   timetable.forEach((period, periodNumber) => {
     period.forEach((tuple, elementID) => {
-      const { uniqueIndex, allowDoublePeriods, classId, className, teacherName } = tuple;
-      // clashPerWeek.push(uniqueIndex);
-      clashPerWeek.push({ el1: periodNumber, uniqueIndex, el2: elementID, classId, className, teacherName, allowDoublePeriods });
+      const { uniqueIndex, allowDoublePeriods, classId } = tuple;
+      clashPerWeek.push({ el1: periodNumber, el2: elementID, uniqueIndex, classId });
       const found = clashPerWeek.filter((cl) => cl.uniqueIndex === uniqueIndex);
       if (found && found.length > 1) {
         if (allowDoublePeriods === false) {
-          // console.log('is this being called', found);
           clashes.push(...found);
         } else {
           // Desirable condition -> double period.
@@ -119,13 +117,16 @@ function findSoftClashingPeriods (timetable) {
           twoSimultaneousPeriods === true ?
             null
             :
-            (found.length > 2 ? clashes.push(found[found.length - 1]) : clashes.push(...found));
-            // twoSimultaneousPeriods === true ? null : (found.length > 2 ? console.log('3rd period',found[found.length - 1]) : console.log('both',...found));
+            (
+              found.length > 2 ?
+              clashes.push(found[found.length - 1])
+              :
+              clashes.push(...found)
+            );
           // Non-Desirable condition -> triple period.
           if (twoSimultaneousPeriods === true && found.length > 2) {
             const threeSimultaneousPeriods = found.some((cl) => cl.el1 === periodNumber - 2);
             threeSimultaneousPeriods === true ? clashes.push(found[found.length - 1]) : null;
-            // threeSimultaneousPeriods === true ? console.log('KKEKW', found[found.length - 1]) : null;
           }
         }
       }
@@ -134,7 +135,6 @@ function findSoftClashingPeriods (timetable) {
       clashPerWeek = [];
     }
   });
-  // console.log('num clashes', clashes.length);
   return clashes;
 }
 
