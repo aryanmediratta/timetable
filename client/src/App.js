@@ -48,7 +48,7 @@ class App extends React.Component {
               <Route exact path="/signup" component={RegisterForm} />
               <PrivateRoute exact path="/classes" component={Classes} />
               <PrivateRoute exact path="/teachers" component={Teachers} />
-              <PrivateRoute exact path="/substitutionManager" component={SubstitutionManager} />
+              <PrivateRoute exact path="/substitutions" component={SubstitutionManager} />
             </Switch>
           </BrowserRouter>
         </Provider>

@@ -18,6 +18,7 @@ const modalBody = (teacherData) => {
   const dispatch = useDispatch();
   return (
     <div>
+      {console.log(teachers)}
       <CollapsibleSections title={teacherData.name || 'Teacher'} show>
         <div>
           <TextField

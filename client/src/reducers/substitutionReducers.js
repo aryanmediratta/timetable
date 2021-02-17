@@ -1,7 +1,8 @@
 import { SUB_TYPE } from '../actions/substitution.actions';
 
 const initialState = {
-  subDate: Date(),
+  date: new Date(),
+  absentList: [],
 };
 
 export default function substitutionReducer(state = initialState, action) {
@@ -9,7 +10,7 @@ export default function substitutionReducer(state = initialState, action) {
   case SUB_TYPE.SET_DATE:
     return {
       ...state,
-      subDate: action.payload,
+      date: action.payload,
     };
   default:
     return state;

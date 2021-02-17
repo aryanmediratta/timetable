@@ -4,7 +4,7 @@ import authReducer from './authReducers';
 import teacherReducer from './teacherReducers';
 import classesReducer from './classesReducers';
 import timetableReducer from './timetableReducers';
-import substitutionReducer from './substituionReducers';
+import substitutionReducer from './substitutionReducers';
 
 export default combineReducers({
   auth: authReducer,
