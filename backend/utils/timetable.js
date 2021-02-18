@@ -3,7 +3,7 @@ const { costFunction, findSoftClashingPeriods } = require('../geneticAlgorithm/c
 const NUM_STEPS = 3;
 
 function getSuggestionsForEntity(entityId, selectedEntityId, timetable, entityType, period) {
-  const tempTable = JSON.parse(JSON.stringify(timetable));
+  const tempTable = deepCopyTimetable(timetable);
   const [replacements, selectedElement] = getReplacementsForClass(entityId, selectedEntityId, timetable, entityType, period);
   console.log('repl', replacements.length);
   console.log('Broken', selectedElement);
@@ -39,7 +39,7 @@ function getSuggestionsForEntity(entityId, selectedEntityId, timetable, entityTy
 };
 
 function swapElementsInTimetable(timetable, selectedElement, replacement) {
-  let oof = JSON.parse(JSON.stringify(timetable));
+  let oof = deepCopyTimetable(timetable);
   const { periodNumber, tupleId } = selectedElement;
   const { periodNumber: replacementPeriodNumber, tupleId: replacementTupleId } = replacement;
   oof[periodNumber][tupleId] = replacement;
@@ -66,6 +66,22 @@ function getReplacementsForClass(entityId, selectedEntityId, timetable, entityTy
   return [possibleReplacements, selectedElement[0]];
 }
 
+function deepCopyTimetable (timetable) {
+  if (!timetable || timetable.length === 0) {
+    return [];
+  }
+  const numPeriods = timetable.length;
+  const numClasses = timetable[0].length;
+  let newTable = Array.from(Array(numPeriods), () => new Array(numClasses));
+  for (i = 0; i < numPeriods; i++) {
+    for (j = 0; j < numClasses; j++) {
+      newTable[i][j] = timetable[i][j];
+    }
+  }
+  return newTable;
+};
+
 module.exports = {
   getSuggestionsForEntity,
+  deepCopyTimetable,
 };

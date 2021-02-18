@@ -1,6 +1,6 @@
 const { NUM_CLASSES_CLUBBED_TOGETHER } = require('./constants');
 const { generateTimetable } = require('./performCrossover');
-const { modifyClassesData, addTeachersToClasses } = require('../utils/classes');
+const { modifyClassesData } = require('../utils/classes');
 const { costFunction, findClashes } = require('./calculateFitness');
 const { createTuples } = require('./createRandomTimetables');
 
@@ -91,22 +91,6 @@ function mergeTwoTimetables (finalArray, timetableOne, numPeriods) {
   return finalArray;
 }
 
-// If you have tuples, directly pass it to the function. Otherwise give all classes and teachers and it returns selectedTuples.
-function getAllTuplesForClass(classId, allTuples, allClasses, allTeachers) {
-  if (!allTuples || allTuples.length === 0) {
-    const classesList = addTeachersToClasses(allClasses, allTeachers);
-    allTuples = createTuples(classesList);
-  }
-  const selectedTuples = [];
-  allTuples.forEach((tuple) => {
-    if (tuple.classId === classId) {
-      selectedTuples.push(tuple);
-    }
-  });
-  return selectedTuples;
-}
-
 module.exports = {
   createStepwiseTimetables,
-  getAllTuplesForClass,
 };

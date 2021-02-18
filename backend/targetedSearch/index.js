@@ -1,10 +1,10 @@
-const { getAllTuplesForClass } = require('../geneticAlgorithm/performStepwiseGA');
 const { findSoftClashingPeriods, costFunction, findClashes } = require('../geneticAlgorithm/calculateFitness');
 const { MAXIMUM_POSSIBLE_VARIATIONS, NUM_STEPS } = require('./constants');
+const { deepCopyTimetable } = require('../utils/timetable');
 
 function main (timetable) {
   const numPeriodsPerWeek = timetable.length;
-  let index = 0
+  let index = 0;
   while (index < NUM_STEPS) {
     index++;
     const softClashes = findSoftClashingPeriods(timetable);
@@ -20,7 +20,7 @@ function main (timetable) {
         allTimetables = swapPeriods(timetable, el1, el2, selectedReplacementTuple, allTimetables)
         count++;
       }
-      timetable = JSON.parse(JSON.stringify(findBestTimetable(allTimetables, numPeriodsPerWeek)));
+      timetable = deepCopyTimetable(findBestTimetable(allTimetables, numPeriodsPerWeek));
     });
     // const clashes = findClashes(timetable);
     // console.log('Hard Teacher Clashes', clashes.filter((cl) => cl.type === 'teacher').length);
@@ -32,13 +32,13 @@ function main (timetable) {
 }
 
 function swapPeriods (timetable, el1, el2, selectedReplacementTuple, allTimetables) {
-  let newTimetable = JSON.parse(JSON.stringify(timetable));
+  let newTimetable = deepCopyTimetable(timetable);
   let { rl1, rl2 } = selectedReplacementTuple;
   newTimetable[el1][el2] = selectedReplacementTuple;
   newTimetable[rl1][rl2] = timetable[el1][el2];
   allTimetables.push(newTimetable);
   return allTimetables
-}
+};
 
 function findBestTimetable (generation, numPeriodsPerWeek) {
   const tempGeneration = [];
@@ -59,7 +59,7 @@ function findBestTimetable (generation, numPeriodsPerWeek) {
   const bestFamilyMember = tempGeneration[0].parent;
   console.log('COST FOR BEST', costOfBestMemberInFamily, 'hard clashes', leastHardClashes, 'soft clashes', leastSoftClashes);
   return bestFamilyMember;
-}
+};
 
 function getPeriodsForClass (timetable, selectedClassId) {
   let classes = [];
@@ -70,12 +70,13 @@ function getPeriodsForClass (timetable, selectedClassId) {
     });
   });
   return classes;
-}
+};
 
 function getRandomNumber(min, max) {
   return Math.random() * (max - min) + min;
-}
+};
 
 module.exports = {
   main,
+  getRandomNumber,
 };
