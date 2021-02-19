@@ -12,6 +12,11 @@ export default function substitutionReducer(state = initialState, action) {
       ...state,
       date: action.payload,
     };
+  case SUB_TYPE.SET_ABSENT_LIST:
+    return {
+      ...state,
+      absentList: action.payload,
+    };
   default:
     return state;
   }

@@ -1,19 +1,21 @@
 const Substitution = require('../models/Substitutions');
 
-substitutions = (req, res, next) => {
-    let { date, email } = req.body;
+createNewSubstitution = (req, res, next) => {
+    const { date, email, absentList } = req.body;
     const subChart = new Substitution({
         subDate: date,
-        userEmail: email
+        userEmail: email,
+        absentTeachers: absentList,
     });
     subChart.save()
-    .then((res) => {
+    .then(response => {
         res.status(200).json({
             success: true,
             message: 'Data Saved',
         });
     })
-    .catch((res) => {
+    .catch((err) => {
+        console.log(err)
         res.status(200).json({
             success: false,
             message: 'Data is Fraud, You fraud'
@@ -22,5 +24,5 @@ substitutions = (req, res, next) => {
 }
 
 module.exports = {
-    substitutions,
-} 
+    createNewSubstitution,
+}

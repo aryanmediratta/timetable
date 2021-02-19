@@ -2,15 +2,19 @@ import { SUB_TYPE } from './substitution.actions';
 
 import { post } from '../utils';
 
-const setSubDate = (data) => (dispatch) => {
-  post('/api/substitution/', data)
+export const createNewSub = (data) => (dispatch) => {
+  post('/api/create_new_substitution/', data)
     .then((res) => res.json())
     .then((res) => {
-      dispatch({
-        type: SUB_TYPE.SET_DATE,
-        payload: res.data,
-      });
+      console.log(res);
     });
 };
 
-export default setSubDate;
+export const setSubDate = (date) => (dispatch) => {
+  dispatch({
+    type: SUB_TYPE.SET_DATE,
+    payload: date,
+  });
+};
+
+// export default createNewSub;

@@ -2,12 +2,12 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import DatePicker from 'react-datepicker';
 import { Button } from '@material-ui/core';
-// import Dropdown from '../common/Dropdown';
+import Dropdown from '../common/Dropdown';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
 import { SUB_TYPE } from '../../actions/substitution.actions';
-import setSubDate from '../../actions/substitutionActions';
+import { createNewSub, setSubDate } from '../../actions/substitutionActions';
 import { getAllTeachers } from '../../actions/teacherActions';
 
 const SubstitutionManager = () => {
@@ -18,39 +18,40 @@ const SubstitutionManager = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAllTeachers)
+    dispatch(getAllTeachers(email));
   }, []);
 
   const teachers = useSelector((state) => state.teachers);
-  // const { teachersList } = teachers;
+  const { teachersList } = teachers;
 
   const handleClick = (e) => {
     const data = {
       date,
       email,
+      absentList: substitution.absentList,
     };
-    dispatch(setSubDate(data));
+    dispatch(createNewSub(data));
   };
 
   return (
     <div>
-      {console.log(teachers)}
       <div>
         <h1>Bello</h1>
         <DatePicker
           selected={date}
-          onChange={(e) => dispatch({ type: SUB_TYPE.SET_DATE, payload: e })}
+          onChange={(e) => dispatch(setSubDate(e))}
         />
         <br />
         <br />
-        {/* <Dropdown
+        <Dropdown
           className="absent-teachers-dropdown"
           isMulti
           isSearchable
           showAnimations
           options={teachersList && teachersList.length > 0
           && teachersList.map((teacher) => ({ value: teacher._id, label: teacher.teacherName }))}
-          value={substitution.absentList}
+          value={substitution.absentList && substitution.absentList.length > 0
+          && substitution.absentList.map((teacher) => ({ value: teacher._id, label: teacher.teacherName }))}
           onChange={(_option, action) => {
             let selectedOption = {};
             if (action.action === 'select-option') {
@@ -61,10 +62,11 @@ const SubstitutionManager = () => {
               absentList = absentList.concat(selectedOption);
               substitution.absentList = absentList;
             } else if (action.action === 'remove-value') {
-              substitution.absentList = substitution.absentList.filter((item) => item_id !== action.removedValue.value);
+              substitution.absentList = substitution.absentList.filter((item) => item._id !== action.removedValue.value);
             }
+            dispatch({ type: SUB_TYPE.SET_ABSENT_LIST, payload: substitution.absentList });
           }}
-        /> */}
+        />
         <br />
         <br />
         <Button
