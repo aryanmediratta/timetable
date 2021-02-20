@@ -5,7 +5,7 @@ const { signup, signin } = require('../controllers/auth');
 const { addTeacher, fetchTeachers } = require('../controllers/teachers');
 const { generateNewTimetable, saveTimetable, fetchTimetable, getSuggestions } = require('../controllers/timetables');
 const { addClasses, getAllClasses, updateClasses } = require('../controllers/classes');
-const { createNewSubstitution } = require('../controllers/substitutions');
+const { createNewSubstitution, fetchSubstitution } = require('../controllers/substitutions');
 
 // APIs related to Authentication.
 router.post('/signup', signup);
@@ -22,11 +22,12 @@ router.put('/update_classes', updateClasses);
 
 // APIs related to Timetables.
 router.get('/generate_timetable', generateNewTimetable);
-router.post('/save_timeable', saveTimetable)
+router.post('/save_timeable', saveTimetable);
 router.get('/get_saved_timetable', fetchTimetable);
-router.get('/get_suggestions', getSuggestions)
+router.get('/get_suggestions', getSuggestions);
 
 //APIs related to Substitution
 router.post('/create_new_substitution', createNewSubstitution);
+router.get('/get_substitutions', fetchSubstitution);
 
 module.exports = router;

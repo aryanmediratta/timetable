@@ -7,7 +7,8 @@ import Dropdown from '../common/Dropdown';
 import 'react-datepicker/dist/react-datepicker.css';
 
 import { SUB_TYPE } from '../../actions/substitution.actions';
-import { createNewSub, setSubDate } from '../../actions/substitutionActions';
+import { formatDate } from '../utils';
+import { createNewSub, setSubDate, getSubstitutions } from '../../actions/substitutionActions';
 import { getAllTeachers } from '../../actions/teacherActions';
 
 const SubstitutionManager = () => {
@@ -15,6 +16,7 @@ const SubstitutionManager = () => {
   const auth = useSelector((state) => state.auth);
   const { user: { email } } = auth;
   const { date } = substitution;
+  // const setDate = formatDate(date);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -26,7 +28,7 @@ const SubstitutionManager = () => {
 
   const handleClick = (e) => {
     const data = {
-      date,
+      date: formatDate(date),
       email,
       absentList: substitution.absentList,
     };
@@ -39,7 +41,11 @@ const SubstitutionManager = () => {
         <h1>Bello</h1>
         <DatePicker
           selected={date}
-          onChange={(e) => dispatch(setSubDate(e))}
+          onChange={(e) => {
+            dispatch(setSubDate(e));
+            dispatch(getSubstitutions(email, formatDate(e)));
+            // console.log(substitution.absentList);
+          }}
         />
         <br />
         <br />

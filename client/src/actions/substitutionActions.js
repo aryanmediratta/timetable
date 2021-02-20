@@ -1,6 +1,6 @@
 import { SUB_TYPE } from './substitution.actions';
 
-import { post } from '../utils';
+import { get, post, constructURL } from '../utils';
 
 export const createNewSub = (data) => (dispatch) => {
   post('/api/create_new_substitution/', data)
@@ -17,4 +17,14 @@ export const setSubDate = (date) => (dispatch) => {
   });
 };
 
-// export default createNewSub;
+export const getSubstitutions = (email, date) => (dispatch) => {
+  const URL = constructURL('/api/get_substitutions', { email, date });
+  get(URL)
+    .then((res) => {
+      console.log(res.absentList);
+      dispatch({
+        type: SUB_TYPE.SET_ABSENT_LIST,
+        payload: res.absentList,
+      });
+    })
+}
