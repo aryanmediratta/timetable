@@ -15,6 +15,7 @@ import RegisterForm from './components/pages/RegisterForm';
 import Header from './components/common/Header';
 import Teachers from './components/pages/Teachers';
 import Classes from './components/pages/Classes';
+import SubstitutionManager from './components/pages/SubstitutionManager';
 
 // Check for token to keep user logged in
 
@@ -47,6 +48,7 @@ class App extends React.Component {
               <Route exact path="/signup" component={RegisterForm} />
               <PrivateRoute exact path="/classes" component={Classes} />
               <PrivateRoute exact path="/teachers" component={Teachers} />
+              <PrivateRoute exact path="/substitutions" component={SubstitutionManager} />
             </Switch>
           </BrowserRouter>
         </Provider>

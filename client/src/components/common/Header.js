@@ -67,6 +67,7 @@ export default function ButtonAppBar() {
           { link: '/teachers', text: 'Teachers', icon: GroupIcon },
           { link: '/classes', text: 'Classes', icon: ListIcon },
           { link: '/', text: 'Timetable', icon: WatchLaterIcon },
+          { link: '/substitutions', text: 'Substitutions', icon: WatchLaterIcon },
         ].map((obj, index) => {
           const Icon = obj.icon;
           return (

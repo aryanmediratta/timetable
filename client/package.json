@@ -22,6 +22,7 @@
     "optimize-css-assets-webpack-plugin": "^5.0.0",
     "prop-types": "^15.6.2",
     "react": "^16.4.1",
+    "react-datepicker": "^3.4.1",
     "react-dom": "^16.4.1",
     "react-redux": "^7.2.2",
     "react-router-dom": "^5.2.0",
@@ -29,8 +30,8 @@
     "react-table": "^6.8.6",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
-    "webpack-manifest-plugin": "^2.0.3",
     "webpack-bundle-analyzer": "^2.13.1",
+    "webpack-manifest-plugin": "^2.0.3",
     "webpack-merge": "^4.1.3"
   },
   "devDependencies": {
