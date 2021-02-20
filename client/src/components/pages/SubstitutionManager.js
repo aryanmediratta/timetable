@@ -51,7 +51,7 @@ const SubstitutionManager = () => {
           options={teachersList && teachersList.length > 0
           && teachersList.map((teacher) => ({ value: teacher._id, label: teacher.teacherName }))}
           value={substitution.absentList && substitution.absentList.length > 0
-          && substitution.absentList.map((teacher) => ({ value: teacher._id, label: teacher.teacherName }))}
+          && substitution.absentList.map((teacher) => ({ value: teacher._id, label: teacher.label }))}
           onChange={(_option, action) => {
             let selectedOption = {};
             if (action.action === 'select-option') {
