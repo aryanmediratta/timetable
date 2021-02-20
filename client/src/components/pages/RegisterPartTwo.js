@@ -4,9 +4,8 @@ import { Button, TextField } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import SimpleSnackbar from '../utils/Popup';
 import {
-  registerUser, toggleErrorPopup, toggleRegisterForm, setRegisterField,
+  registerUser, toggleRegisterForm, setRegisterField,
 } from '../../actions/authActions';
 
 require('../../styles/Login.scss');
@@ -19,10 +18,6 @@ class RegisterPartTwo extends React.Component {
       this.props.history.push('/home');
     }
   }
-
-  onClose = () => {
-    this.props.toggleErrorPopup(null);
-  };
 
   handleSubmit = (e) => {
     e.preventDefault();
@@ -56,7 +51,6 @@ class RegisterPartTwo extends React.Component {
         registerInfo: {
           name, email, password, passwordConfirmation,
         },
-        errorMessage, showPopup, success,
       },
     } = this.props;
     let { auth: { registerInfo } } = this.props;
@@ -140,10 +134,6 @@ class RegisterPartTwo extends React.Component {
             </div>
           </div>
         </form>
-        {
-          showPopup
-          && <SimpleSnackbar onClose={this.onClose} message={errorMessage} success={success} />
-        }
       </div>
     );
   }
@@ -161,7 +151,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   registerUser,
-  toggleErrorPopup,
   toggleRegisterForm,
   setRegisterField,
 };

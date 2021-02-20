@@ -4,6 +4,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
   AppBar, Toolbar, Typography, IconButton, Button, Menu, MenuItem, List, ListItem, ListItemText, SwipeableDrawer, ListItemIcon,
 } from '@material-ui/core';
+
+import AssessmentIcon from '@material-ui/icons/Assessment';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import GroupIcon from '@material-ui/icons/Group';
@@ -67,7 +69,7 @@ export default function ButtonAppBar() {
           { link: '/teachers', text: 'Teachers', icon: GroupIcon },
           { link: '/classes', text: 'Classes', icon: ListIcon },
           { link: '/', text: 'Timetable', icon: WatchLaterIcon },
-          { link: '/substitutions', text: 'Substitutions', icon: WatchLaterIcon },
+          { link: '/substitutions', text: 'Substitutions', icon: AssessmentIcon },
         ].map((obj, index) => {
           const Icon = obj.icon;
           return (

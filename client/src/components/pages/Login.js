@@ -3,8 +3,7 @@ import { Button, TextField } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { loginUser, toggleErrorPopup, setLoginField } from '../../actions/authActions';
-import SimpleSnackbar from '../utils/Popup';
+import { loginUser, setLoginField } from '../../actions/authActions';
 
 require('../../styles/Login.scss');
 
@@ -24,10 +23,6 @@ class Login extends React.Component {
     }
   }
 
-    onClose = () => {
-      this.props.toggleErrorPopup(null);
-    };
-
     handleSubmit = async (e) => {
       e.preventDefault();
       const { auth: { loginInfo: { email, password } } } = this.props;
@@ -39,7 +34,6 @@ class Login extends React.Component {
     };
 
     render() {
-      const { auth: { errorMessage, showPopup, success } } = this.props;
       let { auth: { loginInfo } } = this.props;
       return (
         <div className="container">
@@ -87,9 +81,6 @@ class Login extends React.Component {
               </div>
             </div>
           </form>
-          {
-            showPopup && <SimpleSnackbar onClose={this.onClose} message={errorMessage} success={success} />
-          }
         </div>
       );
     }
@@ -106,7 +97,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   loginUser,
-  toggleErrorPopup,
   setLoginField,
 };
 

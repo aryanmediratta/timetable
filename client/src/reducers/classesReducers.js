@@ -1,4 +1,4 @@
-import { CLASSES_TYPE } from '../actions/classes.actions';
+import { CLASSES_TYPE } from '../actions/classes.types';
 
 const initialState = {
   classesList: [],

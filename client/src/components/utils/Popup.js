@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Snackbar, IconButton } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import { makeStyles } from '@material-ui/core/styles';
+import { useSelector, useDispatch } from 'react-redux';
+import { closeErrorsPopup } from '../../actions/errorActions';
 
 const useStyles = makeStyles({
   red: {
@@ -12,50 +14,43 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Popup(props) {
-  const [open, setOpen] = useState(false);
+export default function Popup() {
+  const errors = useSelector((state) => state.errors);
+  const dispatch = useDispatch();
+  const { errorMessage, showPopup, success } = errors;
   const classes = useStyles();
-
-  useEffect(() => {
-    setOpen(true);
-  }, []);
-
-  const handleClose = (_event, reason) => {
+  const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
-    setOpen(false);
-    props.onClose();
+    dispatch(closeErrorsPopup());
   };
-
-  useEffect(() => () => {
-    handleClose();
-  }, []);
-
   return (
     <div>
-      <Snackbar
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center',
-        }}
-        ContentProps={{
-          classes: {
-            root: props.success === true ? classes.green : classes.red,
-          },
-        }}
-        open={open}
-        autoHideDuration={props.duration || 3000}
-        onClose={handleClose}
-        message={props.message || 'Action Completed.'}
-        action={(
-          <div>
-            <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
-              <CloseIcon fontSize="small" />
-            </IconButton>
-          </div>
-        )}
-      />
+      {showPopup && (
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+          ContentProps={{
+            classes: {
+              root: success === true ? classes.green : classes.red,
+            },
+          }}
+          open={showPopup}
+          autoHideDuration={3000}
+          onClose={handleClose}
+          message={errorMessage}
+          action={(
+            <div>
+              <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            </div>
+          )}
+        />
+      )}
     </div>
   );
 }

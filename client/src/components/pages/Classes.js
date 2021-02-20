@@ -4,10 +4,9 @@ import { connect } from 'react-redux';
 
 import Dropdown from '../common/Dropdown';
 import FullWidthGrid from '../common/TwoComponentGridSystem';
-import SimpleSnackbar from '../utils/Popup';
 
 import {
-  addNewClasses, getAllClasses, updateClasses, setClassesData, toggleErrorPopup,
+  addNewClasses, getAllClasses, updateClasses, setClassesData,
 } from '../../actions/classesActions';
 import { getAllTeachers } from '../../actions/teacherActions';
 
@@ -77,14 +76,10 @@ class Classes extends React.Component {
     this.props.setClassesData(classesForDropdown);
   }
 
-  onClose = () => {
-    this.props.toggleErrorPopup(null);
-  }
-
   render() {
     const {
       classes: {
-        classesForDropdown, updateData, showPopup, errorMessage, success,
+        classesForDropdown, updateData,
       },
     } = this.props;
 
@@ -164,9 +159,6 @@ class Classes extends React.Component {
               )
           }
         </div>
-        {
-          showPopup && <SimpleSnackbar onClose={this.onClose} message={errorMessage} success={success} />
-        }
       </div>
     );
   }
@@ -184,7 +176,6 @@ const mapDispatchToProps = {
   getAllClasses,
   updateClasses,
   setClassesData,
-  toggleErrorPopup,
   getAllTeachers,
 };
 

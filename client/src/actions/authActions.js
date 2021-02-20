@@ -2,18 +2,12 @@
 /* eslint-disable no-undef */
 import jwt_decode from 'jwt-decode';
 
-import { AUTH_TYPES } from './auth.actions';
-import { TEACHER_TYPES } from './teacher.actions';
-import { CLASSES_TYPE } from './classes.actions';
-import { TIMETABLE_TYPES } from './timetable.actions';
+import { AUTH_TYPES } from './auth.types';
+import { TEACHER_TYPES } from './teacher.types';
+import { CLASSES_TYPE } from './classes.types';
+import { TIMETABLE_TYPES } from './timetable.types';
 import { post } from '../utils';
-
-// Toggle Error Popup
-export const toggleErrorPopup = (message) => ({
-  type: AUTH_TYPES.TOGGLE_AUTH_POPUP,
-  payload: message,
-  success: false,
-});
+import { openErrorsPopup } from './errorActions';
 
 // Setting Login Fields
 export const setLoginField = (data) => ({
@@ -81,18 +75,13 @@ export const registerUser = (userData) => (dispatch) => {
       if (res.success === true) {
         const { token } = res;
         // Set token to Auth header
-        // setAuthToken(token);
         localStorage.setItem('jwtToken', token);
         // Decode token to get user data
         const decoded = jwt_decode(token);
         // Set current user
         dispatch(setCurrentUser(decoded));
       } else {
-        dispatch({
-          type: AUTH_TYPES.TOGGLE_AUTH_POPUP,
-          payload: res.message,
-          success: false,
-        });
+        dispatch(openErrorsPopup(res));
       }
     });
 };
@@ -102,30 +91,19 @@ export const loginUser = (userData) => async (dispatch) => {
   const req = await post('/api/signin', userData);
   const statusCode = req.status;
   const res = await req.json();
-  if (statusCode !== 200) {
-    dispatch({
-      type: AUTH_TYPES.TOGGLE_AUTH_POPUP,
-      payload: res.errors,
-    });
-  } else if (statusCode === 200) {
+  if (statusCode === 200) {
     if (res.success === true) {
       const { token } = res;
       // Set token to Auth header
-      // setAuthToken(token);
       localStorage.setItem('jwtToken', token);
       // Decode token to get user data
       const decoded = jwt_decode(token);
       // Set current user
-      // eslint-disable-next-line no-use-before-define
       dispatch(setCurrentUser(decoded));
       dispatch(setSchoolName(res.user.schoolName));
       dispatch(setUserName(res.userName));
     } else {
-      dispatch({
-        type: AUTH_TYPES.TOGGLE_AUTH_POPUP,
-        payload: res.message,
-        success: false,
-      });
+      dispatch(openErrorsPopup(res));
     }
   }
 };
