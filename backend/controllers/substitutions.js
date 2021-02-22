@@ -12,7 +12,7 @@ createNewSubstitution = (req, res, next) => {
         absentTeachers: absentList,
     };
     if (_id) {
-      Substitution.findOneAndReplace({ userEmail: email, subDate: date }, replacement, { returnNewDocument: true })
+      Substitution.findOneAndReplace({ userEmail: email, _id: _id }, replacement, { returnNewDocument: true })
         .then(response => {
           res.status(200).json({
             _id: response._id,
@@ -64,6 +64,7 @@ fetchSubstitution = (req, res, next) => {
     })
     .catch(err => {
       res.status(200).json({
+        success: false,
         absentList: [],
         message: 'Empty List Received',
       });

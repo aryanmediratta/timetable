@@ -15,12 +15,12 @@ const SubstitutionManager = () => {
   const substitution = useSelector((state) => state.substitution);
   const auth = useSelector((state) => state.auth);
   const { user: { email } } = auth;
-  const { date } = substitution;
-  // const setDate = formatDate(date);
+  const { date, _id } = substitution;
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getAllTeachers(email));
+    dispatch(getSubstitutions(email, formatDate(date)));
   }, []);
 
   const teachers = useSelector((state) => state.teachers);
@@ -28,11 +28,16 @@ const SubstitutionManager = () => {
 
   const handleClick = (e) => {
     const data = {
+      _id,
       date: formatDate(date),
       email,
       absentList: substitution.absentList,
     };
     dispatch(createNewSub(data));
+  };
+
+  const generateSub = (e) => {
+
   };
 
   return (
@@ -82,6 +87,16 @@ const SubstitutionManager = () => {
           onClick={handleClick}
         >
           Save Date
+        </Button>
+        <br />
+        <br />
+        <Button
+          color="primary"
+          variant="contained"
+          type="submit"
+          onClick={generateSub}
+        >
+          Generate Sub Chart
         </Button>
       </div>
     </div>
