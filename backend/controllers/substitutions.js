@@ -5,6 +5,7 @@ const { generateSubstitutions } = require('../utils/substitutions');
 createNewSubstitution = (req, res, next) => {
     const { date, email, absentList, _id } = req.body;
     // console.log(generateSubstitutions(date));
+    console.log(_id);
     const replacement = {
         _id: _id,
         subDate: date,
@@ -22,6 +23,7 @@ createNewSubstitution = (req, res, next) => {
         })
         .catch(err => {
           res.status(200).json({
+            _id: '',
             success: false,
             message: 'No Updates Made',
           })
@@ -42,6 +44,7 @@ createNewSubstitution = (req, res, next) => {
       })
       .catch((err) => {
           res.status(200).json({
+              _id: '', 
               success: false,
               message: 'Data is Fraud, You fraud'
           });
@@ -60,12 +63,14 @@ fetchSubstitution = (req, res, next) => {
         success: true,
         absentList: absentTeachers,
         _id: _id,
+        message: 'Absent List Received',
       });
     })
     .catch(err => {
       res.status(200).json({
         success: false,
         absentList: [],
+        _id: '',
         message: 'Empty List Received',
       });
     });

@@ -29,6 +29,7 @@ export const getSubstitutions = (email, date) => (dispatch) => {
     payload: null,
   });
   get(URL)
+    .then((res) => res.json())
     .then((res) => {
       dispatch({
         type: SUB_TYPE.SET_ABSENT_LIST,
