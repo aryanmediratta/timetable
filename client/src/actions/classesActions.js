@@ -1,22 +1,24 @@
-import { CLASSES_TYPE } from './classes.actions';
+import { CLASSES_TYPE } from './classes.types';
 
 import {
   post, get, constructURL, put,
 } from '../utils';
+import { logoutUser } from './authActions';
+import { openErrorsPopup } from './errorActions';
 
 export const setClassesData = (classesForDropdown) => ({
   type: CLASSES_TYPE.SET_FIELD_DATA_FOR_CLASS,
   payload: classesForDropdown,
 });
 
-export const toggleErrorPopup = (message) => ({
-  type: CLASSES_TYPE.TOGGLE_CLASS_POPUP,
-  payload: message,
-});
-
 export const addNewClasses = (classesData) => (dispatch) => {
   post('/api/add_new_class', classesData)
-    .then((res) => res.json())
+    .then((response) => {
+      if (response.status === 401) {
+        dispatch(logoutUser());
+      }
+      return response.json();
+    })
     .then((res) => {
       if (res.success === true) {
         dispatch({
@@ -24,11 +26,7 @@ export const addNewClasses = (classesData) => (dispatch) => {
           payload: res.classes,
         });
       } else {
-        dispatch({
-          type: CLASSES_TYPE.TOGGLE_CLASS_POPUP,
-          payload: res.message,
-          success: false,
-        });
+        dispatch(openErrorsPopup(res));
       }
     })
     .catch(() => null);
@@ -37,6 +35,12 @@ export const addNewClasses = (classesData) => (dispatch) => {
 export const getAllClasses = (email) => (dispatch) => {
   const URL = constructURL('/api/get_all_classes', { email });
   get(URL)
+    .then((response) => {
+      if (response.status === 401) {
+        dispatch(logoutUser());
+      }
+      return response.json();
+    })
     .then((res) => {
       dispatch({
         type: CLASSES_TYPE.SET_ALL_CLASSES,
@@ -51,7 +55,12 @@ export const getAllClasses = (email) => (dispatch) => {
 
 export const updateClasses = (classesData) => (dispatch) => {
   put('/api/update_classes', classesData)
-    .then((res) => res.json())
+    .then((response) => {
+      if (response.status === 401) {
+        dispatch(logoutUser());
+      }
+      return response.json();
+    })
     .then((res) => {
       if (res.success === true) {
         dispatch({
@@ -63,11 +72,7 @@ export const updateClasses = (classesData) => (dispatch) => {
           payload: res.numSectionsPerClass,
         });
       } else {
-        dispatch({
-          type: CLASSES_TYPE.TOGGLE_CLASS_POPUP,
-          payload: res.message,
-          success: false,
-        });
+        dispatch(openErrorsPopup(res));
       }
     })
     .catch(() => null);

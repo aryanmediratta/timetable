@@ -6,10 +6,9 @@ import { connect } from 'react-redux';
 import Table from '../common/Table';
 import FullWidthGrid from '../common/TwoComponentGridSystem';
 import ModifyTeacherModal from '../partials/ModifyTeacherModal';
-import SimpleSnackbar from '../utils/Popup';
 
 import {
-  getAllTeachers, toggleErrorPopup, toggleTeacherModal,
+  getAllTeachers, toggleTeacherModal,
 } from '../../actions/teacherActions';
 import { getAllClasses } from '../../actions/classesActions';
 
@@ -50,7 +49,7 @@ class Teachers extends React.Component {
   render() {
     const {
       teachers: {
-        showModal, newTeacher, errorMessage, showPopup, success, allTeachersForTable,
+        showModal, newTeacher, allTeachersForTable,
       },
     } = this.props;
 
@@ -108,9 +107,6 @@ class Teachers extends React.Component {
           + Add Teacher
         </Button>
         <br />
-        {
-          showPopup && <SimpleSnackbar onClose={this.onClose} message={errorMessage} success={success} />
-        }
       </div>
     );
   }
@@ -129,7 +125,6 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   getAllTeachers,
   getAllClasses,
-  toggleErrorPopup,
   toggleTeacherModal,
 };
 

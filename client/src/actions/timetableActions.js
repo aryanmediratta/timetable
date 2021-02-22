@@ -1,6 +1,8 @@
 import { get, constructURL, post } from '../utils';
-import { TIMETABLE_TYPES } from './timetable.actions';
+import { TIMETABLE_TYPES } from './timetable.types';
 import { getSpecificTimetable } from '../components/utils';
+import { logoutUser } from './authActions';
+import { openErrorsPopup } from './errorActions';
 
 // Set Num Periods
 export const setNumPeriods = (num) => ({
@@ -26,12 +28,6 @@ export const setEntityId = (option) => ({
   payload: option,
 });
 
-// Set/Unset Errors
-export const toggleErrorPopup = (message) => ({
-  type: TIMETABLE_TYPES.TOGGLE_TIMETABLE_POPUP,
-  payload: message,
-});
-
 // Toggle Edit timetable modal
 export const toggleEditTimetableModal = (data) => (dispatch) => {
   dispatch({
@@ -53,6 +49,12 @@ export const getSuggestionsForTimetable = (data) => (dispatch) => {
     email, entityId, entityToBeReplaced, period, entityType,
   });
   get(URL)
+    .then((response) => {
+      if (response.status === 401) {
+        dispatch(logoutUser());
+      }
+      return response.json();
+    })
     .then((res) => {
       if (res.success === true) {
         // console.log('res', res);
@@ -66,11 +68,7 @@ export const getSuggestionsForTimetable = (data) => (dispatch) => {
           payload: timetable,
         });
       } else {
-        dispatch({
-          type: TIMETABLE_TYPES.TOGGLE_TIMETABLE_POPUP,
-          payload: res.message,
-          success: res.success,
-        });
+        dispatch(openErrorsPopup(res));
       }
     });
 };
@@ -101,6 +99,12 @@ export const generateNewTimetable = (timetableData) => (dispatch) => {
     payload: true,
   });
   get(URL)
+    .then((response) => {
+      if (response.status === 401) {
+        dispatch(logoutUser());
+      }
+      return response.json();
+    })
     .then((res) => {
       if (res.success === true) {
         dispatch({
@@ -113,11 +117,7 @@ export const generateNewTimetable = (timetableData) => (dispatch) => {
           payload: timetable,
         });
       } else {
-        dispatch({
-          type: TIMETABLE_TYPES.TOGGLE_TIMETABLE_POPUP,
-          payload: res.message,
-          success: res.success,
-        });
+        dispatch(openErrorsPopup(res));
       }
     })
     .finally(() => dispatch({
@@ -128,20 +128,14 @@ export const generateNewTimetable = (timetableData) => (dispatch) => {
 
 export const saveTimetable = (timetableData) => (dispatch) => {
   post('/api/save_timeable', timetableData)
-    .then((res) => res.json())
-    .then((res) => {
-      if (res.success === true) {
-        dispatch({
-          type: TIMETABLE_TYPES.TOGGLE_TIMETABLE_POPUP,
-          payload: res.message,
-          success: res.success,
-        });
-      } else {
-        dispatch({
-          type: TIMETABLE_TYPES.TOGGLE_TIMETABLE_POPUP,
-          payload: res.message,
-        });
+    .then((response) => {
+      if (response.status === 401) {
+        dispatch(logoutUser());
       }
+      return response.json();
+    })
+    .then((res) => {
+      dispatch(openErrorsPopup(res));
     })
     .catch(() => null);
 };
@@ -149,6 +143,12 @@ export const saveTimetable = (timetableData) => (dispatch) => {
 export const getTimetable = (email) => (dispatch) => {
   const URL = constructURL('/api/get_saved_timetable', { email });
   get(URL)
+    .then((response) => {
+      if (response.status === 401) {
+        dispatch(logoutUser());
+      }
+      return response.json();
+    })
     .then((res) => {
       if (res.success === true) {
         dispatch({

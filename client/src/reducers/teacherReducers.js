@@ -1,4 +1,4 @@
-import { TEACHER_TYPES } from '../actions/teacher.actions';
+import { TEACHER_TYPES } from '../actions/teacher.types';
 
 const initialState = {
   teachersList: [],

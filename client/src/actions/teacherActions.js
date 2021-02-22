@@ -1,14 +1,9 @@
 import { post, get, constructURL } from '../utils';
-import { TEACHER_TYPES } from './teacher.actions';
+import { TEACHER_TYPES } from './teacher.types';
+import { logoutUser } from './authActions';
+import { openErrorsPopup } from './errorActions';
 
-// Toggle Error Popup
-export const toggleErrorPopup = (message) => ({
-  type: TEACHER_TYPES.TOGGLE_TEACHER_POPUP,
-  payload: message,
-  success: false,
-});
-
-// Toggle Error Popup
+// Toggle Teacher Modal
 export const toggleTeacherModal = (payload) => ({
   type: TEACHER_TYPES.TOGGLE_TEACHER_MODAL,
   payload,
@@ -41,7 +36,12 @@ export const setTableData = (teachersList) => (dispatch) => {
 
 export const addNewTeacher = (userData, teachersList) => (dispatch) => {
   post('/api/add_teacher', userData)
-    .then((res) => res.json())
+    .then((response) => {
+      if (response.status === 401) {
+        dispatch(logoutUser());
+      }
+      return response.json();
+    })
     .then((res) => {
       if (res.success === true) {
         // Successfully updated teacher.
@@ -72,18 +72,10 @@ export const addNewTeacher = (userData, teachersList) => (dispatch) => {
           type: TEACHER_TYPES.TOGGLE_TEACHER_MODAL,
           payload: {},
         });
-        dispatch({
-          type: TEACHER_TYPES.TOGGLE_TEACHER_POPUP,
-          payload: res.message,
-          success: res.success,
-        });
+        dispatch(openErrorsPopup(res));
       // Failed to perform Action
       } else {
-        dispatch({
-          type: TEACHER_TYPES.TOGGLE_TEACHER_POPUP,
-          payload: res.message,
-          success: res.success,
-        });
+        dispatch(openErrorsPopup(res));
       }
     })
     .catch(() => null);
@@ -92,6 +84,12 @@ export const addNewTeacher = (userData, teachersList) => (dispatch) => {
 export const getAllTeachers = (email) => (dispatch) => {
   const URL = constructURL('/api/get_all_teachers', { email });
   get(URL)
+    .then((response) => {
+      if (response.status === 401) {
+        dispatch(logoutUser());
+      }
+      return response.json();
+    })
     .then((res) => {
       dispatch({
         type: TEACHER_TYPES.SET_ALL_TEACHERS,

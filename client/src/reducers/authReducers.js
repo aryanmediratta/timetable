@@ -1,4 +1,4 @@
-import { AUTH_TYPES } from '../actions/auth.actions';
+import { AUTH_TYPES } from '../actions/auth.types';
 
 const initialLoginInfo = {
   email: '',

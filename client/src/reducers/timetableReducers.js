@@ -1,4 +1,4 @@
-import { TIMETABLE_TYPES } from '../actions/timetable.actions';
+import { TIMETABLE_TYPES } from '../actions/timetable.types';
 import { allEntityTypes } from '../components/utils';
 
 const selectedEntityId = {

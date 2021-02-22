@@ -12,12 +12,10 @@ import Loader from '../common/Loader';
 import { getSpecificTimetable, allEntityTypes } from '../utils';
 import {
   // eslint-disable-next-line max-len
-  generateNewTimetable, saveTimetable, getTimetable, setTimetable, setEntityType, setEntityId, toggleErrorPopup, populateEntityIdDropdown, toggleEditTimetableModal,
+  generateNewTimetable, saveTimetable, getTimetable, setTimetable, setEntityType, setEntityId, populateEntityIdDropdown, toggleEditTimetableModal,
 } from '../../actions/timetableActions';
 import { getAllClasses } from '../../actions/classesActions';
 import { getAllTeachers } from '../../actions/teacherActions';
-
-import SimpleSnackbar from '../utils/Popup';
 
 require('../../styles/Timetable.scss');
 
@@ -98,10 +96,6 @@ class Timetable extends React.Component {
     }
   }
 
-  onClose = () => {
-    this.props.toggleErrorPopup(null);
-  }
-
     // Fix Logic to handle all cases.
     getAllDataForDropdown = () => {
       const {
@@ -154,7 +148,7 @@ class Timetable extends React.Component {
       const {
         timetables: {
           // eslint-disable-next-line max-len
-          entityType, entityId, timetable, loading, schoolTimetable, showPopup, errorMessage, success, filteredEntityIds, showEditTimetableModal, selectedEntityId,
+          entityType, entityId, timetable, loading, schoolTimetable, filteredEntityIds, showEditTimetableModal, selectedEntityId,
         },
       } = this.props;
       return (
@@ -241,9 +235,6 @@ class Timetable extends React.Component {
 
           { loading === true && <Loader /> }
           {
-            showPopup && <SimpleSnackbar onClose={this.onClose} message={errorMessage} success={success} />
-          }
-          {
             showEditTimetableModal && (
               <EditTimetableModal
                 showEditTimetableModal={showEditTimetableModal}
@@ -278,7 +269,6 @@ const mapDispatchToProps = {
   setTimetable,
   setEntityType,
   setEntityId,
-  toggleErrorPopup,
   populateEntityIdDropdown,
   toggleEditTimetableModal,
 };

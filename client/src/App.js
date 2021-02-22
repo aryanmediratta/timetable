@@ -16,6 +16,7 @@ import Header from './components/common/Header';
 import Teachers from './components/pages/Teachers';
 import Classes from './components/pages/Classes';
 import SubstitutionManager from './components/pages/SubstitutionManager';
+import Popup from './components/utils/Popup';
 
 // Check for token to keep user logged in
 
@@ -50,6 +51,7 @@ class App extends React.Component {
               <PrivateRoute exact path="/teachers" component={Teachers} />
               <PrivateRoute exact path="/substitutions" component={SubstitutionManager} />
             </Switch>
+            <Popup />
           </BrowserRouter>
         </Provider>
       </div>

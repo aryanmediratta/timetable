@@ -6,7 +6,7 @@ import Dropdown from '../common/Dropdown';
 import CollapsibleSections from '../common/CollapsibleSections';
 import Modal from '../common/Modal';
 import FullWidthGrid from '../common/TwoComponentGridSystem';
-import { TEACHER_TYPES } from '../../actions/teacher.actions';
+import { TEACHER_TYPES } from '../../actions/teacher.types';
 import { addNewTeacher } from '../../actions/teacherActions';
 
 const modalBody = (teacherData) => {

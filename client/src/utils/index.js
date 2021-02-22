@@ -1,4 +1,4 @@
-function updateAuthToken() {
+function addTokenToHeader() {
   let token = null;
   if (localStorage.jwtToken) {
     token = localStorage.jwtToken;
@@ -13,27 +13,25 @@ function updateAuthToken() {
 
 module.exports = {
   get: (url) => fetch(url, {
-    headers: updateAuthToken(),
+    headers: addTokenToHeader(),
     method: 'GET',
-  }).then((response) => response.json()),
+  }),
   post: (url, data) => fetch(url, {
     method: 'POST',
     body: JSON.stringify(data),
-    headers: updateAuthToken(),
+    headers: addTokenToHeader(),
   }),
   put: (url, data, signal) => fetch(url, {
     body: JSON.stringify(data),
-    headers: updateAuthToken(),
+    headers: addTokenToHeader(),
     method: 'PUT',
     signal,
   }),
   rawPost: (url, data) => fetch(url, {
     body: data,
-    headers: updateAuthToken(),
+    headers: addTokenToHeader(),
     method: 'POST',
   }),
-  updateAuthToken,
-
   constructURL: (baseUrl, queryParams) => {
     let URL = baseUrl;
     const params = Object.keys(queryParams);
