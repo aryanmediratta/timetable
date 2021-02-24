@@ -41,3 +41,12 @@ export const getSubstitutions = (email, date) => (dispatch) => {
       });
     });
 };
+
+export const generateSubstitutions = (email, date) => (dispatch) => {
+  const URL = constructURL('/api/generate_substitutions', { email, date });
+  get(URL)
+    .then((res) => res.json())
+    .then((res) => {
+      console.log(res);
+    })
+}

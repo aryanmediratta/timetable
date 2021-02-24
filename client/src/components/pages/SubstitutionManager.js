@@ -8,7 +8,12 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 import { SUB_TYPE } from '../../actions/substitution.actions';
 import { formatDate } from '../utils';
-import { createNewSub, setSubDate, getSubstitutions } from '../../actions/substitutionActions';
+import {
+  createNewSub,
+  setSubDate,
+  getSubstitutions,
+  generateSubstitutions,
+} from '../../actions/substitutionActions';
 import { getAllTeachers } from '../../actions/teacherActions';
 
 const SubstitutionManager = () => {
@@ -36,9 +41,9 @@ const SubstitutionManager = () => {
     dispatch(createNewSub(data));
   };
 
-  const generateSub = (e) => {
+  // const generateSub = (e) => {
 
-  };
+  // };
 
   return (
     <div>
@@ -94,7 +99,7 @@ const SubstitutionManager = () => {
           color="primary"
           variant="contained"
           type="submit"
-          onClick={generateSub}
+          onClick={(e) => dispatch(generateSubstitutions(email, formatDate(date)))}
         >
           Generate Sub Chart
         </Button>
