@@ -68,6 +68,22 @@ function getSpecificTimetable(schoolTimetable, entityId, numPeriods) {
   return timetable;
 }
 
+function formatDate(date) {
+  const d = new Date(date);
+  let month = `${d.getMonth() + 1}`;
+  let day = `${d.getDate()}`;
+  const year = d.getFullYear();
+
+  if (month.length < 2) {
+    month = `${0 + month}`;
+  }
+  if (day.length < 2) {
+    day = `${0 + day}`;
+  }
+
+  return [year, month, day].join('-');
+}
+
 const allEntityTypes = [
   { value: 'Teacher', label: 'Teacher' },
   { value: 'Class', label: 'Class' },
@@ -76,6 +92,7 @@ const allEntityTypes = [
 module.exports = {
   showAllSections,
   getSpecificTimetable,
+  formatDate,
   allEntityTypes,
   DAYS_OF_WEEK,
   PERIOD_NUMBER,

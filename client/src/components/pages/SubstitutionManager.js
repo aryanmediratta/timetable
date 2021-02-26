@@ -7,18 +7,20 @@ import Dropdown from '../common/Dropdown';
 import 'react-datepicker/dist/react-datepicker.css';
 
 import { SUB_TYPE } from '../../actions/substitution.actions';
-import { createNewSub, setSubDate } from '../../actions/substitutionActions';
+import { formatDate } from '../utils';
+import { createNewSub, setSubDate, getSubstitutions } from '../../actions/substitutionActions';
 import { getAllTeachers } from '../../actions/teacherActions';
 
 const SubstitutionManager = () => {
   const substitution = useSelector((state) => state.substitution);
   const auth = useSelector((state) => state.auth);
   const { user: { email } } = auth;
-  const { date } = substitution;
+  const { date, _id } = substitution;
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getAllTeachers(email));
+    dispatch(getSubstitutions(email, formatDate(date)));
   }, []);
 
   const teachers = useSelector((state) => state.teachers);
@@ -26,11 +28,16 @@ const SubstitutionManager = () => {
 
   const handleClick = (e) => {
     const data = {
-      date,
+      _id,
+      date: formatDate(date),
       email,
       absentList: substitution.absentList,
     };
     dispatch(createNewSub(data));
+  };
+
+  const generateSub = (e) => {
+
   };
 
   return (
@@ -39,7 +46,11 @@ const SubstitutionManager = () => {
         <h1>Bello</h1>
         <DatePicker
           selected={date}
-          onChange={(e) => dispatch(setSubDate(e))}
+          onChange={(e) => {
+            dispatch(setSubDate(e));
+            dispatch(getSubstitutions(email, formatDate(e)));
+            // console.log(substitution.absentList);
+          }}
         />
         <br />
         <br />
@@ -76,6 +87,16 @@ const SubstitutionManager = () => {
           onClick={handleClick}
         >
           Save Date
+        </Button>
+        <br />
+        <br />
+        <Button
+          color="primary"
+          variant="contained"
+          type="submit"
+          onClick={generateSub}
+        >
+          Generate Sub Chart
         </Button>
       </div>
     </div>

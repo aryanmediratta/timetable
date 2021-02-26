@@ -1,14 +1,6 @@
 import { SUB_TYPE } from './substitution.actions';
 
-import { post } from '../utils';
-
-export const createNewSub = (data) => (dispatch) => {
-  post('/api/create_new_substitution/', data)
-    .then((res) => res.json())
-    .then((res) => {
-      console.log(res);
-    });
-};
+import { get, post, constructURL } from '../utils';
 
 export const setSubDate = (date) => (dispatch) => {
   dispatch({
@@ -17,4 +9,35 @@ export const setSubDate = (date) => (dispatch) => {
   });
 };
 
-// export default createNewSub;
+export const setSubId = (_id) => ({
+  type: SUB_TYPE.SET_SUB_ID,
+  payload: _id,
+});
+
+export const createNewSub = (data) => (dispatch) => {
+  post('/api/create_new_substitution/', data)
+    .then((res) => res.json())
+    .then((res) => {
+      dispatch(setSubId(res._id));
+    });
+};
+
+export const getSubstitutions = (email, date) => (dispatch) => {
+  const URL = constructURL('/api/get_substitutions', { email, date });
+  dispatch({
+    type: SUB_TYPE.SET_SUB_ID,
+    payload: null,
+  });
+  get(URL)
+    .then((res) => res.json())
+    .then((res) => {
+      dispatch({
+        type: SUB_TYPE.SET_ABSENT_LIST,
+        payload: res.absentList,
+      });
+      dispatch({
+        type: SUB_TYPE.SET_SUB_ID,
+        payload: res._id,
+      });
+    });
+};
