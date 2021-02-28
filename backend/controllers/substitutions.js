@@ -5,13 +5,14 @@ const Teacher = require('../models/Teachers');
 const { generateSub } = require('../utils/substitutions');
 
 createNewSubstitution = (req, res, next) => {
-    const { date, email, absentList, _id } = req.body;
+    const { date, email, absentList, _id, subChart } = req.body;
     console.log(_id);
     const replacement = {
         _id: _id,
         subDate: date,
         userEmail: email,
         absentTeachers: absentList,
+        subChart: subChart,
     };
     if (_id) {
       Substitution.findOneAndReplace({ userEmail: email, _id: _id }, replacement, { returnNewDocument: true })
@@ -30,12 +31,13 @@ createNewSubstitution = (req, res, next) => {
           })
         });
     } else {
-      const subChart = new Substitution({
+      const sub = new Substitution({
           subDate: date,
           userEmail: email,
           absentTeachers: absentList,
+          subChart: subChart,
       });
-      subChart.save()
+      sub.save()
       .then(response => {
           res.status(200).json({
               _id: response._id,
@@ -59,11 +61,12 @@ fetchSubstitution = (req, res, next) => {
   const date = url.searchParams.get('date');
   Substitution.findOne({ userEmail: email, subDate: date })
     .then(data => {
-      const { absentTeachers, _id } = data;
+      const { absentTeachers, _id, subChart } = data;
       res.status(200).json({
         success: true,
         absentList: absentTeachers,
         _id: _id,
+        subChart: subChart, 
         message: 'Absent List Received',
       });
     })
@@ -72,6 +75,7 @@ fetchSubstitution = (req, res, next) => {
         success: false,
         absentList: [],
         _id: '',
+        subChart: [],
         message: 'Empty List Received',
       });
     });
@@ -94,7 +98,7 @@ generateSubstitutions = async (req, res, next) => {
         success: false,
         absentList: [],
         message: 'No Absent List Received',
-      })
+      });
     });
   await Teacher.find({ userEmail: email })
     .then(data => {
@@ -105,7 +109,7 @@ generateSubstitutions = async (req, res, next) => {
         success: false,
         teachersList: [],
         message: 'No Teachers Received',
-      })
+      });
     });
   await Timetable.findOne({ userEmail: email })
     .then(data => {
@@ -118,9 +122,15 @@ generateSubstitutions = async (req, res, next) => {
         success: false,
         timetable: [],
         message: 'Unable to retrieve timetable',
-      })
+      });
     });
-  console.log(generateSub(date, getTimetable, absentList, teachersList));
+  const substitutionChart = generateSub(date, getTimetable, absentList, teachersList);
+  res.status(200).json({
+    success: true,
+    subChart: substitutionChart,
+    message: 'Substitution Chart Receieved',
+  });
+  // console.log(generateSub(date, getTimetable, absentList, teachersList));
 }
 
 module.exports = {

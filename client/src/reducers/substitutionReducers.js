@@ -4,6 +4,7 @@ const initialState = {
   date: new Date(),
   absentList: [],
   _id: '',
+  subChart: [],
 };
 
 export default function substitutionReducer(state = initialState, action) {
@@ -22,6 +23,11 @@ export default function substitutionReducer(state = initialState, action) {
     return {
       ...state,
       _id: action.payload,
+    };
+  case SUB_TYPE.SET_SUB_CHART:
+    return {
+      ...state,
+      subChart: action.payload,
     };
   default:
     return state;
