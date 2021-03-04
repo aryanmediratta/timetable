@@ -17,6 +17,7 @@ import Teachers from './components/pages/Teachers';
 import Classes from './components/pages/Classes';
 import SubstitutionManager from './components/pages/SubstitutionManager';
 import Popup from './components/utils/Popup';
+import changePassword from './components/pages/ChangePassword';
 
 // Check for token to keep user logged in
 
@@ -50,6 +51,7 @@ class App extends React.Component {
               <PrivateRoute exact path="/classes" component={Classes} />
               <PrivateRoute exact path="/teachers" component={Teachers} />
               <PrivateRoute exact path="/substitutions" component={SubstitutionManager} />
+              <PrivateRoute exact path="/changepassword" component={changePassword} />
             </Switch>
             <Popup />
           </BrowserRouter>

@@ -73,7 +73,6 @@ export const registerUser = (userData) => (dispatch) => {
     .then((res) => res.json())
     .then((res) => {
       if (res.success === true) {
-        const { token } = res;
         // Set token to Auth header
         localStorage.setItem('jwtToken', token);
         // Decode token to get user data
@@ -102,6 +101,19 @@ export const loginUser = (userData) => async (dispatch) => {
       dispatch(setCurrentUser(decoded));
       dispatch(setSchoolName(res.user.schoolName));
       dispatch(setUserName(res.userName));
+    } else {
+      dispatch(openErrorsPopup(res));
+    }
+  }
+};
+
+export const setNewPass = (passData) => async (dispatch) => {
+  const req = await post('/api/change_password', passData);
+  const statusCode = req.status;
+  const res = await req.json();
+  if (statusCode === 200) {
+    if (res.success === true) {
+      console.log(res);
     } else {
       dispatch(openErrorsPopup(res));
     }

@@ -157,7 +157,78 @@ signin = (req, res) => {
     });
 }
 
+changePassword = (req, res) => {
+    let { userEmail, password, newPassword, confirmNewPassword } = req.body;
+    let errors = [];
+    console.log(req.body);
+
+    if (password === '') {
+        errors.push('Password Cannot Be Empty.')
+    }
+    if (newPassword !== confirmNewPassword) {
+        errors.push('New Passwords Do Not Match.');
+    }
+    if (newPassword === '' || confirmNewPassword === '') {
+        errors.push('New Password Cannot Be Empty.');
+    }
+    if (errors.length > 0) {
+        return res.status(200).json({
+            success: false,
+            message: errors[0],
+        });
+    } else {
+        User.findOne({ email: userEmail })
+        .then(user => {
+            console.log(user);
+            bcrypt.compare(password, user.password).then(isMatch => {
+                if (!isMatch) {
+                    return res.status(200).json({
+                        success: false,
+                        message: 'Password Does Not Match'
+                    });
+                } else {
+                    bcrypt.genSalt(10, function(err, salt) { bcrypt.hash(confirmNewPassword, salt, function(err, hash) {
+                        if (err) throw err;
+                        const replacement = {
+                            _id: user._id,
+                            name: user.name,
+                            email: user.email,
+                            password: hash,
+                            schoolName: user.schoolName,
+                        };
+                        User.findOneAndReplace({ email: userEmail, _id: user._id }, replacement, { returnNewDocument: true })
+                            .then(_user => {
+                                res.status(200).json({
+                                    success: true,
+                                    newPassUser: replacement,
+                                    message: 'Password Changed Successfully',
+                                    updated: true,
+                                });
+                            })
+                            .catch(err => {
+                                console.log('Error', err);
+                                res.status(200).json({
+                                    success: false,
+                                    response: err,
+                                    message: 'Password Change Unsuccessful',
+                                });
+                            });
+                    }) });
+                }
+            })
+        })
+        .catch(err => {
+            console.log('Error', err);
+            res.status(200).json({
+                success: false,
+                message: 'Something Went Wrong. Please Try Again.',
+            });
+        })
+    }
+}
+
 module.exports = {
     signin,
     signup,
+    changePassword,
 };

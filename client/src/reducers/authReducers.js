@@ -12,12 +12,21 @@ const initialRegisterInfo = {
   passwordConfirmation: '',
 };
 
+const initialChangePassInfo = {
+  password: '',
+  newPassword: '',
+  confirmNewPassword: '',
+};
+
 const initialState = {
   loginInfo: {
     ...initialLoginInfo,
   },
   registerInfo: {
     ...initialRegisterInfo,
+  },
+  changePassInfo: {
+    ...initialChangePassInfo,
   },
   showPopup: false,
   success: false,
@@ -94,6 +103,15 @@ export default function authReducer(state = initialState, action) {
     return {
       ...state,
       updatedRegisterView: !state.updatedRegisterView,
+    };
+
+  // Change Password
+  case AUTH_TYPES.CHANGE_CURRENT_PASSWORD:
+    return {
+      ...state,
+      changePassInfo: {
+        ...action.payload,
+      },
     };
 
   // Successful Logout

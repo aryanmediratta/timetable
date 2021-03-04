@@ -2,6 +2,8 @@ import { SUB_TYPE } from './substitution.actions';
 
 import { get, post, constructURL } from '../utils';
 
+import { openErrorsPopup } from './errorActions';
+
 export const setSubDate = (date) => (dispatch) => {
   dispatch({
     type: SUB_TYPE.SET_DATE,
@@ -18,7 +20,35 @@ export const createNewSub = (data) => (dispatch) => {
   post('/api/create_new_substitution/', data)
     .then((res) => res.json())
     .then((res) => {
-      dispatch(setSubId(res._id));
+      if (res.success === true) {
+        const update = {
+          success: res.success,
+          message: 'Absent List Updated. Please Create New Sub Chart.',
+        };
+        dispatch(openErrorsPopup(update));
+        dispatch(setSubId(res._id));
+      } else {
+        dispatch(openErrorsPopup(res));
+        dispatch(setSubId(res._id));
+      }
+    });
+};
+
+export const saveSubChart = (subData) => (dispatch) => {
+  post('/api/create_new_substitution/', subData)
+    .then((res) => res.json())
+    .then((res) => {
+      if (res.success === true) {
+        const update = {
+          success: res.success,
+          message: 'New Substitution Chart Created.',
+        };
+        dispatch(openErrorsPopup(update));
+        dispatch(setSubId(res._id));
+      } else {
+        dispatch(openErrorsPopup(res));
+        dispatch(setSubId(res._id));
+      }
     });
 };
 
@@ -32,9 +62,14 @@ export const getSubstitutions = (email, date) => (dispatch) => {
     type: SUB_TYPE.SET_SUB_CHART,
     payload: [],
   });
+  dispatch({
+    type: SUB_TYPE.TOGGLE_LOADER,
+    payload: true,
+  });
   get(URL)
     .then((res) => res.json())
     .then((res) => {
+      dispatch(openErrorsPopup(res));
       dispatch({
         type: SUB_TYPE.SET_ABSENT_LIST,
         payload: res.absentList,
@@ -47,7 +82,11 @@ export const getSubstitutions = (email, date) => (dispatch) => {
         type: SUB_TYPE.SET_SUB_CHART,
         payload: res.subChart,
       });
-    });
+    })
+    .finally(() => dispatch({
+      type: SUB_TYPE.TOGGLE_LOADER,
+      payload: null,
+    }));
 };
 
 export const generateSubstitutions = (email, date) => (dispatch) => {
@@ -56,12 +95,21 @@ export const generateSubstitutions = (email, date) => (dispatch) => {
     type: SUB_TYPE.SET_SUB_CHART,
     payload: [],
   });
+  dispatch({
+    type: SUB_TYPE.TOGGLE_LOADER,
+    payload: true,
+  });
   get(URL)
     .then((res) => res.json())
     .then((res) => {
+      dispatch(openErrorsPopup(res));
       dispatch({
         type: SUB_TYPE.SET_SUB_CHART,
         payload: res.subChart,
       });
-    });
+    })
+    .finally(() => dispatch({
+      type: SUB_TYPE.TOGGLE_LOADER,
+      payload: null,
+    }));
 };

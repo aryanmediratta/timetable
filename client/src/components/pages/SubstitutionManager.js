@@ -13,8 +13,10 @@ import {
   setSubDate,
   getSubstitutions,
   generateSubstitutions,
+  saveSubChart,
 } from '../../actions/substitutionActions';
 import { getAllTeachers } from '../../actions/teacherActions';
+import Loader from '../common/Loader';
 
 require('../../styles/Substitution.scss');
 
@@ -22,7 +24,12 @@ const SubstitutionManager = () => {
   const substitution = useSelector((state) => state.substitution);
   const auth = useSelector((state) => state.auth);
   const { user: { email } } = auth;
-  const { date, _id, subChart } = substitution;
+  const {
+    date,
+    _id,
+    subChart,
+    loading,
+  } = substitution;
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -39,13 +46,13 @@ const SubstitutionManager = () => {
       date: formatDate(date),
       email,
       absentList: substitution.absentList,
-      subChart: substitution.subChart,
+      subChart: [],
     };
     dispatch(createNewSub(data));
     dispatch({ type: SUB_TYPE.SET_SUB_CHART, payload: [] });
   };
 
-  const saveSubChart = (e) => {
+  const saveSubTable = (e) => {
     const data = {
       _id,
       date: formatDate(date),
@@ -53,24 +60,28 @@ const SubstitutionManager = () => {
       absentList: substitution.absentList,
       subChart: substitution.subChart,
     };
-    dispatch(createNewSub(data));
+    dispatch(saveSubChart(data));
   };
 
   return (
     <div>
       <div>
-        <h1>Bello</h1>
-        <DatePicker
-          selected={date}
-          onChange={(e) => {
-            dispatch(setSubDate(e));
-            dispatch(getSubstitutions(email, formatDate(e)));
-          }}
-        />
+        <h1>Substitution Chart</h1>
+        <div className="date-style">
+          <DatePicker
+            selected={date}
+            onChange={(e) => {
+              dispatch(setSubDate(e));
+              dispatch(getSubstitutions(email, formatDate(e)));
+            }}
+          />
+          <div className="date-style-div">Choose Date</div>
+        </div>
         <br />
         <br />
         <Dropdown
           className="absent-teachers-dropdown"
+          placeholder="Absent Teachers"
           isMulti
           isSearchable
           showAnimations
@@ -115,6 +126,7 @@ const SubstitutionManager = () => {
         </Button>
         <br />
         <br />
+        { loading === true && <Loader /> }
         <Grid
           container
           justify="center"
@@ -155,7 +167,7 @@ const SubstitutionManager = () => {
               color="secondary"
               variant="contained"
               type="submit"
-              onClick={saveSubChart}
+              onClick={saveSubTable}
             >
               Save Substitution Chart
             </Button>

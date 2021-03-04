@@ -5,6 +5,7 @@ const initialState = {
   absentList: [],
   _id: '',
   subChart: [],
+  loading: false,
 };
 
 export default function substitutionReducer(state = initialState, action) {
@@ -29,6 +30,18 @@ export default function substitutionReducer(state = initialState, action) {
       ...state,
       subChart: action.payload,
     };
+  case SUB_TYPE.TOGGLE_LOADER:
+    if (action.payload === null) {
+      return {
+        ...state,
+        loading: false,
+      };
+    }
+    return {
+      ...state,
+      loading: true,
+    };
+
   default:
     return state;
   }
