@@ -16,8 +16,10 @@ import Header from './components/common/Header';
 import Teachers from './components/pages/Teachers';
 import Classes from './components/pages/Classes';
 import SubstitutionManager from './components/pages/SubstitutionManager';
+import ChangePassword from './components/pages/ChangePassword';
+import ForgotPassword from './components/pages/ForgotPassword';
+import ResetPassword from './components/pages/ResetPassword';
 import Popup from './components/utils/Popup';
-import changePassword from './components/pages/ChangePassword';
 
 // Check for token to keep user logged in
 
@@ -48,10 +50,12 @@ class App extends React.Component {
               <PrivateRoute exact path="/home" component={HomePage} />
               <Route exact path="/login" component={Login} />
               <Route exact path="/signup" component={RegisterForm} />
+              <Route exact path="/forgotpassword" component={ForgotPassword} />
+              <Route exact path="/resetpassword/:token" component={ResetPassword} />
               <PrivateRoute exact path="/classes" component={Classes} />
               <PrivateRoute exact path="/teachers" component={Teachers} />
               <PrivateRoute exact path="/substitutions" component={SubstitutionManager} />
-              <PrivateRoute exact path="/changepassword" component={changePassword} />
+              <PrivateRoute exact path="/changepassword" component={ChangePassword} />
             </Switch>
             <Popup />
           </BrowserRouter>

@@ -6,7 +6,7 @@ import { AUTH_TYPES } from '../../actions/auth.types';
 
 import { setNewPass } from '../../actions/authActions';
 
-const changePassword = () => {
+const ChangePassword = () => {
   const auth = useSelector((state) => state.auth);
   const { user: { email } } = auth;
   let { changePassInfo } = auth;
@@ -27,7 +27,7 @@ const changePassword = () => {
   return (
     <div>
       <h1>Change Password</h1>
-      <div class="flex-center">
+      <div className="flex-center">
         <TextField
           className="text-field"
           label="Enter current Password"
@@ -82,4 +82,4 @@ const changePassword = () => {
   );
 };
 
-export default changePassword;
+export default ChangePassword;

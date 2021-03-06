@@ -18,7 +18,10 @@ let userSchema = new Schema({
   password: {
     type: String,
     required: true
-  }}
+  },
+  resetPasswordToken: String,
+  resetPasswordExpires: Date
+  }
   ,{
   timestamps: true,
   collection: 'Users'

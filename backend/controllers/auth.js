@@ -1,3 +1,8 @@
+const dotenv = require('dotenv');
+dotenv.config();
+
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
@@ -160,7 +165,6 @@ signin = (req, res) => {
 changePassword = (req, res) => {
     let { userEmail, password, newPassword, confirmNewPassword } = req.body;
     let errors = [];
-    console.log(req.body);
 
     if (password === '') {
         errors.push('Password Cannot Be Empty.')
@@ -179,28 +183,20 @@ changePassword = (req, res) => {
     } else {
         User.findOne({ email: userEmail })
         .then(user => {
-            console.log(user);
             bcrypt.compare(password, user.password).then(isMatch => {
                 if (!isMatch) {
                     return res.status(200).json({
                         success: false,
-                        message: 'Password Does Not Match'
+                        message: 'Passwords Does Not Match.'
                     });
                 } else {
                     bcrypt.genSalt(10, function(err, salt) { bcrypt.hash(confirmNewPassword, salt, function(err, hash) {
                         if (err) throw err;
-                        const replacement = {
-                            _id: user._id,
-                            name: user.name,
-                            email: user.email,
-                            password: hash,
-                            schoolName: user.schoolName,
-                        };
-                        User.findOneAndReplace({ email: userEmail, _id: user._id }, replacement, { returnNewDocument: true })
+                        user.password = hash;
+                        user.save()
                             .then(_user => {
                                 res.status(200).json({
                                     success: true,
-                                    newPassUser: replacement,
                                     message: 'Password Changed Successfully',
                                     updated: true,
                                 });
@@ -227,8 +223,159 @@ changePassword = (req, res) => {
     }
 }
 
+forgotPassword = async (req, res) => {
+    let { email } = req.body;
+    if (email === '') {
+        return res.status(200).json({
+            success: false,
+            message: "Email Required.",
+        });
+    }
+    await User.findOne({ email: email })
+        .then((user) => {
+            const token = crypto.randomBytes(20).toString('hex');
+            if(user === null) {
+                return res.status(200).json({
+                    success: false,
+                    message: "No such User/Email exists."
+                });
+            } else {
+                user.resetPasswordToken = token;
+                user.resetPasswordExpires = Date.now() + 3600000;
+                user.save();
+            }
+
+            const transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: process.env.EMAIL_ADDRESS,
+                    pass: process.env.EMAIL_PASSWORD,
+                },
+            });
+
+            const mailOptions = {
+                from: 'someone@somewhere.com',
+                to: `${user.email}`,
+                subject: 'Link To Reset Password',
+                text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+                'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+                `http://localhost:8000/resetpassword/${token}\n\n` +
+                'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+            };
+
+            console.log('Sending Mail');
+
+            transporter.sendMail(mailOptions, (err, response) => {
+                if (err) {
+                    return res.status(200).json({
+                        success:false,
+                        message:'Error in sending mail. Please Try Again.',
+                    });
+                } else {
+                    return res.status(200).json({
+                        response: response,
+                        success:true,
+                        message:'Mail Sent Successfully.',
+                    });
+                }
+            })
+        })
+        .catch(err => {
+            console.log('Error', err);
+            res.status(200).json({
+                success: false,
+                message: 'Something Went Wrong. Please Try Again.'
+            });
+        });
+}
+
+resetLinkValid = (req, res) => {
+    const url = new URL(`https://anyrandomwebsite.com/${req.originalUrl}`);
+    const token = url.searchParams.get('token');
+    User.findOne({ resetPasswordToken: token, resetPasswordExpires: { $gt: Date.now() } })
+        .then((user) => {
+            if (user === null) {
+                return res.status(200).json({
+                    success: false,
+                    message: 'Password Reset Link Invalid or Expired.',
+                });
+            } else {
+                return res.status(200).json({
+                    success: true,
+                    message: 'Please Enter New Password',
+                    email: user.email,
+                });
+            }
+        })
+        .catch(err => {
+            console.log('Error');
+            res.status(200).json({
+                success: false,
+                message: 'Something Went Wrong.',
+            });
+        });
+}
+
+resetPassword = (req, res) => {
+    let { email, newPassword, confirmNewPassword } = req.body;
+    let errors = [];
+
+    if (email === '' || email === null) {
+        erros.push('Password Reset Failed. Unable to find User Email.');     
+    }
+    if (newPassword === '' || confirmNewPassword === '') {
+        errors.push('Password Field Cannot Be Empty.')
+    }
+    if (newPassword !== confirmNewPassword) {
+        errors.push('Passwords Do Not Match.');
+    }
+    if (errors.length > 0) {
+        return res.status(200).json({
+            success: false,
+            message: errors[0],
+        });
+    } else {
+        User.findOne({ email: email })
+            .then((user) => {
+                bcrypt.genSalt(10, function(err, salt) { bcrypt.hash(confirmNewPassword, salt, function(err, hash) {
+                    if (err) throw err;
+                    user.password = hash;
+                    user.resetPasswordToken = undefined;
+                    user.resetPasswordExpires = undefined;
+                    user.save()
+                        .then(_user => {
+                            res.status(200).json({
+                                success: true,
+                                message: 'Password Changed Successfully',
+                                updated: true,
+                            });
+                        })
+                        .catch(err => {
+                            console.log('Error', err);
+                            res.status(200).json({
+                                success: false,
+                                response: err,
+                                message: 'Password Change Unsuccessful.',
+                            });
+                        });
+                }) });
+            })
+            .catch((err) => {
+                console.log('Error', err);
+                res.status(200).json({
+                    success: false,
+                    response: err,
+                    message: 'Unable To Reset Password.'
+                });
+            });
+    }
+}
+
 module.exports = {
     signin,
     signup,
     changePassword,
+    forgotPassword,
+    resetLinkValid,
+    resetPassword,
 };
