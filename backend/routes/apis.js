@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const { verifyToken } = require('../utils/auth');
-const { signup, signin } = require('../controllers/auth');
+const { signup, signin, changePassword, forgotPassword, resetLinkValid, resetPassword } = require('../controllers/auth');
 const { addTeacher, fetchTeachers } = require('../controllers/teachers');
 const { generateNewTimetable, saveTimetable, fetchTimetable, getSuggestions } = require('../controllers/timetables');
 const { addClasses, getAllClasses, updateClasses } = require('../controllers/classes');
@@ -11,6 +11,10 @@ const { createNewSubstitution, fetchSubstitution, generateSubstitutions } = requ
 // APIs related to Authentication.
 router.post('/signup', signup);
 router.post('/signin', signin);
+router.post('/forgot_password', forgotPassword);
+router.post('/change_password', verifyToken, changePassword);
+router.get('/reset_link_valid', resetLinkValid);
+router.put('/reset_password', resetPassword);
 
 // APIs related to Teachers.
 router.get('/get_all_teachers', verifyToken, fetchTeachers);

@@ -6,7 +6,6 @@ const { generateSub } = require('../utils/substitutions');
 
 createNewSubstitution = (req, res, next) => {
     const { date, email, absentList, _id, subChart } = req.body;
-    console.log(_id);
     const replacement = {
         _id: _id,
         subDate: date,
@@ -20,14 +19,14 @@ createNewSubstitution = (req, res, next) => {
           res.status(200).json({
             _id: response._id,
             success: true,
-            message: 'Update Successful',
+            message: 'Updated Succesful.',
           });
         })
         .catch(err => {
           res.status(200).json({
             _id: '',
             success: false,
-            message: 'No Updates Made',
+            message: 'Update Unsuccessful.',
           })
         });
     } else {
@@ -42,14 +41,14 @@ createNewSubstitution = (req, res, next) => {
           res.status(200).json({
               _id: response._id,
               success: true,
-              message: 'Data Saved',
+              message: `Absent Teachers List For ${date} created.`,
           });
       })
       .catch((err) => {
           res.status(200).json({
               _id: '', 
               success: false,
-              message: 'Data is Fraud, You fraud'
+              message: 'Failed To Create Absent Teachers List'
           });
       })
     }
@@ -67,7 +66,7 @@ fetchSubstitution = (req, res, next) => {
         absentList: absentTeachers,
         _id: _id,
         subChart: subChart, 
-        message: 'Absent List Received',
+        message: `Substitution Data for ${date} Retrieved.`,
       });
     })
     .catch(err => {
@@ -76,7 +75,7 @@ fetchSubstitution = (req, res, next) => {
         absentList: [],
         _id: '',
         subChart: [],
-        message: 'Empty List Received',
+        message: `Unable To Retrieve Substitution Data for ${date}.`,
       });
     });
 }
@@ -97,7 +96,7 @@ generateSubstitutions = async (req, res, next) => {
       res.send({
         success: false,
         absentList: [],
-        message: 'No Absent List Received',
+        message: 'Failed To Create Substitution Chart.',
       });
     });
   await Teacher.find({ userEmail: email })
@@ -108,7 +107,7 @@ generateSubstitutions = async (req, res, next) => {
       res.send({
         success: false,
         teachersList: [],
-        message: 'No Teachers Received',
+        message: 'Failed To Create Substitution Chart.',
       });
     });
   await Timetable.findOne({ userEmail: email })
@@ -121,14 +120,14 @@ generateSubstitutions = async (req, res, next) => {
       res.send({
         success: false,
         timetable: [],
-        message: 'Unable to retrieve timetable',
+        message: 'Failed To Create Substitution Chart.',
       });
     });
   const substitutionChart = generateSub(date, getTimetable, absentList, teachersList);
   res.status(200).json({
     success: true,
     subChart: substitutionChart,
-    message: 'Substitution Chart Receieved',
+    message: 'Substitution Chart Created.',
   });
   // console.log(generateSub(date, getTimetable, absentList, teachersList));
 }

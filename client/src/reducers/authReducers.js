@@ -12,12 +12,37 @@ const initialRegisterInfo = {
   passwordConfirmation: '',
 };
 
+const initialForgotPassInfo = {
+  email: '',
+};
+
+const initialResetPassInfo = {
+  email: '',
+  newPassword: '',
+  confirmNewPassword: '',
+};
+
+const initialChangePassInfo = {
+  password: '',
+  newPassword: '',
+  confirmNewPassword: '',
+};
+
 const initialState = {
   loginInfo: {
     ...initialLoginInfo,
   },
   registerInfo: {
     ...initialRegisterInfo,
+  },
+  changePassInfo: {
+    ...initialChangePassInfo,
+  },
+  forgotPassInfo: {
+    ...initialForgotPassInfo,
+  },
+  resetPassInfo: {
+    ...initialResetPassInfo,
   },
   showPopup: false,
   success: false,
@@ -94,6 +119,42 @@ export default function authReducer(state = initialState, action) {
     return {
       ...state,
       updatedRegisterView: !state.updatedRegisterView,
+    };
+
+  // Change Password
+  case AUTH_TYPES.CHANGE_CURRENT_PASSWORD:
+    return {
+      ...state,
+      changePassInfo: {
+        ...action.payload,
+      },
+    };
+
+  // Forgot Password
+  case AUTH_TYPES.FORGOT_PASSWORD:
+    return {
+      ...state,
+      forgotPassInfo: {
+        ...action.payload,
+      },
+    };
+
+  // Reset Password
+  case AUTH_TYPES.RESET_PASSWORD_EMAIL:
+    return {
+      ...state,
+      resetPassInfo: {
+        ...state,
+        email: action.payload,
+      },
+    };
+
+  case AUTH_TYPES.RESET_PASSWORD:
+    return {
+      ...state,
+      resetPassInfo: {
+        ...action.payload,
+      },
     };
 
   // Successful Logout

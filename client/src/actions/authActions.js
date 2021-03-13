@@ -6,7 +6,12 @@ import { AUTH_TYPES } from './auth.types';
 import { TEACHER_TYPES } from './teacher.types';
 import { CLASSES_TYPE } from './classes.types';
 import { TIMETABLE_TYPES } from './timetable.types';
-import { post } from '../utils';
+import {
+  constructURL,
+  post,
+  get,
+  put,
+} from '../utils';
 import { openErrorsPopup } from './errorActions';
 
 // Setting Login Fields
@@ -73,7 +78,6 @@ export const registerUser = (userData) => (dispatch) => {
     .then((res) => res.json())
     .then((res) => {
       if (res.success === true) {
-        const { token } = res;
         // Set token to Auth header
         localStorage.setItem('jwtToken', token);
         // Decode token to get user data
@@ -106,4 +110,49 @@ export const loginUser = (userData) => async (dispatch) => {
       dispatch(openErrorsPopup(res));
     }
   }
+};
+
+export const setNewPass = (passData) => async (dispatch) => {
+  const req = await post('/api/change_password', passData);
+  const statusCode = req.status;
+  const res = await req.json();
+  if (statusCode === 200) {
+    dispatch(openErrorsPopup(res));
+  }
+};
+
+export const forgotPassword = (data) => async (dispatch) => {
+  const req = await post('/api/forgot_password', data);
+  const statusCode = req.status;
+  const res = await req.json();
+  if (statusCode === 200) {
+    dispatch(openErrorsPopup(res));
+  }
+};
+
+export const resetLinkValidation = (token) => (dispatch) => {
+  const URL = constructURL('/api/reset_link_valid', { token });
+  get(URL)
+    .then((res) => res.json())
+    .then((res) => {
+      dispatch(openErrorsPopup(res));
+      dispatch({
+        type: AUTH_TYPES.RESET_PASSWORD_EMAIL,
+        payload: res.email,
+      });
+    })
+    .catch((err) => {
+      dispatch(openErrorsPopup(res));
+    });
+};
+
+export const resetPassword = (data) => (dispatch) => {
+  put('/api/reset_password', data)
+    .then((res) => res.json())
+    .then((res) => {
+      dispatch(openErrorsPopup(res));
+    })
+    .catch((err) => {
+      dispatch(openErrorsPopup(res));
+    });
 };
