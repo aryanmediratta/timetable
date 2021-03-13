@@ -83,7 +83,7 @@ function generateSub(date, timetable, absentList, teachersList) {
     console.log('  ')
   })
   // console.log(substitutions);
-  return 0;
+  return substitutions;
 }
 
 function getSubDay(day, numPeriods) {

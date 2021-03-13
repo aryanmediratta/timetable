@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import DatePicker from 'react-datepicker';
-import { Button } from '@material-ui/core';
+import { Button, Grid } from '@material-ui/core';
 import Dropdown from '../common/Dropdown';
 
 import 'react-datepicker/dist/react-datepicker.css';
@@ -16,11 +16,13 @@ import {
 } from '../../actions/substitutionActions';
 import { getAllTeachers } from '../../actions/teacherActions';
 
+require('../../styles/Substitution.scss');
+
 const SubstitutionManager = () => {
   const substitution = useSelector((state) => state.substitution);
   const auth = useSelector((state) => state.auth);
   const { user: { email } } = auth;
-  const { date, _id } = substitution;
+  const { date, _id, subChart } = substitution;
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -31,19 +33,28 @@ const SubstitutionManager = () => {
   const teachers = useSelector((state) => state.teachers);
   const { teachersList } = teachers;
 
-  const handleClick = (e) => {
+  const saveAbsentTeachers = (e) => {
     const data = {
       _id,
       date: formatDate(date),
       email,
       absentList: substitution.absentList,
+      subChart: substitution.subChart,
+    };
+    dispatch(createNewSub(data));
+    dispatch({ type: SUB_TYPE.SET_SUB_CHART, payload: [] });
+  };
+
+  const saveSubChart = (e) => {
+    const data = {
+      _id,
+      date: formatDate(date),
+      email,
+      absentList: substitution.absentList,
+      subChart: substitution.subChart,
     };
     dispatch(createNewSub(data));
   };
-
-  // const generateSub = (e) => {
-
-  // };
 
   return (
     <div>
@@ -54,7 +65,6 @@ const SubstitutionManager = () => {
           onChange={(e) => {
             dispatch(setSubDate(e));
             dispatch(getSubstitutions(email, formatDate(e)));
-            // console.log(substitution.absentList);
           }}
         />
         <br />
@@ -89,9 +99,9 @@ const SubstitutionManager = () => {
           color="primary"
           variant="contained"
           type="submit"
-          onClick={handleClick}
+          onClick={saveAbsentTeachers}
         >
-          Save Date
+          Save Absent Teachers
         </Button>
         <br />
         <br />
@@ -103,6 +113,53 @@ const SubstitutionManager = () => {
         >
           Generate Sub Chart
         </Button>
+        <br />
+        <br />
+        <Grid
+          container
+          justify="center"
+          alignItems="baseline"
+          direction="row"
+          spacing={0}
+        >
+          { subChart && subChart.length > 0
+            && subChart.map((period, index) => (
+              <Grid key={index} item>
+                <div className="subtable-periods">
+                  {index + 1}
+                </div>
+                <Grid
+                  container
+                  justify="center"
+                  alignItems="baseline"
+                  direction="column"
+                >
+                  { period && period.length > 0
+                    && period.map((sub, subIndex) => (
+                      <Grid key={subIndex} item>
+                        <div className="subtable-periods-sub">
+                          <p>{`Absent teacher\n${sub.absentTeacher}`}</p>
+                          <p>{`Class ${sub.substitutionClass}`}</p>
+                          <p>{`Sub Teacher\n${sub.teacher}`}</p>
+                        </div>
+                      </Grid>
+                    ))}
+                </Grid>
+              </Grid>
+            ))}
+        </Grid>
+        <br />
+        {subChart && subChart.length > 0
+          && (
+            <Button
+              color="secondary"
+              variant="contained"
+              type="submit"
+              onClick={saveSubChart}
+            >
+              Save Substitution Chart
+            </Button>
+          )}
       </div>
     </div>
   );

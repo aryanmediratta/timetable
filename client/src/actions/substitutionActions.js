@@ -28,6 +28,10 @@ export const getSubstitutions = (email, date) => (dispatch) => {
     type: SUB_TYPE.SET_SUB_ID,
     payload: null,
   });
+  dispatch({
+    type: SUB_TYPE.SET_SUB_CHART,
+    payload: [],
+  });
   get(URL)
     .then((res) => res.json())
     .then((res) => {
@@ -39,14 +43,25 @@ export const getSubstitutions = (email, date) => (dispatch) => {
         type: SUB_TYPE.SET_SUB_ID,
         payload: res._id,
       });
+      dispatch({
+        type: SUB_TYPE.SET_SUB_CHART,
+        payload: res.subChart,
+      });
     });
 };
 
 export const generateSubstitutions = (email, date) => (dispatch) => {
   const URL = constructURL('/api/generate_substitutions', { email, date });
+  dispatch({
+    type: SUB_TYPE.SET_SUB_CHART,
+    payload: [],
+  });
   get(URL)
     .then((res) => res.json())
     .then((res) => {
-      console.log(res);
-    })
-}
+      dispatch({
+        type: SUB_TYPE.SET_SUB_CHART,
+        payload: res.subChart,
+      });
+    });
+};
