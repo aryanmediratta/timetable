@@ -1,10 +1,11 @@
 const Substitution = require('../models/Substitutions');
+const Timetable = require('../models/Timetables');
+const Teacher = require('../models/Teachers');
 
-const { generateSubstitutions } = require('../utils/substitutions');
+const { generateSub } = require('../utils/substitutions');
 
 createNewSubstitution = (req, res, next) => {
     const { date, email, absentList, _id } = req.body;
-    // console.log(generateSubstitutions(date));
     console.log(_id);
     const replacement = {
         _id: _id,
@@ -76,7 +77,54 @@ fetchSubstitution = (req, res, next) => {
     });
 }
 
+generateSubstitutions = async (req, res, next) => {
+  const url = new URL(`https://anyrandomwebsite.com/${req.originalUrl}`);
+  const email = url.searchParams.get('email');
+  const date = url.searchParams.get('date');
+  let getTimetable;
+  let absentList;
+  let teachersList;
+  await Substitution.findOne({ userEmail: email, subDate: date })
+    .then(data => {
+      const { absentTeachers } = data;
+      absentList = absentTeachers;
+    })
+    .catch(data => {
+      res.send({
+        success: false,
+        absentList: [],
+        message: 'No Absent List Received',
+      })
+    });
+  await Teacher.find({ userEmail: email })
+    .then(data => {
+      teachersList = data;
+    })
+    .catch(data => {
+      res.send({
+        success: false,
+        teachersList: [],
+        message: 'No Teachers Received',
+      })
+    });
+  await Timetable.findOne({ userEmail: email })
+    .then(data => {
+      const { timetable } = data;
+      getTimetable = timetable;
+    })
+    .catch(err => {
+      console.log('ERROR', err);
+      res.send({
+        success: false,
+        timetable: [],
+        message: 'Unable to retrieve timetable',
+      })
+    });
+  console.log(generateSub(date, getTimetable, absentList, teachersList));
+}
+
 module.exports = {
   createNewSubstitution,
   fetchSubstitution,
+  generateSubstitutions,
 }

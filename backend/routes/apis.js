@@ -6,7 +6,7 @@ const { signup, signin } = require('../controllers/auth');
 const { addTeacher, fetchTeachers } = require('../controllers/teachers');
 const { generateNewTimetable, saveTimetable, fetchTimetable, getSuggestions } = require('../controllers/timetables');
 const { addClasses, getAllClasses, updateClasses } = require('../controllers/classes');
-const { createNewSubstitution, fetchSubstitution } = require('../controllers/substitutions');
+const { createNewSubstitution, fetchSubstitution, generateSubstitutions } = require('../controllers/substitutions');
 
 // APIs related to Authentication.
 router.post('/signup', signup);
@@ -30,5 +30,6 @@ router.get('/get_suggestions', verifyToken, getSuggestions);
 //APIs related to Substitution
 router.post('/create_new_substitution', verifyToken, createNewSubstitution);
 router.get('/get_substitutions', verifyToken, fetchSubstitution);
+router.get('/generate_substitutions', verifyToken, generateSubstitutions);
 
 module.exports = router;
