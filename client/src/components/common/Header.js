@@ -133,6 +133,14 @@ export default function ButtonAppBar() {
               >
                 <MenuItem onClick={() => {
                   handleClose();
+                }}
+                >
+                  <Link to="/changepassword">
+                    Change Password
+                  </Link>
+                </MenuItem>
+                <MenuItem onClick={() => {
+                  handleClose();
                   dispatch(logoutUser());
                 }}
                 >

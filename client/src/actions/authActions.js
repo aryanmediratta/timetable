@@ -79,6 +79,7 @@ export const registerUser = (userData) => (dispatch) => {
     .then((res) => {
       if (res.success === true) {
         // Set token to Auth header
+        const { token } = res;
         localStorage.setItem('jwtToken', token);
         // Decode token to get user data
         const decoded = jwt_decode(token);

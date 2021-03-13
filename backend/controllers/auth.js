@@ -31,6 +31,12 @@ signup = (req, res, next) => {
     if (!password) {
         errors.push('Password is Required.');
     }
+    if (!schoolName) {
+      errors.push('School name is Required.');
+    }
+    if (!numPeriods) {
+      errors.push('Number of periods is Required.');
+    }
     if (!passwordConfirmation) {
         errors.push('Please type password again.');
     }
@@ -267,6 +273,7 @@ forgotPassword = async (req, res) => {
 
             transporter.sendMail(mailOptions, (err, response) => {
                 if (err) {
+                  console.log('error in mailing', err);
                     return res.status(200).json({
                         success:false,
                         message:'Error in sending mail. Please Try Again.',

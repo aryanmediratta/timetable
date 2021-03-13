@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, TextField } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import { loginUser, setLoginField } from '../../actions/authActions';
 
@@ -78,6 +79,11 @@ class Login extends React.Component {
                 >
                   Login
                 </Button>
+                <br />
+                <br />
+                <Link to="/forgotpassword">
+                  Forgot Password
+                </Link>
               </div>
             </div>
           </form>
