@@ -64,7 +64,7 @@ const SubstitutionManager = () => {
   };
 
   return (
-    <div>
+    <div className="container">
       <div>
         <h1>Substitution Chart</h1>
         <div className="date-style">
@@ -75,7 +75,6 @@ const SubstitutionManager = () => {
               dispatch(getSubstitutions(email, formatDate(e)));
             }}
           />
-          <div className="date-style-div">Choose Date</div>
         </div>
         <br />
         <br />
