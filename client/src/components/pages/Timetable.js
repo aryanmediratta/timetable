@@ -144,6 +144,34 @@ class Timetable extends React.Component {
       }
     };
 
+    exportToCsv = () => {
+      const { timetables: { timetable, entityType, entityId } } = this.props;
+      const finalObj = [];
+      timetable.forEach((period) => {
+        let row = {};
+        period.forEach((element, id) => {
+          row[`${id}`] = element.cell;
+        });
+        finalObj.push(row);
+        row = {};
+      });
+      const csvStr = finalObj.map((it) => Object.values(it).toString()).join('\n');
+      const blob = new Blob([csvStr], { type: 'text/csv' });
+      const filename = `Timetable_for_${entityId.label}_${entityType.label}.csv`;
+      this.downloadBlobToFile(blob, filename);
+    }
+
+    downloadBlobToFile = (blob, filename) => {
+      const URL = window.URL || window.webkitURL;
+      const downloadUrl = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = downloadUrl;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    };
+
     render() {
       const {
         timetables: {
@@ -193,19 +221,19 @@ class Timetable extends React.Component {
           <br />
           {' '}
           <br />
-          <h2>
-            Timetable for
-            {' '}
-            {entityType.label}
-            {' '}
-            -
-            {' '}
-            {entityId.label}
-          </h2>
           {
             schoolTimetable && schoolTimetable.length > 0
                     && (
                       <div>
+                        <h2>
+                          Timetable for
+                          {' '}
+                          {entityType.label}
+                          {' '}
+                          -
+                          {' '}
+                          {entityId.label}
+                        </h2>
                         {
                           timetable && timetable.length > 0 && timetable.map((period, periodNumber) => (
                             <Grid container style={{ flexGrow: 1 }} spacing={0}>
@@ -232,6 +260,18 @@ class Timetable extends React.Component {
                   Save timetable
                 </Button>
               )}
+              &nbsp;&nbsp;&nbsp;
+          {schoolTimetable && schoolTimetable.length > 0
+            && (
+              <Button
+                color="primary"
+                variant="contained"
+                type="submit"
+                onClick={() => this.exportToCsv()}
+              >
+                Export to Excel
+              </Button>
+            )}
 
           { loading === true && <Loader /> }
           {
