@@ -3,6 +3,7 @@ import { SUB_TYPE } from './substitution.actions';
 import { get, post, constructURL } from '../utils';
 
 import { openErrorsPopup } from './errorActions';
+import { logoutUser } from './authActions';
 
 export const setSubDate = (date) => (dispatch) => {
   dispatch({
@@ -18,7 +19,12 @@ export const setSubId = (_id) => ({
 
 export const createNewSub = (data) => (dispatch) => {
   post('/api/create_new_substitution/', data)
-    .then((res) => res.json())
+    .then((response) => {
+      if (response.status === 401) {
+        dispatch(logoutUser());
+      }
+      return response.json();
+    })
     .then((res) => {
       if (res.success === true) {
         const update = {
@@ -36,7 +42,12 @@ export const createNewSub = (data) => (dispatch) => {
 
 export const saveSubChart = (subData) => (dispatch) => {
   post('/api/create_new_substitution/', subData)
-    .then((res) => res.json())
+    .then((response) => {
+      if (response.status === 401) {
+        dispatch(logoutUser());
+      }
+      return response.json();
+    })
     .then((res) => {
       if (res.success === true) {
         const update = {
@@ -67,7 +78,12 @@ export const getSubstitutions = (email, date) => (dispatch) => {
     payload: true,
   });
   get(URL)
-    .then((res) => res.json())
+    .then((response) => {
+      if (response.status === 401) {
+        dispatch(logoutUser());
+      }
+      return response.json();
+    })
     .then((res) => {
       dispatch(openErrorsPopup(res));
       dispatch({
@@ -100,7 +116,12 @@ export const generateSubstitutions = (email, date) => (dispatch) => {
     payload: true,
   });
   get(URL)
-    .then((res) => res.json())
+    .then((response) => {
+      if (response.status === 401) {
+        dispatch(logoutUser());
+      }
+      return response.json();
+    })
     .then((res) => {
       dispatch(openErrorsPopup(res));
       dispatch({

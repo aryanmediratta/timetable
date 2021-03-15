@@ -67,6 +67,9 @@ const SubstitutionManager = () => {
     <div className="container">
       <div>
         <h1>Substitution Chart</h1>
+        <div className="help-text">
+          You can create a substitution chart on this page. Just select the absent teachers, save them and click on Generate Substitution chart.
+        </div>
         <div className="date-style">
           <DatePicker
             selected={date}
@@ -77,15 +80,14 @@ const SubstitutionManager = () => {
           />
         </div>
         <br />
-        <br />
         <Dropdown
           className="absent-teachers-dropdown"
           placeholder="Absent Teachers"
           isMulti
           isSearchable
           showAnimations
-          options={teachersList && teachersList.length > 0
-          && teachersList.map((teacher) => ({ value: teacher._id, label: teacher.teacherName }))}
+          options={(teachersList && teachersList.length > 0
+          && teachersList.map((teacher) => ({ value: teacher._id, label: teacher.teacherName }))) || []}
           value={substitution.absentList && substitution.absentList.length > 0
           && substitution.absentList.map((teacher) => ({ value: teacher._id, label: teacher.label }))}
           onChange={(_option, action) => {
@@ -111,7 +113,7 @@ const SubstitutionManager = () => {
           type="submit"
           onClick={saveAbsentTeachers}
         >
-          Save Absent Teachers
+          Save absent teachers
         </Button>
         <br />
         <br />
@@ -121,7 +123,7 @@ const SubstitutionManager = () => {
           type="submit"
           onClick={(e) => dispatch(generateSubstitutions(email, formatDate(date)))}
         >
-          Generate Sub Chart
+          Generate substitution chart
         </Button>
         <br />
         <br />

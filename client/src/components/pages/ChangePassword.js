@@ -25,7 +25,7 @@ const ChangePassword = () => {
   };
 
   return (
-    <div>
+    <div className="container">
       <h1>Change Password</h1>
       <div className="flex-center">
         <TextField
@@ -76,7 +76,7 @@ const ChangePassword = () => {
         type="submit"
         onClick={submitPassword}
       >
-        ChangePassword
+        Change password
       </Button>
     </div>
   );

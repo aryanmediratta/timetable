@@ -67,6 +67,10 @@ class HomePage extends React.Component {
           {email}
         </h2>
         <br />
+        <div className="help-text">
+          You can get started by adding the classes first.
+          After adding classes, you can start adding teachers.
+        </div>
         <h2> Classes </h2>
         <div className="class-container">
           <Grid container style={{ flexGrow: 1 }} spacing={6}>

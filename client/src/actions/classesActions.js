@@ -25,6 +25,7 @@ export const addNewClasses = (classesData) => (dispatch) => {
           type: CLASSES_TYPE.ADD_NEW_CLASSES,
           payload: res.classes,
         });
+        dispatch(openErrorsPopup(res));
       } else {
         dispatch(openErrorsPopup(res));
       }
@@ -50,6 +51,7 @@ export const getAllClasses = (email) => (dispatch) => {
         type: CLASSES_TYPE.SET_FIELD_DATA_FOR_CLASS,
         payload: res.numSectionsPerClass,
       });
+      dispatch(openErrorsPopup(res));
     });
 };
 

@@ -29,7 +29,7 @@ const ResetPassword = () => {
   };
 
   return (
-    <div>
+    <div className="container">
       <div>
         <h1>Reset Password Link</h1>
         {email && (email !== null || email !== '')

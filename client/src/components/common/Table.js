@@ -40,23 +40,21 @@ class Table extends React.Component {
     return (
       <div className="table-container">
         <div className="card">
-          {(filteredData.length > 0)
-            && (
-              <ReactTable
-                {...tableProps}
-                page={page}
-                resizable={false}
-                data={filteredData}
-                className="table"
-                showPagination={false}
-                defaultPageSize={defaultPageSize}
-                pageSize={removeExtraRows ? Math.min(defaultPageSize, filteredData.length) : undefined}
-                onSortedChange={(props) => {
-                  onSortedChange(props);
-                  onPageChange(0);
-                }}
-              />
-            )}
+          <ReactTable
+            {...tableProps}
+            noDataText="No data found"
+            page={page}
+            resizable={false}
+            data={filteredData}
+            className="table"
+            showPagination={false}
+            defaultPageSize={defaultPageSize}
+            pageSize={removeExtraRows ? Math.min(defaultPageSize, filteredData.length) : undefined}
+            onSortedChange={(props) => {
+              onSortedChange(props);
+              onPageChange(0);
+            }}
+          />
         </div>
         {(filteredData.length > 0) && totalPages > 1
           && (

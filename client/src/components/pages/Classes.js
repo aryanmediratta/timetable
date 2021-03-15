@@ -87,14 +87,18 @@ class Classes extends React.Component {
       <div className="container">
         <h2> Manage Classes </h2>
         <div>
-          <h2> Number of section cannot be changed after creation. </h2>
+          <div className="warning-text"> Warning: number of section cannot be changed after creation. </div>
+          <div className="help-text">
+            Select a class from the dropdown. Then add the number of sections for that class.
+          </div>
           <FullWidthGrid
-            componentOneSize={3}
-            componentTwoSize={9}
-            spacing={2}
-            componentOne={(<h3>Select Class</h3>)}
+            componentOneSize={2}
+            componentTwoSize={10}
+            spacing={0}
+            componentOne={(<h3 className="create-class-text">Select Class</h3>)}
             componentTwo={(
               <Dropdown
+                className="create-class-dropdown"
                 isMulti
                 options={options}
                 onChange={(option, action) => this.updateOptions(option, action)}

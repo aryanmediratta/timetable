@@ -27,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     flexGrow: 1,
+    cursor: 'pointer',
   },
 }));
 
@@ -102,7 +103,7 @@ export default function ButtonAppBar() {
               <MenuIcon />
             </IconButton>
           )}
-          <Typography variant="h6" className={classes.title}>
+          <Typography variant="h6" className={classes.title} onClick={() => redirectAndClose('/home')}>
             Scheduler
           </Typography>
           {auth && auth.isAuthenticated === true ? (

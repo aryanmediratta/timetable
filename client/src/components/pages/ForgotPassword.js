@@ -28,7 +28,7 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div>
+    <div className="container">
       <h1>Forgot Password</h1>
       <div className="flex-center">
         <TextField

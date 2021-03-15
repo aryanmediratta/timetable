@@ -247,7 +247,7 @@ forgotPassword = async (req, res) => {
                 });
             } else {
                 user.resetPasswordToken = token;
-                user.resetPasswordExpires = Date.now() + 3600000;
+                user.resetPasswordExpires = Date.now() + DEFAULT_LOGIN_DURATION;
                 user.save();
             }
 

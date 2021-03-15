@@ -58,8 +58,8 @@ const modalBody = (teacherData) => {
               isMulti
               isSearchable
               showAnimations
-              options={myClassesList && myClassesList.length > 0
-                && myClassesList.map((myClass) => ({ value: myClass._id, label: myClass.label }))}
+              options={(myClassesList && myClassesList.length > 0
+                && myClassesList.map((myClass) => ({ value: myClass._id, label: myClass.label }))) || []}
               value={teacherData.classesList && teacherData.classesList.length > 0
                 && teacherData.classesList.map((myClass) => ({ value: myClass._id, label: myClass.label }))}
               onChange={(_option, action) => {

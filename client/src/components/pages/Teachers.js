@@ -73,6 +73,13 @@ class Teachers extends React.Component {
       <div className="container">
         <h2> Manage Teachers </h2>
         <br />
+        <div className="help-text">
+          You can add and edit teachers on this page. Click on the Add Teacher button and enter the details for each teacher.
+        </div>
+        <div className="help-text">
+          Also, the data in this table can be sorted by clicking on the name of the column.
+        </div>
+        <br />
         <FullWidthGrid
           componentOneSize={9}
           componentTwoSize={3}
