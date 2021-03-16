@@ -4,9 +4,6 @@ const initialState = {
   teachersList: [],
   allTeachersForTable: [],
   showModal: false,
-  showPopup: false,
-  success: false,
-  errorMessage: '',
   newTeacher: {
     name: '',
     subject: '',
@@ -45,21 +42,6 @@ export default function teacherReducer(state = initialState, action) {
     return {
       ...state,
       teachersList: [...state.teachersList, action.payload],
-    };
-  case TEACHER_TYPES.TOGGLE_TEACHER_POPUP:
-    if (action.payload === null) {
-      return {
-        ...state,
-        showPopup: false,
-        errorMessage: '',
-        success: false,
-      };
-    }
-    return {
-      ...state,
-      showPopup: true,
-      errorMessage: action.payload,
-      success: action.success,
     };
   case TEACHER_TYPES.UPDATE_EXISTING_TEACHER:
     const { teachersList } = state;

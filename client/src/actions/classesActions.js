@@ -51,7 +51,6 @@ export const getAllClasses = (email) => (dispatch) => {
         type: CLASSES_TYPE.SET_FIELD_DATA_FOR_CLASS,
         payload: res.numSectionsPerClass,
       });
-      dispatch(openErrorsPopup(res));
     });
 };
 

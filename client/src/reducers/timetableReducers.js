@@ -16,9 +16,6 @@ const initialState = {
   entityId: '',
   entityType: allEntityTypes[0],
   loading: false,
-  showPopup: false,
-  success: false,
-  errorMessage: '',
   showEditTimetableModal: false,
   suggestions: [],
   suggestionsFound: true,
@@ -87,21 +84,6 @@ export default function timetableReducer(state = initialState, action) {
       loading: true,
       schoolTimetable: [],
       timetable: [],
-    };
-  case TIMETABLE_TYPES.TOGGLE_TIMETABLE_POPUP:
-    if (action.payload === null) {
-      return {
-        ...state,
-        showPopup: false,
-        errorMessage: '',
-        success: false,
-      };
-    }
-    return {
-      ...state,
-      showPopup: true,
-      errorMessage: action.payload,
-      success: action.success,
     };
   case TIMETABLE_TYPES.CLEAR_STATE:
     return initialState;

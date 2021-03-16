@@ -44,9 +44,6 @@ const initialState = {
   resetPassInfo: {
     ...initialResetPassInfo,
   },
-  showPopup: false,
-  success: false,
-  errorMessage: '',
   isAuthenticated: false,
   user: {},
   userName: '',
@@ -72,23 +69,6 @@ export default function authReducer(state = initialState, action) {
       registerInfo: {
         ...action.payload,
       },
-    };
-
-  // Handling Errors
-  case AUTH_TYPES.TOGGLE_AUTH_POPUP:
-    if (action.payload === null) {
-      return {
-        ...state,
-        showPopup: false,
-        errorMessage: '',
-        success: action.success,
-      };
-    }
-    return {
-      ...state,
-      showPopup: true,
-      errorMessage: action.payload,
-      success: action.success,
     };
 
   // Successful Login
