@@ -84,6 +84,18 @@ function formatDate(date) {
   return [year, month, day].join('-');
 }
 
+function convertPeriodToDay(periodNumber, numPeriodsPerWeek) {
+  const numPeriodsPerDay = numPeriodsPerWeek / 5;
+  const day = periodNumber / numPeriodsPerDay;
+  return DAYS_OF_WEEK[Math.floor(day)];
+}
+
+function getPeriodOfDay(periodNumber, numPeriodsPerWeek) {
+  const numPeriodsPerDay = numPeriodsPerWeek / 5;
+  const day = periodNumber % numPeriodsPerDay;
+  return day + 1;
+}
+
 const allEntityTypes = [
   { value: 'Teacher', label: 'Teacher' },
   { value: 'Class', label: 'Class' },
@@ -93,6 +105,8 @@ module.exports = {
   showAllSections,
   getSpecificTimetable,
   formatDate,
+  convertPeriodToDay,
+  getPeriodOfDay,
   allEntityTypes,
   DAYS_OF_WEEK,
   PERIOD_NUMBER,

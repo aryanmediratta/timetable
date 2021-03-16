@@ -20,6 +20,8 @@ const initialState = {
   success: false,
   errorMessage: '',
   showEditTimetableModal: false,
+  suggestions: [],
+  suggestionsFound: true,
   ...selectedEntityId,
 };
 
@@ -34,6 +36,18 @@ export default function timetableReducer(state = initialState, action) {
     return {
       ...state,
       timetable: action.payload,
+    };
+  case TIMETABLE_TYPES.SET_SUGGESTIONS:
+    return {
+      ...state,
+      suggestions: action.payload,
+      suggestionsFound: action.payload.length > 0,
+    };
+  case TIMETABLE_TYPES.RESET_SUGGESTIONS:
+    return {
+      ...state,
+      suggestionsFound: true,
+      suggestions: [],
     };
   case TIMETABLE_TYPES.SET_NUM_PERIODS:
     return {

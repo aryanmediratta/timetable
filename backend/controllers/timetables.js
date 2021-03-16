@@ -128,12 +128,18 @@ getSuggestions = async (req, res) => {
         message: 'Could not fetch data, please try again',
       });
     });
-  const newTimetable = getSuggestionsForEntity(entityId, entityToBeReplaced, timetable, entityType, period);
+  const suggestions = getSuggestionsForEntity(entityId, entityToBeReplaced, timetable, entityType, period);
   // const newTimetable = main(timetable);
+  if (suggestions.length === 0) {
+    return res.status(200).json({
+      success: false,
+      message: 'No Suggestions found for this period.',
+    })
+  }
   return res.status(200).json({
     success: true,
     message: '',
-    timetable: newTimetable,
+    suggestions,
   })
 }
 

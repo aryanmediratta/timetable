@@ -3,48 +3,30 @@ const { costFunction, findSoftClashingPeriods } = require('../geneticAlgorithm/c
 const NUM_STEPS = 3;
 
 function getSuggestionsForEntity(entityId, selectedEntityId, timetable, entityType, period) {
-  const tempTable = deepCopyTimetable(timetable);
+  const [initialCost, hardClashes, softClashes] = costFunction(timetable, timetable.length, null);
   const [replacements, selectedElement] = getReplacementsForClass(entityId, selectedEntityId, timetable, entityType, period);
   console.log('repl', replacements.length);
   console.log('Broken', selectedElement);
-  const moreTables = [];
-  moreTables.push(tempTable);
-  let tempGeneration = [];
-  // const [cost, hardClashes, softClashes] = costFunction(timetable, timetable.length, null);
-  // console.log('BESTT COST', cost, 'hardClashes', hardClashes, 'softClashes', softClashes);
-  // const clashes = findSoftClashingPeriods(timetable);
-  // console.log('SOFT CLAHSES', clashes.length);
-  // return timetable;
-// }
+  let allReplacements = [];
   for (let i = 0; i < replacements.length; i++) {
-    const newTT = swapElementsInTimetable(tempTable, selectedElement, replacements[i]);
-    moreTables.push(newTT);
+    allReplacements = swapElementsInTimetable(timetable, selectedElement, replacements[i], initialCost, allReplacements);
   }
-  moreTables.forEach((parent) => {
-    const [cost, hardClashes, softClashes] = costFunction(parent, parent.length, null);
-    console.log('COST', cost, 'hardClashes', hardClashes, 'softClashes', softClashes);
-    tempGeneration.push({
-      cost,
-      parent,
-      hardClashes,
-      softClashes,
-    });
-  });
-  tempGeneration.sort((a,b) => a.cost - b.cost);
-  const costOfBestMemberInFamily = tempGeneration[0].cost;
-  const leastHardClashes = tempGeneration[0].hardClashes;
-  const leastSoftClashes = tempGeneration[0].softClashes;
-  console.log('BESTT COST', costOfBestMemberInFamily, 'hardClashes', leastHardClashes, 'softClashes', leastSoftClashes);
-  return tempGeneration[0].parent;
+  return allReplacements;
 };
 
-function swapElementsInTimetable(timetable, selectedElement, replacement) {
+function swapElementsInTimetable(timetable, selectedElement, replacement, initialCost, allReplacements) {
   let oof = deepCopyTimetable(timetable);
   const { periodNumber, tupleId } = selectedElement;
   const { periodNumber: replacementPeriodNumber, tupleId: replacementTupleId } = replacement;
   oof[periodNumber][tupleId] = replacement;
   oof[replacementPeriodNumber][replacementTupleId] = selectedElement;
-  return oof;
+  const [cost, hardClashes, softClashes] = costFunction(oof, oof.length, null);
+  console.log('cost', cost, 'compare with', initialCost);
+  if (cost <= initialCost && selectedElement.teacherId !== replacement.teacherId) {
+    console.log('period num-', replacement.periodNumber+1, 'teacher -', replacement.teacherName, 'class -', replacement.className);
+    allReplacements.push(replacement);
+  }
+  return allReplacements;
 }
 
 function getReplacementsForClass(entityId, selectedEntityId, timetable, entityType, myPeriodNumber) {

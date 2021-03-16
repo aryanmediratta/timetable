@@ -34,6 +34,9 @@ export const toggleEditTimetableModal = (data) => (dispatch) => {
     type: TIMETABLE_TYPES.TOGGLE_EDIT_TIMETABLE_MODAL,
     payload: data,
   });
+  if (!data) {
+    dispatch({ type: TIMETABLE_TYPES.RESET_SUGGESTIONS });
+  }
 };
 
 export const getSuggestionsForTimetable = (data) => (dispatch) => {
@@ -56,20 +59,10 @@ export const getSuggestionsForTimetable = (data) => (dispatch) => {
       return response.json();
     })
     .then((res) => {
-      if (res.success === true) {
-        // console.log('res', res);
-        dispatch({
-          type: TIMETABLE_TYPES.SET_SCHOOL_TIMETABLE,
-          payload: res.timetable,
-        });
-        const timetable = getSpecificTimetable(res.timetable, entityId, numPeriods);
-        dispatch({
-          type: TIMETABLE_TYPES.SET_TIMETABLE,
-          payload: timetable,
-        });
-      } else {
-        dispatch(openErrorsPopup(res));
-      }
+      dispatch({
+        type: TIMETABLE_TYPES.SET_SUGGESTIONS,
+        payload: res.suggestions || [],
+      });
     });
 };
 
