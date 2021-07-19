@@ -2,12 +2,12 @@ const { NUM_CLASSES_CLUBBED_TOGETHER } = require('./constants');
 const { generateTimetable } = require('./performCrossover');
 const { modifyClassesData } = require('../utils/classes');
 const { costFunction, findClashes } = require('./calculateFitness');
-const { createTuples } = require('./createRandomTimetables');
+// const { createTuples } = require('./createRandomTimetables');
 
 function createStepwiseTimetables(allData) {
   const { classesList, numPeriods } = allData;
   const classData = modifyClassesData(classesList);
-  const allTuples = createTuples(classesList);
+  // const allTuples = createTuples(classesList);
   classData.sort((a,b) => a.value - b.value);
   const allTimetables = [];
   let teacherClashes = [];
