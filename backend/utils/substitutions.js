@@ -20,12 +20,12 @@ function generateSub(date, timetable, absentList, teachersList) {
   // Creating Lookup list for Present Teachers
   teachersList.forEach((teacher) => {
     if (absentLookup[teacher._id]) {
-      console.log(`${teacher.teacherName} is Absent`);
+      // console.log(`${teacher.teacherName} is Absent`);
     } else {
       presentLookup[teacher._id] = { teacherId: teacher._id, teacher: teacher.teacherName };
     }
   })
-  console.log('');
+  // console.log('');
   // Looping Over Day's Timetable, Finding Absent Teachers
   // And Removing Teacher From Present List if they already have a class
   subTable.forEach((period, index) => {
@@ -64,11 +64,11 @@ function generateSub(date, timetable, absentList, teachersList) {
     substitutions.push(subAssignments);
     if (checkReplacements && Object.keys(checkReplacements).length!==0) {
       Object.keys(checkReplacements).map((key) => {
-        console.log(`${checkReplacements[key].teacher} still free for period no ${index+1}`);
+        // console.log(`${checkReplacements[key].teacher} still free for period no ${index+1}`);
         return checkReplacements[key];
       });
     } else {
-      console.log(`No Free Teacher for period ${index + 1}`);
+      // console.log(`No Free Teacher for period ${index + 1}`);
     }
     // if (index === 0) {
     //   console.log(substitutions);
@@ -79,8 +79,8 @@ function generateSub(date, timetable, absentList, teachersList) {
     // subReplacements.push(repCount);
     // console.log(`Total periods to replace in period ${index + 1} are ${totalPeriodsToReplace}`);
     // console.log(`Available teachers for replacements are ${repCount.length}`);
-    console.log(subAssignments);
-    console.log('  ')
+    // console.log(subAssignments);
+    // console.log('  ')
   })
   // console.log(substitutions);
   return substitutions;

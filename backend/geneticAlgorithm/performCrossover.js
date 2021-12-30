@@ -1,6 +1,6 @@
 const { NUM_GENERATIONS, POPULATION_RATIO } = require('./constants');
 const { costFunction, findHardClashingPeriods, findSoftClashingPeriods } = require('./calculateFitness');
-// const { createRandomTimeTables } = require('./createRandomTimeTables');
+const { createRandomTimeTables } = require('./createRandomTimeTables');
 
 // Receives two parents with the crossover point and mutation rate, returns the entire family.
 function crossTwoParents (parent1, parent2, crossoverPoint, numClasses, numPeriods, hardClashingPeriods, softClashingPeriods, stopCrossover) {
@@ -177,7 +177,7 @@ function addCostAndProbabilityOfSelectionToPopulation (population) {
 
 function generateTimetable (data, count) {
   console.log('-------------------------------------------------------------------------------');
-  // let population = createRandomTimeTables(data);
+  let population = createRandomTimeTables(data);
   let stopCrossover = false;
   let leastSoftClashes = 1, bestFamilyMember, avg, maxHardClashes = 1, index = 2, crossoverPoint = null, costOfBestMemberInFamily = 10;
   while ((costOfBestMemberInFamily > 0) && (index <= NUM_GENERATIONS) && (((leastSoftClashes > 0) || maxHardClashes > 0))) {

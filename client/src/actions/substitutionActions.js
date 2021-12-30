@@ -85,7 +85,7 @@ export const getSubstitutions = (email, date) => (dispatch) => {
       return response.json();
     })
     .then((res) => {
-      dispatch(openErrorsPopup(res));
+      // dispatch(openErrorsPopup(res));
       dispatch({
         type: SUB_TYPE.SET_ABSENT_LIST,
         payload: res.absentList,

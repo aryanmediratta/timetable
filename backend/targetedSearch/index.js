@@ -22,9 +22,9 @@ function main (timetable) {
       }
       timetable = deepCopyTimetable(findBestTimetable(allTimetables, numPeriodsPerWeek));
     });
-    // const clashes = findClashes(timetable);
-    // console.log('Hard Teacher Clashes', clashes.filter((cl) => cl.type === 'teacher').length);
-    // console.log('Hard Classes Clashes', clashes.filter((cl) => cl.type === 'class').length);
+    const clashes = findClashes(timetable);
+    console.log('Hard Teacher Clashes', clashes.filter((cl) => cl.type === 'teacher').length);
+    console.log('Hard Classes Clashes', clashes.filter((cl) => cl.type === 'class').length);
     const [cost, hardClashes, softClashes1] = costFunction(timetable, numPeriodsPerWeek);
     console.log('Cost', cost, 'hardClashes', hardClashes, 'soft', softClashes1);
   }
@@ -44,7 +44,7 @@ function findBestTimetable (generation, numPeriodsPerWeek) {
   const tempGeneration = [];
   generation.forEach((parent) => {
     const [cost, hardClashes, softClashes] = costFunction(parent, numPeriodsPerWeek);
-    // console.log('Cost', cost, 'hardClashes', hardClashes, 'soft', softClashes);
+    console.log('Cost', cost, 'hardClashes', hardClashes, 'soft', softClashes);
     tempGeneration.push({
       cost,
       parent,

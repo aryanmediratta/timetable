@@ -1,4 +1,4 @@
-const { HARD_CLASH_WEIGHT } = require("./constants");
+const { HARD_CLASH_WEIGHT, includeClashesPerWeek } = require("./constants");
 
 // Returns the number of clashes in a given timetable.
 // teacherClashes is a list of teacherIds showing availability of teachers. Only required when breaking timetable into different groups.
@@ -6,7 +6,7 @@ function costFunction (timetable, numPeriods, teacherClashes) {
   let costForClasses = 0;
   let costForTeachers = 0;
   let costForLabels = 0;
-  // let uniqueClashesPerWeek = 0;
+  let uniqueClashesPerWeek = 0;
   let softClashWeight = 0;
   let numSoftClashes = 0;
   let softClashList = [];
@@ -25,7 +25,7 @@ function costFunction (timetable, numPeriods, teacherClashes) {
       allTeachers.indexOf(teacherId) > -1 ? costForTeachers += HARD_CLASH_WEIGHT : allTeachers.push(teacherId);
       allClasses.indexOf(classId) > -1 ? costForClasses += HARD_CLASH_WEIGHT : allClasses.push(classId);
       allLabels.indexOf(label) > -1 ? costForLabels += HARD_CLASH_WEIGHT * 1000 : allLabels.push(label);
-      // clashPerWeek.indexOf(uniqueIndex) > -1 ? uniqueClashesPerWeek++ : clashPerWeek.push(uniqueIndex);
+      includeClashesPerWeek && clashPerWeek.indexOf(uniqueIndex) > -1 ? uniqueClashesPerWeek++ : clashPerWeek.push(uniqueIndex);
       softClashList.push({ periodNumber, uniqueIndex });
       const found = softClashList.filter((cl) => cl.uniqueIndex === uniqueIndex);
       if (found && found.length > 1) {
@@ -47,12 +47,12 @@ function costFunction (timetable, numPeriods, teacherClashes) {
       }
     });
     if (((periodNumber+1) % (numPeriods/5) === 0) && periodNumber !== 0) {
-      // clashPerWeek = [];
+      clashPerWeek = [];
       softClashList = [];
     }
   });
   const hardClashes = (costForClasses + costForTeachers) / HARD_CLASH_WEIGHT;
-  const softClashes = numSoftClashes;
+  const softClashes = numSoftClashes + uniqueClashesPerWeek;
   const totalCost = costForClasses + costForTeachers + costForLabels + softClashWeight;
   return [totalCost, hardClashes, softClashes];
 }

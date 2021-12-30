@@ -1,4 +1,4 @@
-const { NUM_CHROMOSOMES, colorNames, myColors } = require('./constants');
+const { NUM_CHROMOSOMES, myColors } = require('./constants');
 
 function createRandomTimeTables (data) {
   const allTimeTables = [];
