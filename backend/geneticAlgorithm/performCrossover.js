@@ -39,6 +39,8 @@ function crossTwoParents (parent1, parent2, crossoverPoint, numClasses, numPerio
     const temp = child1[el1][el2];
     child1[el1][el2] = child1[x1][x2];
     child1[x1][x2] = temp;
+    child1[el1][el2].numMutation++;
+    child1[x1][x2].numMutation++;
   } else if (softClashingPeriods && softClashingPeriods.length > 0) {
     // console.log('SOFT TARGETTING');
     const { el1, el2 } = softClashingPeriods[Math.floor(Math.random() * softClashingPeriods.length)];
@@ -47,6 +49,8 @@ function crossTwoParents (parent1, parent2, crossoverPoint, numClasses, numPerio
     const temp = child1[el1][el2];
     child1[el1][el2] = child1[x1][x2];
     child1[x1][x2] = temp;
+    child1[el1][el2].numMutation++;
+    child1[x1][x2].numMutation++;
   } else {
     // console.log('NEVER hard ->', hardClashingPeriods.length, 'soft ->', softClashingPeriods.length);
     const i1 = Math.floor(Math.random() * numPeriods);
@@ -56,6 +60,8 @@ function crossTwoParents (parent1, parent2, crossoverPoint, numClasses, numPerio
     const temp = child1[i1][j1];
     child1[i1][j1] = child1[i2][j2];
     child1[i2][j2] = temp;
+    child1[i1][j1].numMutation++;
+    child1[i2][j2].numMutation++;
   }
   // Mutating Child Two.
   if (hardClashingPeriods && hardClashingPeriods.length > 0) {
@@ -65,6 +71,8 @@ function crossTwoParents (parent1, parent2, crossoverPoint, numClasses, numPerio
     const temp = child2[el1][el2];
     child2[el1][el2] = child2[x1][x2];
     child2[x1][x2] = temp;
+    child2[el1][el2].numMutation++;
+    child2[x1][x2].numMutation++;
   } else if (softClashingPeriods && softClashingPeriods.length > 0) {
     const { el1, el2 } = softClashingPeriods[Math.floor(Math.random() * softClashingPeriods.length)];
     const x1 = Math.floor(Math.random() * numPeriods);
@@ -72,6 +80,8 @@ function crossTwoParents (parent1, parent2, crossoverPoint, numClasses, numPerio
     const temp = child2[el1][el2];
     child2[el1][el2] = child2[x1][x2];
     child2[x1][x2] = temp;
+    child2[el1][el2].numMutation++;
+    child2[x1][x2].numMutation++;
   } else {
     const k1 = Math.floor(Math.random() * numPeriods);
     const k2 = Math.floor(Math.random() * numPeriods);
@@ -80,6 +90,8 @@ function crossTwoParents (parent1, parent2, crossoverPoint, numClasses, numPerio
     const temp = child2[k1][l1];
     child2[k1][l1] = child2[k2][l2];
     child2[k2][l2] = temp;
+    child2[k1][l1].numMutation++;
+    child2[k2][l2].numMutation++;
   }
   family.push(parent1);
   family.push(parent2);
@@ -206,7 +218,7 @@ function generateTimetable (data, count) {
     bestFamilyMember = newGen.bestFamilyMember;
     leastSoftClashes = newGen.leastSoftClashes;
     maxHardClashes = newGen.leastHardClashes;
-    // console.log(`Avg of ${population.length} parents in ${index} Gen is -> ${avg} with BEST as ${costOfBestMemberInFamily} having ${maxHardClashes} hard and ${leastSoftClashes} soft clashes for class-${count}`);
+    console.log(`Avg of ${population.length} parents in ${index} Gen is -> ${avg} with BEST as ${costOfBestMemberInFamily} having ${maxHardClashes} hard and ${leastSoftClashes} soft clashes for class-${count}`);
     index++;
   }
   console.log(`Average of ${population.length} parents in ${index} Generation is -> ${avg} with BEST as ${costOfBestMemberInFamily} for class- ${count}.`);

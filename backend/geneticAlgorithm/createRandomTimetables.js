@@ -49,6 +49,7 @@ function createTuplesForClass (classData, population, index, uniqueIndex) {
           subject: teacher.subject,
           color: myColors[uniqueIndex],
           allowDoublePeriods: false,
+          numMutation: 0,
         });
       }
     } else {
@@ -64,6 +65,7 @@ function createTuplesForClass (classData, population, index, uniqueIndex) {
           subject: teacher.subject,
           color: myColors[uniqueIndex],
           allowDoublePeriods: true,
+          numMutation: 0,
         });
       }
     }
